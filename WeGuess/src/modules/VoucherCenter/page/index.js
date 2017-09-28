@@ -215,36 +215,39 @@ class VoucherCenter extends ContainerComponent {
     //支付
     Pay = (token, money, bean) => {
         let that = this
-        that.showAlert(
-            (<View style={[styles.alertTitle]}>
-                <Text style={{textAlign: 'left'}}>支付方式</Text>
-                <TouchableWithoutFeedback onPress={() => {
-                    that.alert.Ok()
-                }}>
-                    <View style={[styles.titleCancel]}>
-                        <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>),
-            (
-                <View style={[styles.alertContent]}>
-                    <View style={[styles.alertMoney]}>
-                        <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
-                        <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
-                    </View>
-                    <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                        that.WFTPay(0, token)
+        setTimeout(()=>{
+            that.hideLoading();
+            that.showAlert(
+                (<View style={[styles.alertTitle]}>
+                    <Text style={{textAlign: 'left'}}>支付方式</Text>
+                    <TouchableWithoutFeedback onPress={() => {
+                        that.alert.Ok()
                     }}>
-                        <View style={[styles.payType]}>
-                            <View style={[styles.payItem]}>
-                                <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
-                                <Text style={[styles.customFont]}>支付宝支付</Text>
-                            </View>
-                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                        <View style={[styles.titleCancel]}>
+                            <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
                         </View>
                     </TouchableWithoutFeedback>
-                </View>), false, null
-        )
+                </View>),
+                (
+                    <View style={[styles.alertContent]}>
+                        <View style={[styles.alertMoney]}>
+                            <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
+                            <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
+                        </View>
+                        <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
+                            that.WFTPay(0, token)
+                        }}>
+                            <View style={[styles.payType]}>
+                                <View style={[styles.payItem]}>
+                                    <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
+                                    <Text style={[styles.customFont]}>支付宝支付</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>), false, null
+            )
+        },300)
     }
 
     WFTPay = (type, token) => {
@@ -274,10 +277,10 @@ class VoucherCenter extends ContainerComponent {
         this.networking.post(BuyDiamondUrl, params, {}).then(function (response) {
             that.canPress.Diamond = true;
             let {Result, Data} = response;
-            that.hideLoading();
             if (Result == 1) {
                 that.Pay(Data, data.Money);
             } else {
+                that.hideLoading();
                 that.showError(Result);
             }
         }, (error) => {
@@ -311,10 +314,10 @@ class VoucherCenter extends ContainerComponent {
         this.networking.post(BuyPropUrl, params, {}).then(function (response) {
             let {Result, Data} = response;
             that.canPress.Prop = true;
-            that.hideLoading();
             if (Result == 1) {
                 that.Pay(Data, data.Money, data.Bean);
             } else {
+                that.hideLoading();
                 that.showError(Result);
             }
         }, (error) => {
@@ -342,25 +345,28 @@ class VoucherCenter extends ContainerComponent {
         this.networking.get(IsBindingPhoneUrl, null, {}).then(function (response) {
             let {Result} = response;
             that.canPress.Award = true;
-            that.hideLoading();
             if (Result == 1) {
-                that.showAlert(
-                    '提示',
-                    <View style={{alignItems: 'center'}}>
-                        <Image source={{uri: PictureURL}} style={styles.listImg}/>
-                        <Text style={{margin: 10, fontSize: 14}}>{Name}</Text>
-                        <Text style={{color: '#999'}}>抽取该项奖品需要猜豆<Text
-                            style={{color: 'orange'}}>{numFormat(Bean)}</Text></Text>
-                        <Text style={{color: '#999', fontSize: 14, marginVertical: 5}}>是否进行抽奖</Text>
-                    </View>,
-                    () => {
-                        that.addAwardRecord(data)
-                    },
-                    () => {
-                    }
-                )
+                setTimeout(()=>{
+                    that.hideLoading();
+                    that.showAlert(
+                        '提示',
+                        <View style={{alignItems: 'center'}}>
+                            <Image source={{uri: PictureURL}} style={styles.listImg}/>
+                            <Text style={{margin: 10, fontSize: 14}}>{Name}</Text>
+                            <Text style={{color: '#999'}}>抽取该项奖品需要猜豆<Text
+                                style={{color: 'orange'}}>{numFormat(Bean)}</Text></Text>
+                            <Text style={{color: '#999', fontSize: 14, marginVertical: 5}}>是否进行抽奖</Text>
+                        </View>,
+                        () => {
+                            that.addAwardRecord(data)
+                        },
+                        () => {
+                        }
+                    )
+                },300)
                 return false;
             } else {
+                that.hideLoading();
                 that.showError(Result);
             }
         }, (error) => {
