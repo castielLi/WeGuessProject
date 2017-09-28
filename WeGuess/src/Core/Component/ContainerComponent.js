@@ -29,7 +29,9 @@ export default class ContainerComponent extends Component {
         if(!ok&&ok!==false){
             ok=()=>{};
         }
-        this.alert.show(title, content, ok, cancel, okText, cancelText,okColor,callback);
+        if(this.alert){
+            this.alert.show(title, content, ok, cancel, okText, cancelText,okColor,callback);
+        }    
     }
 
     showError(errorCode,ok,callback){
@@ -37,7 +39,10 @@ export default class ContainerComponent extends Component {
         if(!ok){
             ok=()=>{};
         }
-        this.alert.show("提示", errorMsg, ok,null,null,null,null,callback);
+        if(this.alert){
+            this.alert.show("提示", errorMsg, ok,null,null,null,null,callback);
+        }
+        
     }
 
     getErrorMsg(errorCode){
@@ -55,24 +60,38 @@ export default class ContainerComponent extends Component {
         if(!ok){
             ok=()=>{};
         }
-        this.alert.show("提示", TipMsg["NoLogin"], ok , ()=>{},null,null,null,callback);
+        if(this.alert){
+            this.alert.show("提示", TipMsg["NoLogin"], ok , ()=>{},null,null,null,callback);
+        }
+        
     }
     showLogout(ok,callback){
         if(!ok){
             ok=()=>{};
         }
-        this.alert.show("提示", TipMsg["Logout"], ok , ()=>{},null,null,null,callback);
+        if(this.alert){
+            this.alert.show("提示", TipMsg["Logout"], ok , ()=>{},null,null,null,callback);
+         }
     }
 
     showLoading(callback){
-        this.loading.show(callback);
+        if(this.loading){
+            this.loading.show(callback);
+        }
+        
     }
 
     showWebView(url,title){
-        this.webview.show(url,title);
+        if(this.webview){
+            this.webview.show(url,title);
+        }
+        
     }
 
     hideLoading(callback){
-        this.loading.hide(callback);
+        if(this.loading){
+           this.loading.hide(callback);  
+        }
+       
     }
 }

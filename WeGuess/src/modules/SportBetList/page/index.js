@@ -68,7 +68,10 @@ export default class SportBetList extends ContainerComponent {
 
     //获取未结算数据
     getBetList = () => {
+        this.showLoading();
+        let that = this;
         this.networking.get(GetUnbalancedBets, null, {}).then((responseData) => {
+            that.hideLoading();
             let {Success, Data, ErrorMsg} = responseData;
             if (Success) {
                 this.setState({
@@ -80,8 +83,10 @@ export default class SportBetList extends ContainerComponent {
                 this.showAlert("提示", ErrorMsg);
             }
         }, (error) => {
+            that.hideLoading();
             this.showError(error);
         }).catch((error) => {
+            that.hideLoading();
             this.showError(error);
         })
     }
@@ -115,7 +120,10 @@ export default class SportBetList extends ContainerComponent {
 
     //获取已结算日期数据
     getBetDateList = () => {
+        this.showLoading();
+        let that = this;
         this.networking.get(GetBalancedBetDate, null, {}).then((responseData) => {
+            that.hideLoading();
             let {Success, Data, ErrorMsg} = responseData;
             if (Success) {
                 this.setState({
@@ -126,8 +134,10 @@ export default class SportBetList extends ContainerComponent {
                 this.showAlert("提示", ErrorMsg);
             }
         }, (error) => {
+            that.hideLoading();
             this.showError(error);
         }).catch((error) => {
+            that.hideLoading();
             this.showError(error);
         })
     }

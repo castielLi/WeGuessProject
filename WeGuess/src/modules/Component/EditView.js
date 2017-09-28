@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     inputLabel: {
         color: '#333',
         fontSize: 14,
-        width: 60
+        width: 50
     },
     inputText: {
         fontSize: 12,
@@ -55,11 +55,9 @@ const styles = StyleSheet.create({
     yzm: {
         color: '#3b67b2',
         fontSize: 12,
-        paddingLeft: 10
     },
     bindPhone: {
         color: '#3b67b2',
         fontSize: 12,
-        paddingLeft: 10
     }
 });
