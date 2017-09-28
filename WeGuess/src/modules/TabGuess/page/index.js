@@ -476,6 +476,7 @@ class Guess extends ContainerComponent {
                 </View>
                 <View style={styles.top}>
                     <View style={styles.gameContainer}>
+                        
                         <View style={[styles.balance]}>
                             <TouchableOpacity onPress={() => {
                                 this.setState({showGameType: !this.state.showGameType})
@@ -500,43 +501,43 @@ class Guess extends ContainerComponent {
                             </TouchableOpacity>
                         </View>
                       
-                           
-                                <View
-                                    style={[styles.balance, this.state.type == "1" ? styles.select : styles.noSelect]}>
-                                     <TouchableOpacity style={{height:40,justifyContent:"center"}} onPress={() => {
+                         <TouchableOpacity style={{flex:1,height:40,justifyContent:"center"}} onPress={() => {
                                 this.onPress(type.time)
-                            }}>
+                            }}>  
+                        <View style={[styles.balance, this.state.type == "1" ? styles.select : styles.noSelect]}>
+                                     
                                     <Text style={[this.state.type == "1" ? styles.selectColor : styles.noSelectColor]}>按日期</Text>
-                                    </TouchableOpacity>
-                                </View>
+                                    
+                        </View>
+                        </TouchableOpacity>
 
-                           
-                                <View
-                                    style={[styles.balance, this.state.type == "2" ? styles.select : styles.noSelect]}>
-                                       <TouchableOpacity style={{height:40,justifyContent:"center"}} onPress={() => {
+                         <TouchableOpacity style={{flex:1,height:40,justifyContent:"center"}} onPress={() => {
                                 this.onPress(type.league)
-                            }}>
+                            }}>  
+                        <View style={[styles.balance, this.state.type == "2" ? styles.select : styles.noSelect]}>
+                                       
                                            <Text style={[this.state.type == "2" ? styles.selectColor : styles.noSelectColor]}>按比赛</Text>
-                                      </TouchableOpacity>
-                                </View>
+                                      
+                        </View>
+                        </TouchableOpacity>
                             
-                           
-                                <View
-                                    style={[styles.balance, this.state.type == "3" ? styles.select : styles.noSelect]}>
-                                     <TouchableOpacity style={{height:40,justifyContent:"center"}} onPress={() => {this.onPress(type.live)}}>
+                        <TouchableOpacity style={{flex:1,}} onPress={() => {this.onPress(type.live)}}>   
+                        <View style={[styles.balance, this.state.type == "3" ? styles.select : styles.noSelect]}>
+                                     
                                             <Text style={[this.state.type == "3" ? styles.selectColor : styles.noSelectColor]}>滚球</Text>
-                                     </TouchableOpacity>
-                                </View>
+                                     
+                        </View>
+                        </TouchableOpacity>
                             
-                            
-                                <View
-                                    style={[styles.balance, this.state.type == "4" ? styles.select : styles.noSelect]}>
-                                        <TouchableOpacity style={{height:40,justifyContent:"center"}} onPress={() => {
+                        <TouchableOpacity style={{flex:1,}} onPress={() => {
                                 this.onPress(type.mix)
-                            }}>
+                            }}>    
+                        <View style={[styles.balance, this.state.type == "4" ? styles.select : styles.noSelect]}>
+                                        
                                                <Text style={[this.state.type == "4" ? styles.selectColor : styles.noSelectColor]}>串关</Text>
-                                        </TouchableOpacity>
-                                </View>
+                                        
+                        </View>
+                        </TouchableOpacity>
                             
                       
                     </View>
@@ -627,8 +628,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: 40,
-        paddingLeft:10,
-        paddingRight:10,
+        // paddingLeft:10,
+        // paddingRight:10,
     },
 
     ballIcon: {

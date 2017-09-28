@@ -90,7 +90,7 @@ export default class WebViewModal extends Component {
                             <View style={[styles.webViewHeader]}>
                                 <TouchableWithoutFeedback onPress={this.close}>
                                     <Icon.Button name="ios-arrow-back" backgroundColor="#ffffff" color="#3a66b3"
-                                                 iconStyle={{fontSize: 30}}>
+                                                 iconStyle={{fontSize:  (Platform.OS === 'ios') ? 20 : 30}}>
                                         <Text style={{width: 20}}/>
                                     </Icon.Button>
                                 </TouchableWithoutFeedback>
