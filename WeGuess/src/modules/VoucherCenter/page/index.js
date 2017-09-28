@@ -215,47 +215,45 @@ class VoucherCenter extends ContainerComponent {
     //支付
     Pay = (token, money, bean) => {
         let that = this
-        setTimeout(()=>{
-            that.hideLoading();
-            that.showAlert(
-                (<View style={[styles.alertTitle]}>
-                    <Text style={{textAlign: 'left'}}>支付方式</Text>
-                    <TouchableWithoutFeedback onPress={() => {
-                        that.alert.Ok()
+        that.showAlert(
+            (<View style={[styles.alertTitle]}>
+                <Text style={{textAlign: 'left'}}>支付方式</Text>
+                <TouchableWithoutFeedback onPress={() => {
+                    that.alert.Ok()
+                }}>
+                    <View style={[styles.titleCancel]}>
+                        <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>),
+            (
+                <View style={[styles.alertContent]}>
+                    <View style={[styles.alertMoney]}>
+                        <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
+                        <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
+                    </View>
+                    <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
+                        that.WFTPay(0, token)
                     }}>
-                        <View style={[styles.titleCancel]}>
-                            <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
+                        <View style={[styles.payType]}>
+                            <View style={[styles.payItem]}>
+                                <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
+                                <Text style={[styles.customFont]}>支付宝支付</Text>
+                            </View>
+                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                         </View>
                     </TouchableWithoutFeedback>
-                </View>),
-                (
-                    <View style={[styles.alertContent]}>
-                        <View style={[styles.alertMoney]}>
-                            <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
-                            <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
-                        </View>
-                        <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                            that.WFTPay(0, token)
-                        }}>
-                            <View style={[styles.payType]}>
-                                <View style={[styles.payItem]}>
-                                    <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
-                                    <Text style={[styles.customFont]}>支付宝支付</Text>
-                                </View>
-                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </View>), false, null
-            )
-        },300)
+                </View>), false, null
+        )
     }
 
     WFTPay = (type, token) => {
         let that = this;
-        that.alert.Ok();
-        WFTPay.pay(token, (success) => {
-            that.props.getMemberInfo();
-        })
+        that.alert.BackInit(() => {
+            WFTPay.pay(token, () => {
+                that.props.getMemberInfo();
+            })
+        });
     }
 
     //点击进行钻石充值
@@ -264,34 +262,39 @@ class VoucherCenter extends ContainerComponent {
             return;
         }
         this.canPress.Diamond = false;
-        this.showLoading();
-        let that = this;
-        let params = {
-            id: data.ID,
-            payAmount: data.Money,
-            payPlatform: 1,
-            payType: PayType.APP,
-            productName: "虚拟钻石",
-            osType: Platform.OS == 'ios' ? 1 : 0
-        }
-        this.networking.post(BuyDiamondUrl, params, {}).then(function (response) {
-            that.canPress.Diamond = true;
-            let {Result, Data} = response;
-            if (Result == 1) {
-                that.Pay(Data, data.Money);
-            } else {
-                that.hideLoading();
-                that.showError(Result);
+        this.showLoading(() => {
+            let that = this;
+            let params = {
+                id: data.ID,
+                payAmount: data.Money,
+                payPlatform: 1,
+                payType: PayType.APP,
+                productName: "虚拟钻石",
+                osType: Platform.OS == 'ios' ? 1 : 0
             }
-        }, (error) => {
-            that.canPress.Diamond = true;
-            that.hideLoading();
-            that.showError(error)
-        }).catch((error) => {
-            that.canPress.Diamond = true;
-            that.hideLoading();
-            that.showError(error);
+            this.networking.post(BuyDiamondUrl, params, {}).then(function (response) {
+                that.canPress.Diamond = true;
+                let {Result, Data} = response;
+                that.hideLoading(() => {
+                    if (Result == 1) {
+                        that.Pay(Data, data.Money);
+                    } else {
+                        that.showError(Result);
+                    }
+                });
+            }, (error) => {
+                that.canPress.Diamond = true;
+                that.hideLoading(() => {
+                    that.showError(error);
+                });
+            }).catch((error) => {
+                that.canPress.Diamond = true;
+                that.hideLoading(() => {
+                    that.showError(error);
+                });
+            });
         });
+
 
     }
 
@@ -301,33 +304,37 @@ class VoucherCenter extends ContainerComponent {
             return;
         }
         this.canPress.Prop = false;
-        this.showLoading();
-        let that = this;
-        let params = {
-            propID: data.PropID,
-            payAmount: data.Money,
-            payPlatform: 1,
-            payType: PayType.APP,
-            productName: "虚拟钻石",
-            osType: Platform.OS == 'ios' ? 1 : 0,
-        }
-        this.networking.post(BuyPropUrl, params, {}).then(function (response) {
-            let {Result, Data} = response;
-            that.canPress.Prop = true;
-            if (Result == 1) {
-                that.Pay(Data, data.Money, data.Bean);
-            } else {
-                that.hideLoading();
-                that.showError(Result);
+        this.showLoading(() => {
+            let that = this;
+            let params = {
+                propID: data.PropID,
+                payAmount: data.Money,
+                payPlatform: 1,
+                payType: PayType.APP,
+                productName: "虚拟钻石",
+                osType: Platform.OS == 'ios' ? 1 : 0,
             }
-        }, (error) => {
-            that.canPress.Prop = true;
-            that.hideLoading();
-            that.showError(error)
-        }).catch((error) => {
-            that.canPress.Prop = true;
-            that.hideLoading();
-            that.showError(error);
+            this.networking.post(BuyPropUrl, params, {}).then(function (response) {
+                let {Result, Data} = response;
+                that.canPress.Prop = true;
+                that.hideLoading(() => {
+                    if (Result == 1) {
+                        that.Pay(Data, data.Money, data.Bean);
+                    } else {
+                        that.showError(Result);
+                    }
+                });
+            }, (error) => {
+                that.canPress.Diamond = true;
+                that.hideLoading(() => {
+                    that.showError(error);
+                });
+            }).catch((error) => {
+                that.canPress.Diamond = true;
+                that.hideLoading(() => {
+                    that.showError(error);
+                });
+            });
         });
     }
 
@@ -337,105 +344,118 @@ class VoucherCenter extends ContainerComponent {
             return;
         }
         this.canPress.Award = false;
-        this.showLoading();
-        let that = this;
-        let PictureURL = data.PictureURL;
-        let Name = data.Name;
-        let Bean = data.Bean;
-        this.networking.get(IsBindingPhoneUrl, null, {}).then(function (response) {
-            let {Result} = response;
-            that.canPress.Award = true;
-            if (Result == 1) {
-                setTimeout(()=>{
-                    that.hideLoading();
-                    that.showAlert(
-                        '提示',
-                        <View style={{alignItems: 'center'}}>
-                            <Image source={{uri: PictureURL}} style={styles.listImg}/>
-                            <Text style={{margin: 10, fontSize: 14}}>{Name}</Text>
-                            <Text style={{color: '#999'}}>抽取该项奖品需要猜豆<Text
-                                style={{color: 'orange'}}>{numFormat(Bean)}</Text></Text>
-                            <Text style={{color: '#999', fontSize: 14, marginVertical: 5}}>是否进行抽奖</Text>
-                        </View>,
-                        () => {
-                            that.addAwardRecord(data)
-                        },
-                        () => {
-                        }
-                    )
-                },300)
-                return false;
-            } else {
-                that.hideLoading();
-                that.showError(Result);
-            }
-        }, (error) => {
-            that.canPress.Award = true;
-            that.hideLoading();
-            that.showError(error)
-        }).catch((error) => {
-            that.canPress.Award = true;
-            that.hideLoading();
-            that.showError(error);
+        this.showLoading(() => {
+            let that = this;
+            let PictureURL = data.PictureURL;
+            let Name = data.Name;
+            let Bean = data.Bean;
+            this.networking.get(IsBindingPhoneUrl, null, {}).then(function (response) {
+                let {Result} = response;
+                that.canPress.Award = true;
+                if (Result == 1) {
+                    that.hideLoading(() => {
+                        that.showAlert(
+                            '提示',
+                            <View style={{alignItems: 'center'}}>
+                                <Image source={{uri: PictureURL}} style={styles.listImg}/>
+                                <Text style={{margin: 10, fontSize: 14}}>{Name}</Text>
+                                <Text style={{color: '#999'}}>抽取该项奖品需要猜豆<Text
+                                    style={{color: 'orange'}}>{numFormat(Bean)}</Text></Text>
+                                <Text style={{color: '#999', fontSize: 14, marginVertical: 5}}>是否进行抽奖</Text>
+                            </View>,
+                            () => {
+                                that.addAwardRecord(data)
+                            },
+                            () => {
+                            }
+                        )
+                    });
+                    return false;
+                } else {
+                    that.hideLoading(() => {
+                        that.showError(Result);
+                    });
+                }
+            }, (error) => {
+                that.canPress.Diamond = true;
+                that.hideLoading(() => {
+                    that.showError(error);
+                });
+            }).catch((error) => {
+                that.canPress.Diamond = true;
+                that.hideLoading(() => {
+                    that.showError(error);
+                });
+            });
         });
+
     }
 
     addAwardRecord(data) {
         let that = this;
-        let params = {
-            awardID: data.AwardID,
-            bean: data.Bean,
-        };
-        let PictureURL = data.PictureURL;
-        let Name = data.Name;
-        this.networking.get(AddAwardRecordUrl, params, {}).then(function (data) {
-            if (data.Result == 1) {
-                that.getAwardList();
-                that.showAlert(
-                    <View style={{alignItems: 'center', paddingVertical: 10, backgroundColor: '#f7f7f7'}}>
-                        <Text style={{textAlign: 'center', color: 'red'}}>恭喜您,获得奖品!</Text>
-                        <TouchableHighlight style={{width: 15, height: 15, position: 'absolute', right: 10, top: 10}}
-                                            onPress={() => that.alert.Ok()}>
-                            <Image source={require('../resources/cancel.png')}
-                                   style={{width: 15, height: 15, opacity: 0.6}}/>
-                        </TouchableHighlight>
-                    </View>,
-                    <View style={{alignItems: 'center', padding: 30}}>
-                        <Image source={{uri: PictureURL}} style={styles.listImg}/>
-                        <Text style={{margin: 10, fontSize: 14}}>{Name}</Text>
-                        <Text style={{color: 'red'}}>恭喜您,成功抽到奖品!</Text>
-                        <Text style={{margin: 10, color: 'red'}}>稍后会有工作人员与您联系并派发奖品.</Text>
-                        <Text style={{color: 'red'}}>请耐心等待.</Text>
-                    </View>, false,
-                )
-                return false;
-            }
-            if (data.Result == 1102) {
-                that.showAlert(
-                    '猜豆不足',
-                    <View style={{alignItems: 'center', padding: 30}}>
-                        <Text style={{fontSize: 14}}>很抱歉,您的猜豆余额不足,</Text>
-                        <Text style={{marginTop: 15, fontSize: 14}}>可以通过以下方式获取猜豆.</Text>
-                    </View>,
-                    () => {
-                        that.refs.TabView.onPress(1)
-                    },
-                    () => {
-                        that.props.navigation.navigate('TabAction')
-                    },
-                    "购买道具",
-                    "参与活动"
-                )
-                return false;
-            } else {
-                that.showError(Result);
-            }
-        }, (error) => {
-            this.showError(error)
-        }).catch((error) => {
+        that.hideLoading(() => {
+            let params = {
+                awardID: data.AwardID,
+                bean: data.Bean,
+            };
+            let PictureURL = data.PictureURL;
+            let Name = data.Name;
+            this.networking.get(AddAwardRecordUrl, params, {}).then(function (data) {
+                that.hideLoading(() => {
+                    if (data.Result == 1) {
+                        that.showAlert(
+                            <View style={{alignItems: 'center', paddingVertical: 10, backgroundColor: '#f7f7f7'}}>
+                                <Text style={{textAlign: 'center', color: 'red'}}>恭喜您,获得奖品!</Text>
+                                <TouchableHighlight
+                                    style={{width: 15, height: 15, position: 'absolute', right: 10, top: 10}}
+                                    onPress={() => that.alert.Ok()}>
+                                    <Image source={require('../resources/cancel.png')}
+                                           style={{width: 15, height: 15, opacity: 0.6}}/>
+                                </TouchableHighlight>
+                            </View>,
+                            <View style={{alignItems: 'center', padding: 30}}>
+                                <Image source={{uri: PictureURL}} style={styles.listImg}/>
+                                <Text style={{margin: 10, fontSize: 14}}>{Name}</Text>
+                                <Text style={{color: 'red'}}>恭喜您,成功抽到奖品!</Text>
+                                <Text style={{margin: 10, color: 'red'}}>稍后会有工作人员与您联系并派发奖品.</Text>
+                                <Text style={{color: 'red'}}>请耐心等待.</Text>
+                            </View>, false,
+                        )
+                        that.getAwardList();
+                    }
+                    else if (data.Result == 1102) {
+                        that.showAlert(
+                            '猜豆不足',
+                            <View style={{alignItems: 'center', padding: 30}}>
+                                <Text style={{fontSize: 14}}>很抱歉,您的猜豆余额不足,</Text>
+                                <Text style={{marginTop: 15, fontSize: 14}}>可以通过以下方式获取猜豆.</Text>
+                            </View>,
+                            () => {
+                                that.refs.TabView.onPress(1)
+                            },
+                            () => {
+                                that.props.navigation.navigate('TabAction')
+                            },
+                            "购买道具",
+                            "参与活动"
+                        )
+                    } else {
+                        that.showError(Result);
+                    }
+                });
+            }, (error) => {
+                that.canPress.Diamond = true;
+                that.hideLoading(() => {
+                    that.showError(error);
+                });
+            }).catch((error) => {
+                that.canPress.Diamond = true;
+                that.hideLoading(() => {
+                    that.showError(error);
+                });
+            });
+        })
 
-            this.showError(error);
-        });
     }
 
     //选择钻石充值板块

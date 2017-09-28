@@ -25,19 +25,19 @@ export default class ContainerComponent extends Component {
         this.storageHelper = new StorageHelper();
     }
 
-    showAlert(title, content, ok, cancel, okText = "确定", cancelText = "取消",okColor){
+    showAlert(title, content, ok, cancel, okText = "确定", cancelText = "取消",okColor,callback){
         if(!ok&&ok!==false){
             ok=()=>{};
         }
-        this.alert.show(title, content, ok, cancel, okText, cancelText,okColor);
+        this.alert.show(title, content, ok, cancel, okText, cancelText,okColor,callback);
     }
 
-    showError(errorCode,ok){
+    showError(errorCode,ok,callback){
         let errorMsg = this.getErrorMsg(errorCode);
         if(!ok){
             ok=()=>{};
         }
-        this.alert.show("提示", errorMsg, ok, null);
+        this.alert.show("提示", errorMsg, ok,null,null,null,null,callback);
     }
 
     getErrorMsg(errorCode){
@@ -51,28 +51,28 @@ export default class ContainerComponent extends Component {
         return errorMsg;
     }
 
-    showLogin(ok){
+    showLogin(ok,callback){
         if(!ok){
             ok=()=>{};
         }
-        this.alert.show("提示", TipMsg["NoLogin"], ok , ()=>{});
+        this.alert.show("提示", TipMsg["NoLogin"], ok , ()=>{},null,null,null,callback);
     }
-    showLogout(ok){
+    showLogout(ok,callback){
         if(!ok){
             ok=()=>{};
         }
-        this.alert.show("提示", TipMsg["Logout"], ok , ()=>{});
+        this.alert.show("提示", TipMsg["Logout"], ok , ()=>{},null,null,null,callback);
     }
 
-    showLoading(){
-        this.loading.show();
+    showLoading(callback){
+        this.loading.show(callback);
     }
 
     showWebView(url,title){
         this.webview.show(url,title);
     }
 
-    hideLoading(){
-        this.loading.hide();
+    hideLoading(callback){
+        this.loading.hide(callback);
     }
 }

@@ -36,20 +36,40 @@ export default class AlertModal extends Component {
         };
     }
 
-    show(title, content, ok, cancel, okText = "确定", cancelText = "取消", okColor = "#3a66b3") {
+    show(title, content, ok, cancel, okText = "确定", cancelText = "取消", okColor = "#3a66b3",callback) {
         this.setState({
             modalVisible: true,
             title: title ? title : "提示",
             content: content,
             ok: ok,
             cancel: cancel,
-            okText: okText,
-            cancelText: cancelText,
-            okColor: okColor
+            okText: okText?okText:"确定",
+            cancelText: cancelText?cancelText:"取消",
+            okColor: okColor?okColor:"#3a66b3"
+        },()=>{
+            if(typeof callback==="function"){
+                callback()
+            }
         });
     };
 
-    Cancel = () => {
+    BackInit=(callback)=>{
+        this.setState({
+            modalVisible: false,
+            title: "提示",
+            content: "",
+            ok: null,
+            cancel: null,
+            okText: "确定",
+            cancelText: "取消"
+        },()=>{
+            if(typeof callback==="function"){
+                callback()
+            }
+        });
+    }
+
+    Cancel = (callback) => {
         if (typeof this.state.cancel == "function") {
             this.state.cancel();
             this.setState({
@@ -60,11 +80,16 @@ export default class AlertModal extends Component {
                 cancel: null,
                 okText: "确定",
                 cancelText: "取消"
+            },()=>{
+                if(typeof callback==="function"){
+                    callback()
+                }
             });
         }
     }
 
-    Ok = () => {
+    Ok = (callback) => {
+        let okBack = this.state.ok;
         this.setState({
             modalVisible: false,
             title: "提示",
@@ -73,10 +98,14 @@ export default class AlertModal extends Component {
             cancel: null,
             okText: "确定",
             cancelText: "取消"
+        },()=>{
+            if(typeof callback==="function"){
+                callback()
+            }
+            if (typeof okBack === "function") {
+                okBack();
+            }
         });
-        if (typeof this.state.ok == "function") {
-            this.state.ok();
-        }
     }
 
     render() {

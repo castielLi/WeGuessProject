@@ -24,15 +24,23 @@ export default class Loading extends Component {
         };
     }
 
-    show() {
+    show(callback) {
         this.setState({
             modalVisible: true,
+        },()=>{
+            if(typeof callback==="function"){
+                callback()
+            }
         });
     };
 
-    hide() {
+    hide(callback) {
         this.setState({
             modalVisible: false,
+        },()=>{
+            if(typeof callback==="function"){
+                callback()
+            }
         });
     };
 

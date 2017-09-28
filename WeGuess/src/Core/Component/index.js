@@ -33,21 +33,21 @@ export default class DisplayComponent extends Component {
         return errorMsg;
     }
 
-    showAlert(title, content, ok, cancel, okText = "确定", cancelText = "取消",okColor) {
-        this.alert.show(title, content, ok, cancel, okText, cancelText,okColor);
+    showAlert(title, content, ok, cancel, okText = "确定", cancelText = "取消",okColor,callback) {
+        this.alert.show(title, content, ok, cancel, okText, cancelText,okColor,callback);
     }
 
-    showError(errorCode, ok) {
+    showError(errorCode, ok,callback) {
         let errorMsg = this.getErrorMsg(errorCode);
-        this.alert.show("提示", errorMsg, ok, null);
+        this.alert.show("提示", errorMsg, ok,null,null,null,null,callback);
     }
 
-    showLoading() {
-        this.loading.show();
+    showLoading(callback){
+        this.loading.show(callback);
     }
 
-    hideLoading(){
-        this.loading.hide();
+    hideLoading(callback){
+        this.loading.hide(callback);
     }
 
 }
