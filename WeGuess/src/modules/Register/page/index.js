@@ -18,10 +18,11 @@ import {
 import ContainerComponent from '../../.././Core/Component/ContainerComponent';
 import LoginButton from '../../Component/LoginButton';
 import EditView from '../../Component/EditView';
-import {RegistByMobilePhoneUrl, GetMobileCaptchaForRegistionUrl,WebViewUrl} from '../../Config/apiUrlConfig';
+import {RegistByMobilePhoneUrl, GetMobileCaptchaForRegistionUrl, WebViewUrl} from '../../Config/apiUrlConfig';
 import {isPhone, isCaptcha, checkPassword} from '../../Utils/check';
 import TokenManager from '../../TokenManager';
 import {StatusBar} from "../../Component/BackButton";
+import Partner from "../../Config/spreadConfig";
 var Dimensions = require('Dimensions');
 
 class Register extends ContainerComponent {
@@ -95,7 +96,8 @@ class Register extends ContainerComponent {
         let params = {
             PhoneNumber: this.state.phone,
             Password: this.state.password,
-            Captcha: this.state.captcha
+            Captcha: this.state.captcha,
+            Partner: Partner
         };
         this.showLoading();
         this.networking.post(RegistByMobilePhoneUrl, params, {})
@@ -134,7 +136,7 @@ class Register extends ContainerComponent {
     }
 
     //获取验证码定时器
-    setTime=()=>{
+    setTime = () => {
         let i = 60;
         let that = this;
         this.interTime = setInterval(function () {
@@ -186,6 +188,7 @@ class Register extends ContainerComponent {
     }
 
     render() {
+        let Alert = this.Alert;
         let Loading = this.Loading;
         let WebView = this.WebView;
         return (
@@ -210,7 +213,7 @@ class Register extends ContainerComponent {
                         </View>
                     </TouchableWithoutFeedback>
                     <Text style={[styles.protocol, {color: '#3b67b2', textDecorationLine: "underline"}]}
-                          onPress={() => this.showWebView(WebViewUrl.registerAgreement.url,WebViewUrl.registerAgreement.title)}>"用户协议"</Text>
+                          onPress={() => this.showWebView(WebViewUrl.registerAgreement.url, WebViewUrl.registerAgreement.title)}>"用户协议"</Text>
                 </View>
                 <View>
                     <Text style={styles.errorMsg}>{this.state.error}</Text>
@@ -227,6 +230,9 @@ class Register extends ContainerComponent {
                 <WebView ref={(refWebView) => {
                     this.webview = refWebView
                 }}></WebView>
+                <Alert ref={(refAlert) => {
+                    this.alert = refAlert
+                }}></Alert>
             </View>
         );
 

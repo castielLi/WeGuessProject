@@ -44,12 +44,13 @@ const styles = StyleSheet.create({
     inputLabel: {
         color: '#333',
         fontSize: 14,
-        width: 80
+        width: 60
     },
     inputText: {
         fontSize: 12,
         color: '#333333',
-        flex: 1
+        flex: 1,
+        padding:8,
     },
     yzm: {
         color: '#3b67b2',

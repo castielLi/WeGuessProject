@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         height: 24
     },
     mfIcon: {
-        fontFamily: 'IoniconsMF',
+        fontFamily: 'IoniconsMf',
         fontSize: 24,
         width: 24,
         height: 24
