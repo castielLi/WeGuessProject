@@ -205,11 +205,11 @@ class MoneyRecord extends ContainerComponent {
         return (
             <View style={{flex: 1}}>
                 <TabView tabList={this.tabList} onPress={this.changeType}></TabView>
-                {/*<View style={styles.stateTop}>*/}
-                    {/*<Text style={[styles.stateTopLi,{width:160}]}>时间</Text>*/}
-                    {/*<Text style={styles.stateTopLi}>项目</Text>*/}
-                    {/*<Text style={[styles.stateTopLi, {paddingRight: 10, textAlign: 'right'}]}>收支</Text>*/}
-                {/*</View>*/}
+                <View style={styles.stateTop}>
+                    <Text style={[styles.stateTopLi,{width:160}]}>时间</Text>
+                    <Text style={styles.stateTopLi}>项目</Text>
+                    <Text style={[styles.stateTopLi, {paddingRight: 10, textAlign: 'right'}]}>收支</Text>
+                </View>
                 {this.content()}
             </View>
         )
