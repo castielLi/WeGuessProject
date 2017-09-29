@@ -163,12 +163,12 @@ class BuyBetRecordList extends DisplayComponent {
         this.props.getBuyBetRecord(true, resolve);
 
     }
+
     onEndReached = () => {
         this.props.getBuyBetRecord();
     }
 
-
-    renderContent = () => {
+    render() {
         if (this.props.data && this.props.data.length > 0) {
             return (
                 <PullList
@@ -188,18 +188,6 @@ class BuyBetRecordList extends DisplayComponent {
                 <Text style={{textAlign: 'center', color: '#999', marginTop: 20, fontSize: 16}}>无记录</Text>
             )
         }
-    }
-
-    render() {
-        let Alert = this.Alert;
-        return (
-            <View style={styles.container}>
-                {this.renderContent()}
-                <Alert ref={(refAlert) => {
-                    this.alert = refAlert
-                }}></Alert>
-            </View>
-        )
 
     }
 }
