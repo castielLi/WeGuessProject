@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import ContainerComponent from '../../Core/Component/ContainerComponent';
 import config from '../Utils/sportConfig';
+import {numFormat} from '../Utils/money';
 import HandleData from '../Utils/sportHandle';
 let {height, width} = Dimensions.get('window')
 
@@ -171,7 +172,7 @@ export default class SportBetList extends ContainerComponent {
                     <View style={styles.btPaneTitle}>
                         <View style={styles.banlace}>
                             <Image source={require('./resource/icon_15.png')} style={styles.banlanceImg}></Image>
-                            <Text style={{color: "#ff5b06"}}>{parseInt(this.props.balance)}</Text>
+                            <Text style={{color: "#ff5b06"}}>{numFormat(this.props.balance)}</Text>
                         </View>
                         
                             <TouchableWithoutFeedback onPress={() => {

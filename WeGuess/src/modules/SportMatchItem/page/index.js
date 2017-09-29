@@ -464,7 +464,7 @@ class Match extends ContainerComponent {
                 </View>
                 {
                     this.state.isShowBet ? (
-                        <BetPane isCommon='true' isMix={this.state.isMix} betInfo={this.state.betInfo} balance={this.state.balance}
+                        <BetPane isCommon={true} isMix={this.state.isMix} betInfo={this.state.betInfo} balance={this.state.balance}
                                  SubmitBet={this.SubmitBet} closeBetPanel={this.closeBetPanel}/>) : null
                 }
                 {

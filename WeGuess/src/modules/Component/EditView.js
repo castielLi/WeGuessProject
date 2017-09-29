@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     yzm: {
         color: '#3b67b2',
         fontSize: 12,
+        paddingVertical:10
     },
     bindPhone: {
         color: '#3b67b2',

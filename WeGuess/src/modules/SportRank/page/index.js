@@ -39,10 +39,15 @@ export default class SportRank extends ContainerComponent {
         this.changeType = this.changeType.bind(this);
         this.state = {
             type: 0,
-            dataSource: new ListView.DataSource({
+            dataSourceWeek: new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 !== r2
+            }),
+            dataSourceMonth: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => r1 !== r2
             }),
         }
+        this.weekData=[];
+        this.monthData=[];
         this.defaultData = {
             Nickname: '(我自己)',
             WinRate: '-',
@@ -57,11 +62,9 @@ export default class SportRank extends ContainerComponent {
     changeType = (index) => {
         this.setState({
             type: index
+        },()=>{
+        	this.fetchData()
         })
-        let that = this;
-        setTimeout(() => {
-            that.fetchData()
-        }, 500)
     }
 
     //网络请求
@@ -87,9 +90,18 @@ export default class SportRank extends ContainerComponent {
                     }
                 }
                 data.unshift(this.defaultData)
-                that.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(data)
-                });
+                if(this.state.type==0){
+                	this.weekData=data;
+                	that.setState({
+	                    dataSourceWeek: this.state.dataSourceWeek.cloneWithRows(this.weekData)
+	                });
+                }else{
+                	this.monthData=data;
+                	that.setState({
+	                    dataSourceMonth: this.state.dataSourceMonth.cloneWithRows(this.monthData)
+	                });
+                }
+                
             } else {
                  that.hideLoading();
                 that.showError(Result);
@@ -153,12 +165,24 @@ export default class SportRank extends ContainerComponent {
                         <Text style={styles.titleText}>胜率</Text>
                     </View>
                 </View>
-                <ListView
-                    style={{maxHeight: Dimensions.get('window').height - 180}}
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderRow}
-                    showsVerticalScrollIndicator={false}
-                />
+                {
+                	this.state.type==0?(
+                		<ListView
+		                    style={{maxHeight: Dimensions.get('window').height - 180}}
+		                    dataSource={this.state.dataSourceWeek}
+		                    renderRow={this.renderRow}
+		                    showsVerticalScrollIndicator={false}
+		                />
+                	):(
+                		<ListView
+		                    style={{maxHeight: Dimensions.get('window').height - 180}}
+		                    dataSource={this.state.dataSourceMonth}
+		                    renderRow={this.renderRow}
+		                    showsVerticalScrollIndicator={false}
+		                />
+                	)
+                }
+                
                 <View style={styles.notesContent}>
                     <Text style={styles.notes}>*注: 此排行榜只显示前50名</Text>
                 </View>

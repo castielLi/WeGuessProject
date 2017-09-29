@@ -11,6 +11,7 @@ import React, {
 } from 'react';
 import {
     TouchableOpacity,
+    TouchableWithoutFeedback,
     Alert,
     View,
     StyleSheet,
@@ -253,7 +254,7 @@ class League extends ContainerComponent {
                     this.state.type == 2 ? null:(
                 <View style={styles.body}>
                     <View>
-                        <TouchableOpacity onPress={()=>{this.setState({showGameType:!this.state.showGameType})}}>
+                        <TouchableWithoutFeedback onPress={()=>{this.setState({showGameType:!this.state.showGameType})}}>
                             <View style = {styles.buttonImg}>
                                  {
                                     this.state.sportId == 1?(<Image source = {require('../resource/icon_57.png')} style={styles.ballIcon}></Image>):
@@ -264,7 +265,7 @@ class League extends ContainerComponent {
                                     !this.state.showGameType ? (<Image source = {require('../resource/icon_18.png')} style = {styles.downButton}></Image>) : (<Image source = {require('../resource/icon_20.png')} style = {styles.downButton}></Image>)
                                 }
                             </View>
-                        </TouchableOpacity>
+                        </TouchableWithoutFeedback>
                             
                     </View>
                     <View style={{flexDirection:'row',justifyContent:'center',}}>
@@ -273,9 +274,11 @@ class League extends ContainerComponent {
                             {
                                 this.state.currentTime !== 0?
                                 (
-                                    <TouchableOpacity onPress={()=>{this.goForwardDay()}} style = {styles.touchButton}>
-                                        <Image source = {require('../resource/icon_22.png')}></Image> 
-                                    </TouchableOpacity>)
+                                    <TouchableWithoutFeedback onPress={()=>{this.goForwardDay()}} style = {styles.touchButton}>
+                                        <View style={{width:60,height:40,justifyContent:"center",alignItems:"center"}}>
+                                             <Image source = {require('../resource/icon_22.png')}></Image> 
+                                        </View>
+                                    </TouchableWithoutFeedback>)
                                 :(<Image source = {require('../resource/icon_26.png')}></Image>)
                             }
                            
@@ -288,17 +291,21 @@ class League extends ContainerComponent {
                             <View style={styles.touchButtonView}>
                                     {
                                         this.state.currentTime !== 6?
-                                        <TouchableOpacity onPress = {()=>{this.goAfterDay()}} style = {styles.touchButton}>
-                                            <Image source = {require('../resource/icon_24.png')}></Image>
-                                        </TouchableOpacity>:<Image source = {require('../resource/icon_34.png')}></Image>
+                                        (<TouchableWithoutFeedback onPress = {()=>{this.goAfterDay()}} style = {styles.touchButton}>
+                                            <View style={{width:60,height:40,justifyContent:"center",alignItems:"center"}}>
+                                                <Image source = {require('../resource/icon_24.png')}></Image>
+                                            </View>
+                                        </TouchableWithoutFeedback>):(<Image source = {require('../resource/icon_34.png')}></Image>)
                                     }
                                 
                             </View>
                     </View>
                     <View style={styles.DataImg}>
-                        <TouchableOpacity onPress={()=>{this.setState({showCalander:!this.state.showCalander})}}>
-                            <Image source = {require('../resource/icon_54.png')} style ={{resizeMode:'stretch',height: 22,width: 22,}}></Image>
-                        </TouchableOpacity>
+                        <TouchableWithoutFeedback onPress={()=>{this.setState({showCalander:!this.state.showCalander})}}>
+                            <View style={{width:60,height:40,justifyContent:"center",alignItems:"center"}}>
+                                <Image source = {require('../resource/icon_54.png')} style ={{resizeMode:'stretch',height: 22,width: 22,}}></Image>
+                            </View>
+                        </TouchableWithoutFeedback>
                     </View>
                 </View>)
 
@@ -393,13 +400,13 @@ const styles = StyleSheet.create({
         paddingVertical:10,
     },
     DataImg: {
-        height: 22,
-        width: 22,
+        height: 40,
+        width: 60,
         justifyContent: 'center',
     },
     touchButton: {
         width:60,
-        height:20,
+        height:40,
         justifyContent: 'center',
         alignItems:'center',
     },

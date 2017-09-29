@@ -575,7 +575,7 @@ class Guess extends ContainerComponent {
                 }
                 {this.state.showGameType ? <View style={styles.forthFive}></View> : null}
                 {this.state.isShowBet ?
-                    <BetPanel removeMatch={this.removeMatch} balance={this.state.balance} betInfo={this.state.betInfo}
+                    <BetPanel isCommon = {false} removeMatch={this.removeMatch} balance={this.state.balance} betInfo={this.state.betInfo}
                               isMix={this.state.isMix}
                               SubmitBet={this.SubmitBet} closeBetPanel={this.closeBetPanel}/> : null}
                 {

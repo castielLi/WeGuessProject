@@ -11,6 +11,7 @@ import {
     Alert,
     ListView,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     Text,
     View,
     ScrollView,
@@ -270,7 +271,7 @@ class Mix extends ContainerComponent {
             <View style={styles.body}>
                 {
                     this.state.listViewData.length>0?(
-                         <ScrollView>
+                         
                             <ListView
                                 initialListSize = {10}
                                 pageSize = {1}
@@ -278,7 +279,7 @@ class Mix extends ContainerComponent {
                                 dataSource={this.state.dataSource}
                                 renderRow={this.renderRow.bind(this)}
                             />
-                        </ScrollView>
+                    
                     ):(<View style={{alignItems:"center",paddingTop:200,borderTopColor:"#ccc",borderTopWidth:1}}><Text>暂无数据</Text></View>)
                 }
                
@@ -324,7 +325,7 @@ class Mix extends ContainerComponent {
         rowID = parseInt(rowID);
         return (
             <View style={styles.listItem} key={rowID}>
-                <TouchableOpacity onPress={() => {
+                <TouchableWithoutFeedback onPress={() => {
                     this.mixChangeShow(rowID)
                 }}>
                     <View style={styles.itemTitle}>
@@ -340,7 +341,7 @@ class Mix extends ContainerComponent {
                         }
 
                     </View>
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
                 {
 
                     rowData.show ?
