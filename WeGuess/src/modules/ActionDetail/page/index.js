@@ -14,7 +14,12 @@ import {
 } from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ContainerComponent from '../../../Core/Component/ContainerComponent';
-import {GetSearchActionUrlByActionIDUrl, GetWinnerListUrl, PostActionBetUrl,WebViewUrl} from '../../Config/apiUrlConfig.js';
+import {
+    GetSearchActionUrlByActionIDUrl,
+    GetWinnerListUrl,
+    PostActionBetUrl,
+    WebViewUrl
+} from '../../Config/apiUrlConfig.js';
 import Detail from './actiondetail';
 import {BackButton, HelpButton} from "../../Component/BackButton";
 import * as Actions from '../../TokenManager/reducer/action';
@@ -131,6 +136,7 @@ class ActionDetail extends ContainerComponent {
             }
         }
     }
+
     //提交请求
     postAnswer() {
         this.showLoading();
@@ -164,7 +170,9 @@ class ActionDetail extends ContainerComponent {
                 this.showError(Result);
             }
 
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             this.hideLoading();
             this.showError(error);
 
@@ -186,7 +194,9 @@ class ActionDetail extends ContainerComponent {
                             submit={this.submit} loadMore={this.loadMore}
                             showAnswerAllQuestionTips={showAnswerAllQuestionTips} addAnswerData={this.addAnswerData}
                             order={order} isChangePageNumber={isChangePageNumber}></Detail>) : (
-                    <View><ActivityIndicator size="large" color="#3a66b3"/></View>)
+                    <View style={styles.ai}>
+                        <ActivityIndicator size="large" color="#3a66b3"/>
+                    </View>)
                 }
                 <WebView ref={(refWebView) => {
                     this.webview = refWebView
@@ -215,7 +225,9 @@ class ActionDetail extends ContainerComponent {
                 })
 
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
 
             this.showError(error)
 
@@ -288,6 +300,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff'
+    },
+    ai: {
+        marginTop: 50,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
 

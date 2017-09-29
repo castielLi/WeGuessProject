@@ -107,7 +107,7 @@ export default class Detail extends Component {
     renderActivityIndicator() {
         const {isHiddenFooter} = this.props;
         return (
-            isHiddenFooter ? null : (<View><ActivityIndicator size="large" color="#3a66b3"/></View>)
+            isHiddenFooter ? null : (<View><ActivityIndicator size="small" color="#3a66b3"/></View>)
         )
     }
 

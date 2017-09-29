@@ -68,11 +68,6 @@ export default class RowItem extends PureComponent {
                 onPress={() => this.onPress(rowData.Type, rowData.ID, rowData.Status, rowData.Code)}>
                 <View style={styles.cell}>
                     {
-                        (rowData.Type !== 1 && rowData.IsWin) ? (
-                            <Image style={styles.winImg} source={require('../resources/win.png')}/>
-                        ) : null
-                    }
-                    {
                         rowData.Pictures[0] ? (
                             <Image style={styles.img} source={{uri: rowData.Pictures[0]}}/>) : (
                             this._renderRowImage(rowData.Type))
@@ -95,6 +90,11 @@ export default class RowItem extends PureComponent {
                         </View>
                     </View>
                     {this._renderOrderImage(rowData.Order)}
+                    {
+                        (rowData.Type !== 1 && rowData.IsWin) ? (
+                            <Image style={styles.winImg} source={require('../resources/win.png')}/>
+                        ) : null
+                    }
                 </View>
             </TouchableWithoutFeedback>
         );
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         right: 60,
-        zIndex: -1
+        zIndex: 99
     },
     titBox: {
         flex: 1,
