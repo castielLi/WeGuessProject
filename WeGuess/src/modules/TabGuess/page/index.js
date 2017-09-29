@@ -432,6 +432,21 @@ class Guess extends ContainerComponent {
             sportId: newBallType,
         })
     }
+    renderFootBallImg = ()=>{
+         return (<Image source={require('../resource/icon_57.png')} style={styles.ballIcon}></Image>);
+    }
+    renderBasketBallImg = ()=>{
+         return (<Image source={require('../resource/icon_75.png')} style={styles.ballIcon}></Image>)
+    }
+    renderGameImg = ()=>{
+         return (<Image source={require('../resource/icon_68.png')} style={styles.ballIcon}></Image>)
+    }
+    renderDownPic = ()=>{
+        return  (<Image source={require('../resource/icon_18.png')} style={styles.downButton}></Image>)
+    }
+    renderUpPic = ()=>{
+        return (<Image source={require('../resource/icon_20.png')} style={styles.downButton}></Image>)
+    }
     //打开APP获取token需要时间，所以选择在获取到token后页面才去请求数据。reducer中loginStore.hasToken变化触发shouldComponentUpdate
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
@@ -478,70 +493,64 @@ class Guess extends ContainerComponent {
                 <View style={styles.top}>
                     <View style={styles.gameContainer}>
                         
-                        
-                            <TouchableWithoutFeedback style={{flex:1,height:40,justifyContent:"center"}} onPress={() => {
+                        <View style={{flex:1,height:40,justifyContent:"center"}}>
+                            <TouchableWithoutFeedback onPress={() => {
                                 this.setState({showGameType: !this.state.showGameType})
                             }}>
                                     <View style={[styles.balance]}>
                                         <View style={styles.buttonImg}>
                                             {
-                                                this.state.sportId == 1 ? (<Image source={require('../resource/icon_57.png')}
-                                                                                style={styles.ballIcon}></Image>) :
-                                                    (this.state.sportId == 2 ? (
-                                                        <Image source={require('../resource/icon_75.png')}
-                                                            style={styles.ballIcon}></Image>) :
-                                                        (<Image source={require('../resource/icon_68.png')}
-                                                                style={styles.ballIcon}></Image>))
+                                                this.state.sportId == 1 ?this.renderFootBallImg():(this.state.sportId == 2 ?this.renderBasketBallImg():this.renderGameImg())
                                             }
                                             {
-                                                !this.state.showGameType ? (<Image source={require('../resource/icon_18.png')}
-                                                                                style={styles.downButton}></Image>) : (
-                                                    <Image source={require('../resource/icon_20.png')}
-                                                        style={styles.downButton}></Image>)
+                                                !this.state.showGameType ?this.renderDownPic():this.renderUpPic()
                                             }
                                         </View>
                                     </View>
                             </TouchableWithoutFeedback>
-                        
-                      
-                         <TouchableOpacity style={{flex:1,height:40,justifyContent:"center"}} onPress={() => {
-                                this.onPress(type.time)
-                            }}>  
-                                <View style={[styles.balance, this.state.type == "1" ? styles.select : styles.noSelect]}>
-                                            
-                                            <Text style={[this.state.type == "1" ? styles.selectColor : styles.noSelectColor]}>按日期</Text>
-                                            
-                                </View>
-                        </TouchableOpacity>
-
-                         <TouchableOpacity style={{flex:1,height:40,justifyContent:"center"}} onPress={() => {
-                                this.onPress(type.league)
-                            }}>  
-                                    <View style={[styles.balance, this.state.type == "2" ? styles.select : styles.noSelect]}>
-                                                
-                                                    <Text style={[this.state.type == "2" ? styles.selectColor : styles.noSelectColor]}>按比赛</Text>
-                                                
-                                    </View>
-                        </TouchableOpacity>
-                            
-                        <TouchableOpacity style={{flex:1,}} onPress={() => {this.onPress(type.live)}}>   
-                                <View style={[styles.balance, this.state.type == "3" ? styles.select : styles.noSelect]}>
-                                            
-                                                    <Text style={[this.state.type == "3" ? styles.selectColor : styles.noSelectColor]}>滚球</Text>
-                                            
-                                </View>
-                        </TouchableOpacity>
-                            
-                        <TouchableOpacity style={{flex:1,}} onPress={() => {
-                                this.onPress(type.mix)
-                            }}>    
-                                <View style={[styles.balance, this.state.type == "4" ? styles.select : styles.noSelect]}>
-                                                
-                                                    <Text style={[this.state.type == "4" ? styles.selectColor : styles.noSelectColor]}>串关</Text>
-                                                
-                                </View>
-                        </TouchableOpacity>
-                            
+                        </View>
+                         <View style={{flex:1,height:40,justifyContent:"center"}}>
+                                <TouchableWithoutFeedback onPress={() => {
+                                        this.onPress(type.time)
+                                    }}>  
+                                        <View style={[styles.balance, this.state.type == "1" ? styles.select : styles.noSelect]}>
+                                                    
+                                                    <Text style={[this.state.type == "1" ? styles.selectColor : styles.noSelectColor]}>按日期</Text>
+                                                    
+                                        </View>
+                                </TouchableWithoutFeedback>
+                        </View>
+                        <View style={{flex:1,height:40,justifyContent:"center"}}> 
+                                <TouchableWithoutFeedback onPress={() => {
+                                        this.onPress(type.league)
+                                    }}>  
+                                            <View style={[this.state.type == "2" ? styles.select : styles.noSelect,styles.balance, ]}>
+                                                        
+                                                            <Text style={[this.state.type == "2" ? styles.selectColor : styles.noSelectColor]}>按联赛</Text>
+                                                        
+                                            </View>
+                                </TouchableWithoutFeedback>
+                        </View>
+                        <View style={{flex:1,height:40,justifyContent:"center"}}>    
+                                <TouchableWithoutFeedback onPress={() => {this.onPress(type.live)}}>   
+                                        <View style={[styles.balance, this.state.type == "3" ? styles.select : styles.noSelect]}>
+                                                    
+                                                            <Text style={[this.state.type == "3" ? styles.selectColor : styles.noSelectColor]}>滚球</Text>
+                                                    
+                                        </View>
+                                </TouchableWithoutFeedback>
+                        </View>
+                        <View style={{flex:1,height:40,justifyContent:"center"}}>    
+                                <TouchableWithoutFeedback onPress={() => {
+                                        this.onPress(type.mix)
+                                    }}>    
+                                        <View style={[styles.balance, this.state.type == "4" ? styles.select : styles.noSelect]}>
+                                                        
+                                                            <Text style={[this.state.type == "4" ? styles.selectColor : styles.noSelectColor]}>串关</Text>
+                                                        
+                                        </View>
+                                </TouchableWithoutFeedback>
+                        </View>    
                       
                     </View>
                 </View>
@@ -646,7 +655,8 @@ const styles = StyleSheet.create({
         resizeMode: 'stretch',
     },
     buttonImg: {
-        width:(Platform.OS === 'ios')?40:50,
+        //width:(Platform.OS === 'ios')?40:50,
+        width:50,
         height:40,
         flexDirection: 'row',
         alignItems: 'center',
