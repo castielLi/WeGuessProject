@@ -48,13 +48,16 @@ import {StatusBar} from "../../Component/BackButton";
 import {bindActionCreators} from "redux";
 import AppUpdate from '../../AppUpdate/page/index';
 import * as Actions from '../reducer/action';
+
 const height = Dimensions.get('window').height;
+const width = Dimensions.get('window').width;
 const type = { //头部tab切换 按时间 按联赛 滚球 串关
-            time: 1,
-            league: 2,
-            live: 3,
-            mix: 4,
+    time: 1,
+    league: 2,
+    live: 3,
+    mix: 4,
 }
+
 class Guess extends ContainerComponent {
 
     static navigationOptions = ({navigation}) => {
@@ -80,15 +83,15 @@ class Guess extends ContainerComponent {
             errorMsg: "",
             hideBetMsg: false,
             betlist: [],
-            removeIndex:"",
+            removeIndex: "",
         }
-        this.tabList = ["按日期", "按联赛","滚球","串关"];
+        this.tabList = ["按日期", "按联赛", "滚球", "串关"];
         this.getBalance = this.getBalance.bind(this);
     }
 
-    onPress = (statusId)=>{
+    onPress = (statusId) => {
         this.setState({
-            type: statusId-0+1
+            type: statusId - 0 + 1
         });
     }
 
@@ -142,22 +145,23 @@ class Guess extends ContainerComponent {
 
         })
     }
-        //移除比赛
-    removeMatch=(indexMatchid)=>{
+
+    //移除比赛
+    removeMatch = (indexMatchid) => {
         let index = indexMatchid.split("-")[0];
         let {betInfo} = this.state;
         let {TicketList} = this.state.betInfo;
-        TicketList.splice(index,1);
+        TicketList.splice(index, 1);
         betInfo.TicketList = TicketList;
         this.setState({
-            removeIndex:indexMatchid,
-            betInfo:betInfo,
+            removeIndex: indexMatchid,
+            betInfo: betInfo,
 
         })
-         if(TicketList.length<=1){
+        if (TicketList.length <= 1) {
             this.setState({
-                isShowBet:false,
-                hideBetMsg:false,
+                isShowBet: false,
+                hideBetMsg: false,
             })
         }
     }
@@ -290,7 +294,7 @@ class Guess extends ContainerComponent {
                 let {BetID, SubBets, BetValue, BackAmount} = data.Data;
                 if (data.BetResult === 0) {
                     this.props.getMemberInfo();
-                    this.showAlert("投注成功", (<View style={{maxHeight:300,}}><ScrollView>{
+                    this.showAlert("投注成功", (<View style={{maxHeight: 300,}}><ScrollView>{
                         SubBets.map((match, index) => {
                             return (
                                 <View style={styles.detail} key={index}>
@@ -304,7 +308,8 @@ class Guess extends ContainerComponent {
 
                                         </View>
                                         <View style={styles.getBean}>
-                                            <Text>预计返还:</Text><Text style={{color: "#ff5b06"}}>{Math.round(BackAmount)}</Text>
+                                            <Text>预计返还:</Text><Text
+                                            style={{color: "#ff5b06"}}>{Math.round(BackAmount)}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -341,7 +346,7 @@ class Guess extends ContainerComponent {
                 this.hideLoading();
                 that.setState.selectBetitem = "";
                 let data = responseData;
-                
+
 
                 //投注成功
                 if (data.BetResult === 0) {
@@ -439,21 +444,7 @@ class Guess extends ContainerComponent {
             sportId: newBallType,
         })
     }
-    renderFootBallImg = ()=>{
-         return (<Image source={require('../resource/icon_57.png')} style={styles.ballIcon}></Image>);
-    }
-    renderBasketBallImg = ()=>{
-         return (<Image source={require('../resource/icon_75.png')} style={styles.ballIcon}></Image>)
-    }
-    renderGameImg = ()=>{
-         return (<Image source={require('../resource/icon_68.png')} style={styles.ballIcon}></Image>)
-    }
-    renderDownPic = ()=>{
-        return  (<Image source={require('../resource/icon_18.png')} style={styles.downButton}></Image>)
-    }
-    renderUpPic = ()=>{
-        return (<Image source={require('../resource/icon_20.png')} style={styles.downButton}></Image>)
-    }
+
     //打开APP获取token需要时间，所以选择在获取到token后页面才去请求数据。reducer中loginStore.hasToken变化触发shouldComponentUpdate
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
@@ -470,13 +461,67 @@ class Guess extends ContainerComponent {
         if (this.props.loginStore.hasToken) {
             this.getBalance();
         }
-		
-		//1.判断是否已经做导航判断
-		//2.根据版本判断是否初始化
-		//3.已初始化，splash.hide()
-		//4.未初始化，路由跳转，在导航页splash.hide();
-		//5.导航页Android返回监听
-		
+
+        //1.判断是否已经做导航判断
+        //2.根据版本判断是否初始化
+        //3.已初始化，splash.hide()
+        //4.未初始化，路由跳转，在导航页splash.hide();
+        //5.导航页Android返回监听
+
+    }
+
+    renderGameType = () => {
+        if (this.state.sportId == 1) {
+            if (this.state.showGameType) {
+                return (
+                    <View style={styles.buttonImg}>
+                        <Text>
+                            <Image source={require('../resource/icon_57.png')} style={styles.ballIcon}></Image>
+                            <Image source={require('../resource/icon_20.png')} style={styles.downButton}></Image>
+                        </Text>
+                    </View>
+                );
+            } else {
+                return (
+                    <View style={styles.buttonImg}>
+                        <Image source={require('../resource/icon_57.png')} style={styles.ballIcon}></Image>
+                        <Image source={require('../resource/icon_18.png')} style={styles.downButton}></Image>
+                    </View>
+                );
+            }
+        } else if (this.state.sportId == 2) {
+            if (this.state.showGameType) {
+                return (
+                    <View style={styles.buttonImg}>
+                        <Image source={require('../resource/icon_75.png')} style={styles.ballIcon}></Image>
+                        <Image source={require('../resource/icon_20.png')} style={styles.downButton}></Image>
+                    </View>
+                );
+            } else {
+                return (
+                    <View style={styles.buttonImg}>
+                        <Image source={require('../resource/icon_75.png')} style={styles.ballIcon}></Image>
+                        <Image source={require('../resource/icon_18.png')} style={styles.downButton}></Image>
+                    </View>
+                );
+            }
+        } else {
+            if (this.state.showGameType) {
+                return (
+                    <View style={styles.buttonImg}>
+                        <Image source={require('../resource/icon_68.png')} style={styles.ballIcon}></Image>
+                        <Image source={require('../resource/icon_20.png')} style={styles.downButton}></Image>
+                    </View>
+                );
+            } else {
+                return (
+                    <View style={styles.buttonImg}>
+                        <Image source={require('../resource/icon_68.png')} style={styles.ballIcon}></Image>
+                        <Image source={require('../resource/icon_18.png')} style={styles.downButton}></Image>
+                    </View>
+                );
+            }
+        }
     }
 
 
@@ -491,73 +536,19 @@ class Guess extends ContainerComponent {
                     <Headers navigation={this.props.navigation} balance={this.state.balance} goRank={this.goRank}
                              goBetList={this.goBetList}></Headers>
                 </View>
-                <View style={styles.top}>
-                    <View style={styles.gameContainer}>
-                        
-                        <View style={{flex:1,height:42,justifyContent:"center"}}>
-                            <TouchableWithoutFeedback onPress={() => {
-                                this.setState({showGameType: !this.state.showGameType})
-                            }}>
-                                    <View style={[styles.balance]}>
-                                        <View style={styles.buttonImg}>
-                                            {
-                                                this.state.sportId == 1 ?this.renderFootBallImg():(this.state.sportId == 2 ?this.renderBasketBallImg():this.renderGameImg())
-                                            }
-                                            {
-                                                !this.state.showGameType ?this.renderDownPic():this.renderUpPic()
-                                            }
-                                        </View>
-                                    </View>
-                            </TouchableWithoutFeedback>
-                        </View>
-                        <View style={{flex:4}}>
-                            <TabView tabList={this.tabList} styleFather={{height:40,borderBottomWidth: 0}} styleChild={{height:40}} onPress={this.onPress}></TabView>
-                        </View>
-                        
-                         {/*<View style={{flex:1,height:40,justifyContent:"center"}}>
-                                <TouchableWithoutFeedback onPress={() => {
-                                        this.onPress(type.time)
-                                    }}>  
-                                        <View style={[styles.balance, this.state.type == "1" ? styles.select : styles.noSelect]}>
-                                                    
-                                                    <Text style={[this.state.type == "1" ? styles.selectColor : styles.noSelectColor]}>按日期</Text>
-                                                    
-                                        </View>
-                                </TouchableWithoutFeedback>
-                        </View>
-                        <View style={{flex:1,height:40,justifyContent:"center"}}> 
-                                <TouchableWithoutFeedback onPress={() => {
-                                        this.onPress(type.league)
-                                    }}>  
-                                            <View style={[styles.balance, this.state.type == "2" ? styles.select : styles.noSelect]}>
-                                                        
-                                                            <Text style={[this.state.type == "2" ? styles.selectColor : styles.noSelectColor]}>按联赛</Text>
-                                                        
-                                            </View>
-                                </TouchableWithoutFeedback>
-                        </View>
-                        <View style={{flex:1,height:40,justifyContent:"center"}}>    
-                                <TouchableWithoutFeedback onPress={() => {this.onPress(type.live)}}>   
-                                        <View style={[styles.balance, this.state.type == "3" ? styles.select : styles.noSelect]}>
-                                                    
-                                                            <Text style={[this.state.type == "3" ? styles.selectColor : styles.noSelectColor]}>滚球</Text>
-                                                    
-                                        </View>
-                                </TouchableWithoutFeedback>
-                        </View>
-                        <View style={{flex:1,height:40,justifyContent:"center"}}>    
-                                <TouchableWithoutFeedback onPress={() => {
-                                        this.onPress(type.mix)
-                                    }}>    
-                                        <View style={[styles.balance, this.state.type == "4" ? styles.select : styles.noSelect]}>
-                                                        
-                                                            <Text style={[this.state.type == "4" ? styles.selectColor : styles.noSelectColor]}>串关</Text>
-                                                        
-                                        </View>
-                                </TouchableWithoutFeedback>
-                        </View>    */}
-                      
+                <View style={styles.gameContainer}>
+                    <View style={{width: width * 0.2, height: 42, justifyContent: "center"}}>
+                        <TouchableWithoutFeedback onPress={() => {
+                            this.setState({showGameType: !this.state.showGameType})
+                        }}>
+                            {
+                                (this.renderGameType())
+                            }
+                        </TouchableWithoutFeedback>
                     </View>
+
+                    <TabView tabList={this.tabList} styleFather={{height: 40, borderBottomWidth: 0, width: width * 0.8}}
+                             styleChild={{height: 40}} onPress={this.onPress}></TabView>
                 </View>
                 <View style={styles.content}>
                     {
@@ -568,7 +559,8 @@ class Guess extends ContainerComponent {
                                        navigation={this.props.navigation}></MatchItem>) : this.state.type == 3 ? (
                             <Live sportId={this.state.sportId} initBet={this.initBet}
                                   navigation={this.props.navigation}></Live>) : (
-                            <Mix removeIndex={this.state.removeIndex} sportId={this.state.sportId} hideBetMsg={this.state.hideBetMsg}
+                            <Mix removeIndex={this.state.removeIndex} sportId={this.state.sportId}
+                                 hideBetMsg={this.state.hideBetMsg}
                                  balance={this.state.balance} initBet={this.initBet}></Mix>)
                     }
 
@@ -583,7 +575,8 @@ class Guess extends ContainerComponent {
                 }
                 {this.state.showGameType ? <View style={styles.forthFive}></View> : null}
                 {this.state.isShowBet ?
-                    <BetPanel removeMatch={this.removeMatch} balance={this.state.balance} betInfo={this.state.betInfo} isMix={this.state.isMix}
+                    <BetPanel removeMatch={this.removeMatch} balance={this.state.balance} betInfo={this.state.betInfo}
+                              isMix={this.state.isMix}
                               SubmitBet={this.SubmitBet} closeBetPanel={this.closeBetPanel}/> : null}
                 {
                     this.state.isBetSuccess ?
@@ -663,19 +656,19 @@ const styles = StyleSheet.create({
         resizeMode: 'stretch',
     },
     buttonImg: {
-        width:(Platform.OS === 'ios')?40:50,
-        height:40,
+        flex: 1,
+        height: 40,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
     forthFive: {
-        left: 0.1 * Screen.ScreenWidth-6,
+        left: 0.1 * Screen.ScreenWidth - 6,
         height: 14,
         width: 14,
         backgroundColor: '#fff',
         position: 'absolute',
-        top:Platform.OS=='ios'?94:74,
+        top: Platform.OS == 'ios' ? 94 : 74,
         transform: [{
             rotateZ: '45deg'
         }],
@@ -732,7 +725,7 @@ const styles = StyleSheet.create({
         height: 30,
         alignItems: "center",
     },
-    content:{
-        height:height-120
+    content: {
+        height: height - 120
     }
 });
