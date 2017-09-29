@@ -9,6 +9,7 @@ import {
     View,
     Image,
     TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -35,18 +36,18 @@ export default class Header extends Component {
                     }
                 </View>
                 <View style={styles.moreView}>
-                    <TouchableOpacity onPress={() => help()}>
+                    <TouchableWithoutFeedback onPress={() => help()}>
                         <View style={styles.viewForText}>
                         <Image source={require('../../Resources/help.png')}
                                style={styles.helpIcon}/>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => more()} style={{flexDirection: 'row'}}>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => more()} style={{flexDirection: 'row'}}>
                         <View style={styles.viewForText}>
                             <Text style={styles.more}>更多</Text>
                             <Icon name="ios-arrow-forward" color="#828282" size={24}/>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableWithoutFeedback>
                 </View>
             </View>
         )

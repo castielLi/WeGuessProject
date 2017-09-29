@@ -10,6 +10,7 @@ import {
     Image,
     Text,
     TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native';
 
 export default class MyButton extends Component {
@@ -30,13 +31,15 @@ export default class MyButton extends Component {
         const props = this.props;
 
         return (
-            <TouchableOpacity {...props} activeOpacity={0.8} style={[styles.lookBtn, props.style]}>
-                {props.btnImage ?
-                    <Image source={props.btnImageUri} style={props.btnImageStyle}/> :
-                    null
-                }
-                <Text style={styles.textStyle}>&nbsp;{props.btnText}&nbsp;</Text>
-            </TouchableOpacity>
+            <TouchableWithoutFeedback {...props} activeOpacity={0.8}>
+	            <View style={[styles.lookBtn, props.style]}>
+	                {props.btnImage ?
+	                    <Image source={props.btnImageUri} style={props.btnImageStyle}/> :
+	                    null
+	                }
+	                <Text style={styles.textStyle}>&nbsp;{props.btnText}&nbsp;</Text>
+	            </View>               
+            </TouchableWithoutFeedback>
         );
     }
 }
