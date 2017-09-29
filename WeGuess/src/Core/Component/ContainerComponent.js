@@ -31,8 +31,7 @@ export default class ContainerComponent extends Component {
             };
         }
         if (this.alert) {
-            let that = this;
-            that.alert.show(title, content, ok, cancel, okText, cancelText, okColor, callback);
+            this.alert.show(title, content, ok, cancel, okText, cancelText, okColor, callback);
         }
     }
 
@@ -43,8 +42,7 @@ export default class ContainerComponent extends Component {
             };
         }
         if (this.alert) {
-            let that = this;
-            that.alert.show("提示", errorMsg, ok, null, null, null, null, callback);
+            this.alert.show("提示", errorMsg, ok, null, null, null, null, callback);
         }
 
     }
@@ -66,8 +64,7 @@ export default class ContainerComponent extends Component {
             };
         }
         if (this.alert) {
-            let that = this;
-            that.alert.show("提示", TipMsg["NoLogin"], ok, () => {
+            this.alert.show("提示", TipMsg["NoLogin"], ok, () => {
             }, null, null, null, callback);
         }
 
@@ -79,8 +76,7 @@ export default class ContainerComponent extends Component {
             };
         }
         if (this.alert) {
-            let that = this;
-            that.alert.show("提示", TipMsg["Logout"], ok, () => {
+            this.alert.show("提示", TipMsg["Logout"], ok, () => {
             }, null, null, null, callback);
         }
     }

@@ -35,16 +35,14 @@ export default class DisplayComponent extends Component {
 
     showAlert(title, content, ok, cancel, okText = "确定", cancelText = "取消", okColor, callback) {
         if (this.alert) {
-            let that = this;
-            that.alert.show(title, content, ok, cancel, okText, cancelText, okColor, callback);
+            this.alert.show(title, content, ok, cancel, okText, cancelText, okColor, callback);
         }
     }
 
     showError(errorCode, ok, callback) {
         let errorMsg = this.getErrorMsg(errorCode);
         if (this.alert) {
-            let that = this;
-            that.alert.show("提示", errorMsg, ok, null, null, null, null, callback);
+            this.alert.show("提示", errorMsg, ok, null, null, null, null, callback);
         }
 
     }
