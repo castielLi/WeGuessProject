@@ -3,7 +3,7 @@
  */
 
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import NetWorking from '../WGNetworking/Network';
 import StorageHelper from '../StorageHelper';
@@ -11,7 +11,7 @@ import Loading from './Popup/loading';
 import style from '../StyleSheet/style';
 import AlertModal from './Popup/alert';
 import WebViewModal from './Popup/webview';
-import {ErrorCode,TipMsg} from './Error';
+import {ErrorCode, TipMsg} from './Error';
 
 export default class ContainerComponent extends Component {
 
@@ -25,27 +25,31 @@ export default class ContainerComponent extends Component {
         this.storageHelper = new StorageHelper();
     }
 
-    showAlert(title, content, ok, cancel, okText = "确定", cancelText = "取消",okColor,callback){
-        if(!ok&&ok!==false){
-            ok=()=>{};
+    showAlert(title, content, ok, cancel, okText = "确定", cancelText = "取消", okColor, callback) {
+        if (!ok && ok !== false) {
+            ok = () => {
+            };
         }
-        if(this.alert){
-            this.alert.show(title, content, ok, cancel, okText, cancelText,okColor,callback);
-        }    
+        if (this.alert) {
+            let that = this;
+            that.alert.show(title, content, ok, cancel, okText, cancelText, okColor, callback);
+        }
     }
 
-    showError(errorCode,ok,callback){
+    showError(errorCode, ok, callback) {
         let errorMsg = this.getErrorMsg(errorCode);
-        if(!ok){
-            ok=()=>{};
+        if (!ok) {
+            ok = () => {
+            };
         }
-        if(this.alert){
-            this.alert.show("提示", errorMsg, ok,null,null,null,null,callback);
+        if (this.alert) {
+            let that = this;
+            that.alert.show("提示", errorMsg, ok, null, null, null, null, callback);
         }
-        
+
     }
 
-    getErrorMsg(errorCode){
+    getErrorMsg(errorCode) {
         let errorMsg = ErrorCode["0"];
         if (typeof errorCode == "string" || typeof errorCode == "number") {
             errorMsg = ErrorCode[errorCode];
@@ -56,42 +60,49 @@ export default class ContainerComponent extends Component {
         return errorMsg;
     }
 
-    showLogin(ok,callback){
-        if(!ok){
-            ok=()=>{};
+    showLogin(ok, callback) {
+        if (!ok) {
+            ok = () => {
+            };
         }
-        if(this.alert){
-            this.alert.show("提示", TipMsg["NoLogin"], ok , ()=>{},null,null,null,callback);
+        if (this.alert) {
+            let that = this;
+            that.alert.show("提示", TipMsg["NoLogin"], ok, () => {
+            }, null, null, null, callback);
         }
-        
-    }
-    showLogout(ok,callback){
-        if(!ok){
-            ok=()=>{};
-        }
-        if(this.alert){
-            this.alert.show("提示", TipMsg["Logout"], ok , ()=>{},null,null,null,callback);
-         }
+
     }
 
-    showLoading(callback){
-        if(this.loading){
+    showLogout(ok, callback) {
+        if (!ok) {
+            ok = () => {
+            };
+        }
+        if (this.alert) {
+            let that = this;
+            that.alert.show("提示", TipMsg["Logout"], ok, () => {
+            }, null, null, null, callback);
+        }
+    }
+
+    showLoading(callback) {
+        if (this.loading) {
             this.loading.show(callback);
         }
-        
+
     }
 
-    showWebView(url,title){
-        if(this.webview){
-            this.webview.show(url,title);
+    showWebView(url, title) {
+        if (this.webview) {
+            this.webview.show(url, title);
         }
-        
+
     }
 
-    hideLoading(callback){
-        if(this.loading){
-           this.loading.hide(callback);  
+    hideLoading(callback) {
+        if (this.loading) {
+            this.loading.hide(callback);
         }
-       
+
     }
 }

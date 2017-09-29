@@ -7,8 +7,10 @@ import {
     StyleSheet,
     View,
     Image,
-    Modal
+    Modal,
+    InteractionManager
 } from 'react-native';
+
 var Dimensions = require('Dimensions');
 var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
@@ -27,8 +29,8 @@ export default class Loading extends Component {
     show(callback) {
         this.setState({
             modalVisible: true,
-        },()=>{
-            if(typeof callback==="function"){
+        }, () => {
+            if (typeof callback === "function") {
                 callback()
             }
         });
@@ -37,9 +39,9 @@ export default class Loading extends Component {
     hide(callback) {
         this.setState({
             modalVisible: false,
-        },()=>{
-            if(typeof callback==="function"){
-                callback()
+        }, () => {
+            if (typeof callback === "function") {
+                callback();
             }
         });
     };
@@ -50,7 +52,7 @@ export default class Loading extends Component {
             return (
                 <View>
                     <Modal
-                        animationType={"fade"}
+                        animationType={"none"}
                         transparent={true}
                         visible={this.state.modalVisible}
                         onRequestClose={() => {
@@ -64,7 +66,7 @@ export default class Loading extends Component {
                     </Modal>
                 </View>
             );
-        }else{
+        } else {
             return <View style={styles.hidden}/>;
         }
     }
@@ -83,11 +85,11 @@ const styles = StyleSheet.create({
         width: 128,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor:"#e5e5e5",
-        borderWidth:1,
+        borderColor: "#e5e5e5",
+        borderWidth: 1,
         borderRadius: 16,
     },
-    image:{
+    image: {
         height: 80,
         width: 80,
     },

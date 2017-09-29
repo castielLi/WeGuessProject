@@ -39,6 +39,7 @@ import TabView from '../../Component/TabView';
 import {numFormat} from '../../Utils/money';
 import PayType from './enum';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 var width = Dimensions.get('window').width;
 var cellWidth = (width - 10 * 4) / 3;  //单个框的宽度
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -160,7 +161,7 @@ class VoucherCenter extends ContainerComponent {
     renderRow(data, selectID, rowID) {
         if (this.state.getDiamonds) {
             return (
-                <View >
+                <View>
                     <TouchableWithoutFeedback ID={data.ID} onPress={() => this.buyDiamond(data)}>
                         <View style={styles.listBtn}>
                             <Image source={require('../resources/diamonds.png')} style={styles.listImg}/>
@@ -175,7 +176,7 @@ class VoucherCenter extends ContainerComponent {
         }
         if (this.state.getPropList) {
             return (
-                <View >
+                <View>
                     <TouchableWithoutFeedback ID={data.PropID} onPress={() => this.buyProp(data)}>
                         <View style={styles.listBtn}>
                             <Image source={{uri: data.PictureURL}} style={styles.listImg}/>
@@ -195,7 +196,7 @@ class VoucherCenter extends ContainerComponent {
         }
         if (this.state.getAwardList) {
             return (
-                <View >
+                <View>
                     <TouchableWithoutFeedback ID={data.AwardID} onPress={() => this.isBindingPhone(data)}>
                         <View style={styles.listBtn}>
                             <Image source={{uri: data.PictureURL}} style={styles.listImg}/>
@@ -215,36 +216,36 @@ class VoucherCenter extends ContainerComponent {
     //支付
     Pay = (token, money, bean) => {
         let that = this
-        that.showAlert(
-            (<View style={[styles.alertTitle]}>
-                <Text style={{textAlign: 'left'}}>支付方式</Text>
-                <TouchableWithoutFeedback onPress={() => {
-                    that.alert.Ok()
-                }}>
-                    <View style={[styles.titleCancel]}>
-                        <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>),
-            (
-                <View style={[styles.alertContent]}>
-                    <View style={[styles.alertMoney]}>
-                        <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
-                        <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
-                    </View>
-                    <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                        that.WFTPay(0, token)
+            that.showAlert(
+                (<View style={[styles.alertTitle]}>
+                    <Text style={{textAlign: 'left'}}>支付方式</Text>
+                    <TouchableWithoutFeedback onPress={() => {
+                        that.alert.Ok()
                     }}>
-                        <View style={[styles.payType]}>
-                            <View style={[styles.payItem]}>
-                                <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
-                                <Text style={[styles.customFont]}>支付宝支付</Text>
-                            </View>
-                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                        <View style={[styles.titleCancel]}>
+                            <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
                         </View>
                     </TouchableWithoutFeedback>
-                </View>), false, null
-        )
+                </View>),
+                (
+                    <View style={[styles.alertContent]}>
+                        <View style={[styles.alertMoney]}>
+                            <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
+                            <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
+                        </View>
+                        <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
+                            that.WFTPay(0, token)
+                        }}>
+                            <View style={[styles.payType]}>
+                                <View style={[styles.payItem]}>
+                                    <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
+                                    <Text style={[styles.customFont]}>支付宝支付</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>), false, null
+            )
     }
 
     WFTPay = (type, token) => {
@@ -591,6 +592,7 @@ class VoucherCenter extends ContainerComponent {
     }
 
 }
+
 const styles = StyleSheet.create({
     topUl: {
         height: 45,
