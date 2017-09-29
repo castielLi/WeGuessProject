@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
     headerTitleText: {
         color: 'white',
         fontSize: 18,
-        fontFamily: 'Ionicons,"Helvetica Neue",Roboto,"Segoe UI",sans-serif',
     },
     headerButton: {
         position: 'absolute',
