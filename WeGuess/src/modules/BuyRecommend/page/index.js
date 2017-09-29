@@ -65,66 +65,69 @@ class BuyRecommend extends ContainerComponent {
         if (isLoading || (!isRefresh && noMorData)) {
             return;
         }
+        let that = this;
         try {
-            this.setState({
+            that.setState({
                 isLoading: true
-            })
-            let index = 1;
-            if (isRefresh) {
-                this.setState({
-                    noMorData: false
-                })
-            } else {
-                index = pageIndex + 1;
-            }
-            let params = {
-                PageIndex: index,
-                PageSize: pageSize
-            }
-            let that = this;
-            this.networking.get(GetBuyBetRecordUrl, params, {}).then((responense) => {
-                let {Result, Data} = responense;
-                if (Result == 1) {
-                    let rowsData = Data ? Data : [];
-                    if (isRefresh) {
-                        that.dataRecord = [];
-                    }
-                    that.dataRecord = that.dataRecord.concat(rowsData);
-
-                    let length = rowsData.length;
-                    if (length < pageSize) {
-                        this.setState({
-                            noMorData: true,
+            }, () => {
+                let index = 1;
+                if (isRefresh) {
+                    that.setState({
+                        noMorData: false,
+                        PageIndex: index
+                    })
+                } else {
+                    index = pageIndex + 1;
+                }
+                let params = {
+                    PageIndex: index,
+                    PageSize: pageSize
+                }
+                that.networking.get(GetBuyBetRecordUrl, params, {}).then((responense) => {
+                    let {Result, Data} = responense;
+                    if (Result == 1) {
+                        let rowsData = Data ? Data : [];
+                        if (isRefresh) {
+                            that.dataRecord = [];
+                        }
+                        that.dataRecord = that.dataRecord.concat(rowsData);
+                        that.setState({
+                            noMorData: rowsData.length < pageSize,
+                            PageIndex: index,
                             dataSource: that.state.dataSource.cloneWithRows(that.dataRecord),
+                            isLoading: false
+                        }, () => {
+                            if (typeof resolve == "function") {
+                                resolve();
+                            }
                         })
                     } else {
-                        this.setState({
-                            dataSource: that.state.dataSource.cloneWithRows(that.dataRecord),
-                            PageIndex: index
-                        })
+                        that.setState({isLoading: false}, () => {
+                            if (typeof resolve == "function") {
+                                resolve();
+                            }
+                            that.showError(Result);
+                        });
                     }
-                } else {
-                    that.showError(Result);
-                }
-                that.setState({isLoading: false});
-                if (typeof resolve == "function") {
-                    resolve();
-                }
-            }, (error) => {
-
-                this.setState({isLoading: false})
-                this.showError(error);
-                if (typeof resolve == "function") {
-                    resolve();
-                }
-            }).catch((error) => {
-
-                this.setState({isLoading: false})
-                this.showError(error);
-                if (typeof resolve == "function") {
-                    resolve();
-                }
+                }, (error) => {
+                    that.setState({isLoading: false}, () => {
+                        that.showError(error, null, () => {
+                            if (typeof resolve == "function") {
+                                resolve();
+                            }
+                        });
+                    })
+                }).catch((error) => {
+                    that.setState({isLoading: false}, () => {
+                        that.showError(error, null, () => {
+                            if (typeof resolve == "function") {
+                                resolve();
+                            }
+                        });
+                    })
+                })
             })
+
         }
         catch (error) {
 
@@ -150,7 +153,7 @@ class BuyRecommend extends ContainerComponent {
             }, () => {
                 let index = 1;
                 if (isRefresh) {
-                    that.setState({noMorDataAnalysis: false})
+                    that.setState({noMorDataAnalysis: false, PageIndexAnalysis: index})
                 } else {
                     index = pageIndexAnalysis + 1;
                 }
@@ -163,17 +166,15 @@ class BuyRecommend extends ContainerComponent {
                     if (Result == 1) {
                         let rowsData = Data ? Data : [];
                         let length = rowsData.length;
-                        if (length < pageSizeAnalysis) {
-                            that.setState({noMorDataAnalysis: true})
-                        } else {
-                            that.setState({PageIndexAnalysis: index})
-                        }
-
                         for (var i = 0; i < length; i++) {
                             rowsData[i].show = false;
                         }
                         if (isRefresh) {
-                            that.setState({dataAnalysis: [].concat(rowsData)}, () => {
+                            that.setState({
+                                dataAnalysis: [].concat(rowsData),
+                                PageIndexAnalysis: index,
+                                noMorDataAnalysis: length < pageSizeAnalysis
+                            }, () => {
                                 that.setState({isLoadingAnalysis: false}, () => {
                                     if (typeof resolve == "function") {
                                         resolve();
@@ -181,7 +182,11 @@ class BuyRecommend extends ContainerComponent {
                                 })
                             });
                         } else {
-                            that.setState({dataAnalysis: that.state.dataAnalysis.concat(rowsData)}, () => {
+                            that.setState({
+                                dataAnalysis: that.state.dataAnalysis.concat(rowsData),
+                                PageIndexAnalysis: index,
+                                noMorDataAnalysis: length < pageSizeAnalysis
+                            }, () => {
                                 that.setState({isLoadingAnalysis: false}, () => {
                                     if (typeof resolve == "function") {
                                         resolve();
@@ -259,24 +264,30 @@ class BuyRecommend extends ContainerComponent {
         this.setState({dataAnalysis: dataAnalysis});
     }
 
+    //列表数据显示
+    content=()=> {
+        if (this.state.type == 0) {
+            return (
+                <BoughtAnalysisList getBuyAnalysis={this.getBuyAnalysis}
+                                    dataSource={this.state.dataSourceAnalysis}
+                                    data={this.state.dataAnalysis}
+                                    analysisIsShow={this.analysisIsShow}/>
+            )
+        } else {
+            return (
+                <BuyBetRecordList navigate={this.props.navigation.navigate}
+                                  getBuyBetRecord={this.getBuyBetRecord} dataSource={this.state.dataSource}
+                                  data={this.dataRecord}/>
+            )
+        }
+    }
+
     render() {
         let Alert = this.Alert;
         return (
             <View style={{flex: 1}}>
                 <TabView tabList={this.tabList} onPress={this.changeType}></TabView>
-                <View style={{height: 1}}>
-
-                </View>
-                {
-                    this.state.type == 0 ?
-                        (<BoughtAnalysisList getBuyAnalysis={this.getBuyAnalysis}
-                                             dataSource={this.state.dataSourceAnalysis}
-                                             data={this.state.dataAnalysis}
-                                             analysisIsShow={this.analysisIsShow}/> ) :
-                        (<BuyBetRecordList navigate={this.props.navigation.navigate}
-                                           getBuyBetRecord={this.getBuyBetRecord} dataSource={this.state.dataSource}
-                                           data={this.dataRecord}/> )
-                }
+                {this.content()}
                 <Alert ref={(refAlert) => {
                     this.alert = refAlert
                 }}></Alert>

@@ -30,10 +30,11 @@ import {
     PublishBet,
     GetBet,
     Bet
-} from '../../Config/apiUrlConfig'
-import config from '../../Utils/sportConfig'
-import HandleData from '../../Utils/sportHandle'
-import Screen from '../method/index'
+} from '../../Config/apiUrlConfig';
+import config from '../../Utils/sportConfig';
+import HandleData from '../../Utils/sportHandle';
+import Screen from '../method/index';
+import TabView from '../../Component/TabView';
 import Headers from '../component/header'
 import TimeItem from '../component/timeitem';
 import MatchItem from '../component/matchitem';
@@ -48,7 +49,12 @@ import {bindActionCreators} from "redux";
 import AppUpdate from '../../AppUpdate/page/index';
 import * as Actions from '../reducer/action';
 const height = Dimensions.get('window').height;
-
+const type = { //头部tab切换 按时间 按联赛 滚球 串关
+            time: 1,
+            league: 2,
+            live: 3,
+            mix: 4,
+}
 class Guess extends ContainerComponent {
 
     static navigationOptions = ({navigation}) => {
@@ -76,12 +82,13 @@ class Guess extends ContainerComponent {
             betlist: [],
             removeIndex:"",
         }
+        this.tabList = ["按日期", "按联赛","滚球","串关"];
         this.getBalance = this.getBalance.bind(this);
     }
 
-    onPress(statusId) {
+    onPress = (statusId)=>{
         this.setState({
-            type: statusId
+            type: statusId-0+1
         });
     }
 
@@ -476,12 +483,6 @@ class Guess extends ContainerComponent {
     render() {
         let Alert = this.Alert;
         let Loading = this.Loading;
-        const type = { //头部tab切换 按时间 按联赛 滚球 串关
-            time: '1',
-            league: '2',
-            live: '3',
-            mix: '4',
-        }
         return (
             <View style={styles.container}>
                 <AppUpdate/>
@@ -493,7 +494,7 @@ class Guess extends ContainerComponent {
                 <View style={styles.top}>
                     <View style={styles.gameContainer}>
                         
-                        <View style={{flex:1,height:40,justifyContent:"center"}}>
+                        <View style={{flex:1,height:42,justifyContent:"center"}}>
                             <TouchableWithoutFeedback onPress={() => {
                                 this.setState({showGameType: !this.state.showGameType})
                             }}>
@@ -509,7 +510,11 @@ class Guess extends ContainerComponent {
                                     </View>
                             </TouchableWithoutFeedback>
                         </View>
-                         <View style={{flex:1,height:40,justifyContent:"center"}}>
+                        <View style={{flex:4}}>
+                            <TabView tabList={this.tabList} styleFather={{height:40,borderBottomWidth: 0}} styleChild={{height:40}} onPress={this.onPress}></TabView>
+                        </View>
+                        
+                         {/*<View style={{flex:1,height:40,justifyContent:"center"}}>
                                 <TouchableWithoutFeedback onPress={() => {
                                         this.onPress(type.time)
                                     }}>  
@@ -550,7 +555,7 @@ class Guess extends ContainerComponent {
                                                         
                                         </View>
                                 </TouchableWithoutFeedback>
-                        </View>    
+                        </View>    */}
                       
                     </View>
                 </View>
@@ -642,8 +647,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 38,
-        borderBottomWidth: 2,
+        height: 40,
         // paddingLeft:10,
         // paddingRight:10,
     },
@@ -659,8 +663,7 @@ const styles = StyleSheet.create({
         resizeMode: 'stretch',
     },
     buttonImg: {
-        //width:(Platform.OS === 'ios')?40:50,
-        width:50,
+        width:(Platform.OS === 'ios')?40:50,
         height:40,
         flexDirection: 'row',
         alignItems: 'center',
@@ -682,6 +685,7 @@ const styles = StyleSheet.create({
     },
     select: {
         borderBottomColor: "#3a67b3",
+        borderBottomWidth: 2,
     },
     selectColor: {
         color: "#3a67b3"

@@ -64,7 +64,6 @@ class BoughtAnalysisList extends DisplayComponent {
     renderRow = (rowData, sectionId, rowId) => {
         let index = parseInt(rowId);
         const {GuessMatch, EndTimeStr} = rowData;
-        let {analysisShow} = this.state;
         let GuessMatchList = JSON.parse(GuessMatch);
         if (GuessMatchList.length == 1) {
             let itemData = GuessMatchList[0];
@@ -123,8 +122,13 @@ class BoughtAnalysisList extends DisplayComponent {
 
 
     }
+    renderFooter=()=>{
+        return (
+            <Text style={styles.tip}>*以上资料数据仅供浏览、参考之用，并不作为竞猜和彩票投注的依据。</Text>
+        )
+    }
 
-    renderContent = () => {
+    render() {
         if (this.props.data && this.props.data.length > 0) {
             return (
                 <PullList enableEmptySections={true}
@@ -136,6 +140,7 @@ class BoughtAnalysisList extends DisplayComponent {
                           dataSource={this.state.dataSource}
                           renderRow={this.renderRow}
                           onEndReachedThreshold={60}
+                          renderFooter={this.renderFooter}
                 >
                 </PullList>
             )
@@ -144,15 +149,6 @@ class BoughtAnalysisList extends DisplayComponent {
                 <Text style={{textAlign: 'center', color: '#999', marginTop: 20, fontSize: 16}}>无记录</Text>
             )
         }
-    }
-
-    render() {
-        return (
-            <View style={styles.container}>
-                {this.renderContent()}
-                <Text style={styles.tip}>*以上资料数据仅供浏览、参考之用，并不作为竞猜和彩票投注的依据。</Text>
-            </View>
-        )
     }
 }
 

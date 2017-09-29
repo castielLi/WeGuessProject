@@ -19,7 +19,9 @@ export default class TabView extends Component {
         super(props);
         this.state = {
             tabList: this.props.tabList,
-            index: this.props.index ? this.props.index : 0
+            index: this.props.index ? this.props.index : 0,
+            styleUl:this.props.styleFather,
+            styleTopRow:this.props.styleChild
         }
     }
 
@@ -30,12 +32,12 @@ export default class TabView extends Component {
 
     render() {
         return (
-            <View style={styles.topUl}>
+            <View style={[styles.topUl,this.state.styleUl]}>
                 {
                     this.state.tabList.map((item, index) => {
                         return (
                             <TouchableWithoutFeedback onPress={() => this.onPress(index)} key={index}>
-                                <View style={[styles.topRow, this.state.index === index ? styles.select : styles.noSelect]}>
+                                <View style={[styles.topRow,this.state.styleTopRow,this.state.index === index ? styles.select : styles.noSelect,]}>
                                     <Text
                                         style={[styles.topLi, this.state.index === index ? styles.selectColor : styles.noSelectColor]}>{item}</Text>
                                 </View>

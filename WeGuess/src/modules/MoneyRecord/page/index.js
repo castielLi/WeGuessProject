@@ -92,16 +92,14 @@ class MoneyRecord extends ContainerComponent {
         let that = this;
         let logID = 0
         if (index == 0 && this.state.isLoadingGold !== 1) {
-            this.setState({logIDGold: 0, isLoadingGold: 1, getType: index});
-            setTimeout(() => {
+            this.setState({logIDGold: 0, isLoadingGold: 1, getType: index}, () => {
                 that.fetchData(resolve, 0, 0, true);
-            }, 1000);
+            });
 
         } else if (index == 1 && this.state.isLoadingBean !== 1) {
-            this.setState({logIDBean: 0, isLoadingBean: 1, getType: index});
-            setTimeout(() => {
+            this.setState({logIDBean: 0, isLoadingBean: 1, getType: index}, () => {
                 that.fetchData(resolve, 1, 0, true);
-            }, 1000);
+            });
         } else {
             if (typeof resolve == "function") {
                 resolve();
@@ -146,18 +144,22 @@ class MoneyRecord extends ContainerComponent {
                     if (Data) {
                         that.dataListGold = that.dataListGold.concat(Data);
                     }
-                    that.setState({
-                        //设置数据源刷新界面
-                        dataSourceGold: that.state.dataSourceGold.cloneWithRows(that.dataListGold),
-                    })
                     if (!Data || Data.length < 20) {
-                        that.setState({isLoadingGold: 2});
+                        that.setState({
+                            dataSourceGold: that.state.dataSourceGold.cloneWithRows(that.dataListGold),
+                            isLoadingGold: 2
+                        });
                     } else {
-                        that.setState({isLoadingGold: 0, logIDGold: Data[Data.length - 1].ID});
+                        that.setState({
+                            dataSourceGold: that.state.dataSourceGold.cloneWithRows(that.dataListGold),
+                            isLoadingGold: 0,
+                            logIDGold: Data[Data.length - 1].ID
+                        });
                     }
                 } else {
-                    that.showError(Result);
-                    that.setState({isLoadingGold: 0});
+                    that.setState({isLoadingGold: 0}, () => {
+                        that.showError(Result);
+                    });
                 }
             } else {
                 if (isRefresh) {
@@ -167,25 +169,30 @@ class MoneyRecord extends ContainerComponent {
                     if (Data) {
                         that.dataListBean = that.dataListBean.concat(Data);
                     }
-                    that.setState({
-                        //设置数据源刷新界面
-                        dataSourceBean: that.state.dataSourceBean.cloneWithRows(that.dataListBean),
-                    })
                     if (!Data || Data.length < 20) {
-                        that.setState({isLoadingBean: 2});
+                        that.setState({
+                            dataSourceBean: that.state.dataSourceBean.cloneWithRows(that.dataListBean),
+                            isLoadingBean: 2
+                        });
                     } else {
-                        that.setState({isLoadingBean: 0, logIDBean: Data[Data.length - 1].ID});
+                        that.setState({
+                            dataSourceBean: that.state.dataSourceBean.cloneWithRows(that.dataListBean),
+                            isLoadingBean: 0,
+                            logIDBean: Data[Data.length - 1].ID
+                        });
                     }
                 } else {
-                    that.showError(Result);
-                    that.setState({isLoadingBean: 0});
+                    that.setState({isLoadingBean: 0},()=>{
+                        that.showError(Result);
+                    });
                 }
             }
             if (typeof resolve == "function") {
                 resolve();
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
-
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             if (typeof resolve == "function") {
                 resolve();
             }
@@ -206,7 +213,7 @@ class MoneyRecord extends ContainerComponent {
             <View style={{flex: 1}}>
                 <TabView tabList={this.tabList} onPress={this.changeType}></TabView>
                 <View style={styles.stateTop}>
-                    <Text style={[styles.stateTopLi,{width:160}]}>时间</Text>
+                    <Text style={[styles.stateTopLi, {width: 160}]}>时间</Text>
                     <Text style={styles.stateTopLi}>项目</Text>
                     <Text style={[styles.stateTopLi, {paddingRight: 10, textAlign: 'right'}]}>收支</Text>
                 </View>
@@ -216,12 +223,12 @@ class MoneyRecord extends ContainerComponent {
     }
 }
 const styles = StyleSheet.create({
-	stateTop:{
-		height:45,
-		flexDirection:'row',
-	    backgroundColor:'#3a66b3',
-	    alignItems:'center',
-	},
+    stateTop: {
+        height: 45,
+        flexDirection: 'row',
+        backgroundColor: '#3a66b3',
+        alignItems: 'center',
+    },
     stateTopLi: {
         color: '#fff',
         flex: 1,

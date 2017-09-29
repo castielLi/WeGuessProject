@@ -4,15 +4,18 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native';
 export default class LoginButton extends Component {
     render() {
         return (
-            <TouchableOpacity style={styles.loginArea} onPress={this.props.onPress}>
-                <Text style={styles.login}>
-                    {this.props.name}
-                </Text>
-            </TouchableOpacity>
+            <TouchableWithoutFeedback  onPress={this.props.onPress}>
+                <View style={styles.loginArea}>
+	                <Text style={styles.login}>
+	                    {this.props.name}
+	                </Text>
+                </View>               
+            </TouchableWithoutFeedback>
         );
     }
 }
