@@ -139,71 +139,94 @@ class BuyRecommend extends ContainerComponent {
     }
 
     getBuyAnalysis = (isRefresh, resolve) => {
-        let {isLoadingAnalysis, pageIndexAnalysis, pageSizeAnalysis, noMorDataAnalysis} = this.state;
+        let that = this;
+        let {isLoadingAnalysis, pageIndexAnalysis, pageSizeAnalysis, noMorDataAnalysis} = that.state;
         if (isLoadingAnalysis || (!isRefresh && noMorDataAnalysis)) {
             return;
         }
         try {
-            this.setState({
+            that.setState({
                 isLoadingAnalysis: true
-            })
-            let index = 1;
-            if (isRefresh) {
-                this.setState({noMorDataAnalysis: false})
-            } else {
-                index = pageIndexAnalysis + 1;
-            }
-            let params = {
-                PageIndex: index,
-                PageSize: pageSizeAnalysis
-            }
-            let that = this;
-            this.networking.get(GetBoughtAnalysisUrl, params, {}).then((responense) => {
-                let {Result, Data} = responense;
-                if (Result == 1) {
-                    let rowsData = Data ? Data : [];
-                    let length = rowsData.length;
-                    if (length < pageSizeAnalysis) {
-                        this.setState({noMorDataAnalysis: true})
-                    } else {
-                        this.setState({PageIndexAnalysis: index})
-                    }
-
-                    for (var i = 0; i < length; i++) {
-                        rowsData[i].show = false;
-                    }
-                    if (isRefresh) {
-                        that.setState({dataAnalysis: [].concat(rowsData)});
-                    } else {
-                        that.setState({dataAnalysis: that.state.dataAnalysis.concat(rowsData)});
-                    }
-
+            }, () => {
+                let index = 1;
+                if (isRefresh) {
+                    that.setState({noMorDataAnalysis: false})
                 } else {
-                    that.showError(Result);
+                    index = pageIndexAnalysis + 1;
                 }
-                this.setState({isLoadingAnalysis: false})
-                if (typeof resolve == "function") {
-                    resolve();
+                let params = {
+                    PageIndex: index,
+                    PageSize: pageSizeAnalysis
                 }
-            }, (error) => {
+                that.networking.get(GetBoughtAnalysisUrl, params, {}).then((responense) => {
+                    let {Result, Data} = responense;
+                    if (Result == 1) {
+                        let rowsData = Data ? Data : [];
+                        let length = rowsData.length;
+                        if (length < pageSizeAnalysis) {
+                            that.setState({noMorDataAnalysis: true})
+                        } else {
+                            that.setState({PageIndexAnalysis: index})
+                        }
 
-                this.setState({
-                    isLoadingAnalysis: false
-                })
-                this.showError(error);
-                if (typeof resolve == "function") {
-                    resolve();
-                }
-            }).catch((error) => {
+                        for (var i = 0; i < length; i++) {
+                            rowsData[i].show = false;
+                        }
+                        if (isRefresh) {
+                            that.setState({dataAnalysis: [].concat(rowsData)}, () => {
+                                that.setState({isLoadingAnalysis: false}, () => {
+                                    if (typeof resolve == "function") {
+                                        resolve();
+                                    }
+                                })
+                            });
+                        } else {
+                            that.setState({dataAnalysis: that.state.dataAnalysis.concat(rowsData)}, () => {
+                                that.setState({isLoadingAnalysis: false}, () => {
+                                    if (typeof resolve == "function") {
+                                        resolve();
+                                    }
+                                })
+                            });
+                        }
 
-                this.setState({
-                    isLoadingAnalysis: false
+                    } else {
+                        that.showError(Result, null, () => {
+                            that.setState({isLoadingAnalysis: false}, () => {
+                                if (typeof resolve == "function") {
+                                    resolve();
+                                }
+                            })
+                        });
+                    }
+                }, (error) => {
+
+                    that.setState({
+                        isLoadingAnalysis: false
+                    }, () => {
+                        that.showError(error, null, () => {
+                            if (typeof resolve == "function") {
+                                resolve();
+                            }
+                        });
+                    })
+
+                }).catch((error) => {
+
+                    that.setState({
+                        isLoadingAnalysis: false
+                    }, () => {
+                        that.showError(error, null, () => {
+                            if (typeof resolve == "function") {
+                                resolve();
+                            }
+                        });
+                    })
+
                 })
-                this.showError(error);
-                if (typeof resolve == "function") {
-                    resolve();
-                }
             })
+
+
         }
         catch (error) {
 
@@ -241,6 +264,9 @@ class BuyRecommend extends ContainerComponent {
         return (
             <View style={{flex: 1}}>
                 <TabView tabList={this.tabList} onPress={this.changeType}></TabView>
+                <View style={{height: 1}}>
+
+                </View>
                 {
                     this.state.type == 0 ?
                         (<BoughtAnalysisList getBuyAnalysis={this.getBuyAnalysis}
@@ -258,6 +284,7 @@ class BuyRecommend extends ContainerComponent {
         )
     }
 }
+
 const styles = StyleSheet.create({})
 
 const mapStateToProps = state => ({

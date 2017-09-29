@@ -8,6 +8,7 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     ListView,
     Dimensions
 } from 'react-native';
@@ -70,7 +71,7 @@ class BoughtAnalysisList extends DisplayComponent {
             let dataToPredict = JSON.parse(itemData.DataToPredict);
             return (
                 <View style={styles.container}>
-                    <TouchableOpacity activeOpacity={1} onPress={() => this.props.analysisIsShow(index)}>
+                    <TouchableWithoutFeedback onPress={() => this.props.analysisIsShow(index)}>
                         <View style={styles.headerStyle}>
                             <View style={styles.headerLeft}>
                                 <Text style={styles.league}>{itemData.MatchInfo.League}</Text>
@@ -88,7 +89,7 @@ class BoughtAnalysisList extends DisplayComponent {
                                     (<Icon name={'ios-arrow-down'} size={12} style={styles.arrowIcon}/>)
                             }
                         </View>
-                    </TouchableOpacity>
+                    </TouchableWithoutFeedback>
                     {
                         rowData.show ? (
                             <AnalysisItem itemData={itemData} dataToPredict={dataToPredict}/>
@@ -99,7 +100,7 @@ class BoughtAnalysisList extends DisplayComponent {
         } else {
             return (
                 <View style={styles.container}>
-                    <TouchableOpacity activeOpacity={1} onPress={() => this.props.analysisIsShow(index)}>
+                    <TouchableWithoutFeedback onPress={() => this.props.analysisIsShow(index)}>
                         <View style={styles.headerStyle}>
                             <View style={styles.headerLeft}>
                                 <Text style={styles.teamHome}>{rowData.Title}</Text>
@@ -110,7 +111,7 @@ class BoughtAnalysisList extends DisplayComponent {
                                     (<Icon name={'ios-arrow-down'} size={12} style={styles.arrowIcon}/>)
                             }
                         </View>
-                    </TouchableOpacity>
+                    </TouchableWithoutFeedback>
                     {
                         rowData.show ? (
                             <AnalysisList item={rowData} bgColor="#e4ecf9"/>
@@ -127,6 +128,7 @@ class BoughtAnalysisList extends DisplayComponent {
         if (this.props.data && this.props.data.length > 0) {
             return (
                 <PullList enableEmptySections={true}
+                          style={{flex: 1}}
                           initialListSize={10}
                           pageSize={10}
                           onPullRelease={this.onPullRelease}

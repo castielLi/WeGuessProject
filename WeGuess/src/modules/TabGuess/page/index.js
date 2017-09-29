@@ -524,7 +524,7 @@ class Guess extends ContainerComponent {
                                 <TouchableWithoutFeedback onPress={() => {
                                         this.onPress(type.league)
                                     }}>  
-                                            <View style={[this.state.type == "2" ? styles.select : styles.noSelect,styles.balance, ]}>
+                                            <View style={[styles.balance, this.state.type == "2" ? styles.select : styles.noSelect]}>
                                                         
                                                             <Text style={[this.state.type == "2" ? styles.selectColor : styles.noSelectColor]}>按联赛</Text>
                                                         
@@ -627,7 +627,10 @@ const styles = StyleSheet.create({
         borderTopColor: '#ccc',
     },
     gameContainer: {
+        flex: 1,
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: 40,
     },
     tab: {
@@ -639,7 +642,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 40,
+        height: 38,
+        borderBottomWidth: 2,
         // paddingLeft:10,
         // paddingRight:10,
     },
@@ -678,14 +682,12 @@ const styles = StyleSheet.create({
     },
     select: {
         borderBottomColor: "#3a67b3",
-        borderBottomWidth: 2,
     },
     selectColor: {
         color: "#3a67b3"
     },
     noSelect: {
         borderBottomColor: "#ffffff",
-        borderBottomWidth: 2,
     },
     noSelectColor: {
         color: "grey"
