@@ -173,13 +173,15 @@ export default class SportBetList extends ContainerComponent {
                             <Image source={require('./resource/icon_15.png')} style={styles.banlanceImg}></Image>
                             <Text style={{color: "#ff5b06"}}>{parseInt(this.props.balance)}</Text>
                         </View>
-                        <View>
+                        
                             <TouchableWithoutFeedback onPress={() => {
                                 this.props.closeBetPanel()
                             }}>
+                              <View style={{width:60,height:36,justifyContent:"center",alignItems:"flex-end"}}>
                                 <Image source={require('./resource/icon_12.png')} style={styles.banlanceImg}></Image>
+                              </View>
                             </TouchableWithoutFeedback>
-                        </View>
+                        
                     </View>
                     <View style={styles.btPaneTeam}>
                         <ScrollView>
@@ -194,12 +196,14 @@ export default class SportBetList extends ContainerComponent {
                                                     style={{color: '#000'}}>{item.Stage == 3 ? "滚球" : "赛前"}·{this.MarketName(item)}:{item.BetTeam} {this.showHDP(item.Hdp, item.BetPos, item.MarketID)}</Text>
                                                 <Text style={{color: '#ff5b06'}}>@ {item.NewOdds}</Text>
                                             </View>
-                                            <View>
+                                            
                                                 <TouchableWithoutFeedback onPress={()=>{this.removeMatch(index+"-"+item.MatchID)}}>
-                                                    <Image source={require('./resource/icon_37.png')}
-                                                        style={styles.banlanceImg}></Image>
+                                                    <View style={{width:60,height:28,justifyContent:"center",alignItems:"flex-end"}}>
+                                                        <Image source={require('./resource/icon_37.png')}
+                                                            style={styles.banlanceImg}></Image>
+                                                    </View>
                                                 </TouchableWithoutFeedback>
-                                            </View>
+                                            
                                         </View>
                                         <View style={styles.team}>
                                             <Text style={{color: '#808080'}}>{item.HomeName} vs {item.AwayName}</Text>
