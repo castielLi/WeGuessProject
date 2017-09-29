@@ -475,10 +475,10 @@ class Guess extends ContainerComponent {
             if (this.state.showGameType) {
                 return (
                     <View style={styles.buttonImg}>
-                        <Text>
+                        
                             <Image source={require('../resource/icon_57.png')} style={styles.ballIcon}></Image>
                             <Image source={require('../resource/icon_20.png')} style={styles.downButton}></Image>
-                        </Text>
+                     
                     </View>
                 );
             } else {
@@ -537,7 +537,7 @@ class Guess extends ContainerComponent {
                              goBetList={this.goBetList}></Headers>
                 </View>
                 <View style={styles.gameContainer}>
-                    <View style={{width: width * 0.2, height: 42, justifyContent: "center"}}>
+                    <View style={{width: width * 0.2, height: 42, justifyContent: "center",alignItems:"center"}}>
                         <TouchableWithoutFeedback onPress={() => {
                             this.setState({showGameType: !this.state.showGameType})
                         }}>
@@ -625,7 +625,6 @@ const styles = StyleSheet.create({
         borderTopColor: '#ccc',
     },
     gameContainer: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -656,7 +655,7 @@ const styles = StyleSheet.create({
         resizeMode: 'stretch',
     },
     buttonImg: {
-        flex: 1,
+        width:50,
         height: 40,
         flexDirection: 'row',
         alignItems: 'center',

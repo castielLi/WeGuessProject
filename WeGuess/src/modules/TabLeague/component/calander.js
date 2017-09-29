@@ -13,7 +13,7 @@ import {
   ScrollView,
   Text,
   View,
-  TouchableHighlight,
+  TouchableOpacity,
   Alert,
 } from 'react-native';
 import Screen from './utils';
@@ -51,37 +51,37 @@ export default class Calander extends Component {
     const date = this.state.dateList;
     return (
 
-      <TouchableHighlight underlayColor='#9d9d9d' style={styles.body} onPress = {()=>{this.changeShow()}}>
+      <TouchableOpacity underlayColor='#9d9d9d' style={styles.body} onPress = {()=>{this.changeShow()}}>
            <View style = {styles.scroll}>
             <ScrollView showsVerticalScrollIndicator = {false} ref={ref=>this.scrollView = ref}
               onContentSizeChange = {(contentWidth,contentHeight)=>{
                 this.scrollView.scrollTo({y:this.state.currentTime*50-50})
               }}
             >
-                <TouchableHighlight style = {this.state.currentTime===0?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(0)}}>
+                <TouchableOpacity style = {this.state.currentTime===0?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(0)}}>
                     <Text style={this.state.currentTime ===0?styles.dateFocusText:styles.dateText}>{this.state.dateList[0].day}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style = {this.state.currentTime===1?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(1)}}>
+                </TouchableOpacity>
+                <TouchableOpacity style = {this.state.currentTime===1?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(1)}}>
                     <Text style={this.state.currentTime ===1?styles.dateFocusText:styles.dateText}>{this.state.dateList[1].day}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style = {this.state.currentTime===2?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(2)}}>
+                </TouchableOpacity>
+                <TouchableOpacity style = {this.state.currentTime===2?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(2)}}>
                     <Text style={this.state.currentTime ===2?styles.dateFocusText:styles.dateText}>{this.state.dateList[2].day}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style = {this.state.currentTime===3?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(3)}}>
+                </TouchableOpacity>
+                <TouchableOpacity style = {this.state.currentTime===3?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(3)}}>
                     <Text style={this.state.currentTime ===3?styles.dateFocusText:styles.dateText}>{this.state.dateList[3].day}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style = {this.state.currentTime===4?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(4)}}>
+                </TouchableOpacity>
+                <TouchableOpacity style = {this.state.currentTime===4?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(4)}}>
                     <Text style={this.state.currentTime ===4?styles.dateFocusText:styles.dateText}>{this.state.dateList[4].day}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style = {this.state.currentTime===5?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(5)}}>
+                </TouchableOpacity>
+                <TouchableOpacity style = {this.state.currentTime===5?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(5)}}>
                     <Text style={this.state.currentTime ===5?styles.dateFocusText:styles.dateText}>{this.state.dateList[5].day}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style = {this.state.currentTime===6?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(6)}}>
+                </TouchableOpacity>
+                <TouchableOpacity style = {this.state.currentTime===6?styles.dateFocusButton:styles.dateButton} onPress={()=>{this.changeDate(6)}}>
                     <Text style={this.state.currentTime ===6?styles.dateFocusText:styles.dateText}>{this.state.dateList[6].day}</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
             </ScrollView>
            </View>
-       </TouchableHighlight>
+       </TouchableOpacity>
     );
   }
 }

@@ -11,7 +11,6 @@ import {
     Alert,
     ListView,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     Text,
     View,
     ScrollView,

@@ -36,7 +36,6 @@ import LeagueProcess from '../component/leagueprocess'
 import LeagueResult from '../component/leagueresult'
 import * as tools from '../method';
 import Screen from '../component/utils';
-import DateBar from '../component/dateBar';
 import Calander from '../component/calander';
 import GameType from '../component/gameType';
 import * as Actions from '../reducer/leagueAction';

@@ -8,7 +8,7 @@ import React, {Component} from 'react';
 import {
     AppRegistry,
     StyleSheet,
-    TouchableWithoutFeedback,
+    TouchableOpacity,
     Text,
     View,
     Image,
@@ -53,7 +53,7 @@ export default class LeftItem extends Component {
 
     renderRow = (rowData, rowID) => {
         return (
-            <TouchableWithoutFeedback key={rowID} onPress={() => {
+            <TouchableOpacity key={rowID} onPress={() => {
                 this.pressRow(rowID)
             }}>
                 {//kind 为1表示按时间显示 为2表示按联赛显示
@@ -73,7 +73,7 @@ export default class LeftItem extends Component {
                     )
                 }
 
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         );
     }
 }

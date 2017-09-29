@@ -25,7 +25,6 @@ import {
 } from "../../Config/apiUrlConfig"
 import HTTPBase from '../network/http.js';
 import Networking from '../../../Core/WGNetworking/Network.js';
-import DateBar from './dateBar';
 import * as methods from '../method'
 import BackgroundTimer from 'react-native-background-timer';
 import ContainerComponent from '../../.././Core/Component/ContainerComponent'

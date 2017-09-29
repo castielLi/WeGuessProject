@@ -42,7 +42,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 var width = Dimensions.get('window').width;
 var cellWidth = (width - 10 * 4) / 3;  //单个框的宽度
-var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 let WFTPay = NativeModules.WFTPay;
 
 class VoucherCenter extends ContainerComponent {
@@ -63,12 +62,17 @@ class VoucherCenter extends ContainerComponent {
     constructor(props) {
         super(props);
         this.state = {
-            dataSource: ds,
+            dataSourceDiamonds: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+            dataSourceProp: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+            dataSourceAward: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             getDiamonds: false,  //钻石充值加载状态
             getPropList: false,  //道具购买加载状态
             getAwardList: false,  //抽奖加载状态
             getAwardEndTime: ''   //获取抽奖截止时间
         }
+        this.diamondsData=[];    //获取钻石数据
+        this.propListData=[];    //获取道具数据
+        this.awardListData=[];   //获取抽奖数据
         this.renderRow = this.renderRow.bind(this);
         this.tabList = ["钻石充值", "道具购买", "抽奖"];
         this.canPress = {
@@ -96,7 +100,7 @@ class VoucherCenter extends ContainerComponent {
                 <View>
                     <ListView
                         contentContainerStyle={styles.listView}
-                        dataSource={this.state.dataSource}
+                        dataSource={this.state.dataSourceDiamonds}
                         renderRow={this.renderRow}
                         ref={component => this._scrollView0 = component}
                     />
@@ -111,7 +115,7 @@ class VoucherCenter extends ContainerComponent {
                 <View>
                     <ListView
                         contentContainerStyle={styles.listView}
-                        dataSource={this.state.dataSource}
+                        dataSource={this.state.dataSourceProp}
                         renderRow={this.renderRow}
                         ref={component => this._scrollView1 = component}
                     />
@@ -143,7 +147,7 @@ class VoucherCenter extends ContainerComponent {
                     </View>
                     <ListView
                         contentContainerStyle={styles.listView}
-                        dataSource={this.state.dataSource}
+                        dataSource={this.state.dataSourceAward}
                         renderRow={this.renderRow}
                         ref={component => this._scrollView2 = component}
                     />
@@ -462,15 +466,17 @@ class VoucherCenter extends ContainerComponent {
     //选择钻石充值板块
     getDiamonds() {
         let that = this;
+        this.setState({
+        	getDiamonds: true,
+            getPropList: false,
+            getAwardList: false,
+        })
         this.networking.get(GetDiamondsUrl, null, {}).then((data) => {
             let {Result, Data} = data;
             if (Result == 1) {
-                that.setState({
-                    getDiamonds: true,
-                    getPropList: false,
-                    getAwardList: false,
-                    //设置数据源刷新界面
-                    dataSource: ds.cloneWithRows(Data),
+            	this.diamondsData=Data;
+                that.setState({                   
+                    dataSourceDiamonds: this.state.dataSourceDiamonds.cloneWithRows(this.diamondsData),
                 })
             } else {
                 that.showError(Result);
@@ -485,15 +491,17 @@ class VoucherCenter extends ContainerComponent {
     //选择道具购买板块
     getPropList() {
         let that = this;
+        this.setState({
+        	getDiamonds: false,
+            getPropList: true,
+            getAwardList: false,
+        })
         this.networking.get(GetPropListUrl, null, {}).then((data) => {
             let {Result, Data} = data;
             if (Result == 1) {
+            	this.propListData=Data;
                 that.setState({
-                    getDiamonds: false,
-                    getPropList: true,
-                    getAwardList: false,
-                    //设置数据源刷新界面
-                    dataSource: ds.cloneWithRows(Data),
+                    dataSourceProp: this.state.dataSourceProp.cloneWithRows(this.propListData),
                 })
             } else {
                 that.showError(Result);
@@ -509,15 +517,17 @@ class VoucherCenter extends ContainerComponent {
     //选择抽奖板块
     getAwardList() {
         let that = this;
+        this.setState({
+        	getDiamonds: false,
+            getPropList: false,
+            getAwardList: true,
+        })
         this.networking.get(GetAwardListUrl, null, {}).then((data) => {
             let {Result, Data} = data;
             if (Result == 1) {
+            	this.awardListData=Data;
                 that.setState({
-                    getDiamonds: false,
-                    getPropList: false,
-                    getAwardList: true,
-                    //设置数据源刷新界面
-                    dataSource: ds.cloneWithRows(Data),
+                    dataSourceAward: this.state.dataSourceAward.cloneWithRows(this.awardListData),
                 })
             } else {
                 that.showError(Result);
