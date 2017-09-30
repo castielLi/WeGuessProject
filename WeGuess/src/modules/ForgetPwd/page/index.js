@@ -101,7 +101,7 @@ class ForgetPwd extends ContainerComponent {
 
 
     //获取验证码定时器
-    setTime=()=> {
+    setTime = () => {
         let i = 60;
         let that = this;
         this.interTime = setInterval(function () {
@@ -152,16 +152,18 @@ class ForgetPwd extends ContainerComponent {
         return (
             <View style={styles.container}>
                 <StatusBar/>
-                <View style={styles.list}>
-                    <EditView label="手机号" name="请输入手机号" getyzm={this.state.GetCaptcha}
-                              disabled={this.state.disabled}
-                              onChangeText={phone => this.setState({phone})} onPress={() => this.GetCaptcha()}/>
-                    <EditView label="验证码" name="请输入验证码" onChangeText={captcha => this.setState({captcha})}/>
+                <View style={styles.padding}>
+                    <View style={styles.list}>
+                        <EditView label="手机号" name="请输入手机号" getyzm={this.state.GetCaptcha}
+                                  disabled={this.state.disabled}
+                                  onChangeText={phone => this.setState({phone})} onPress={() => this.GetCaptcha()}/>
+                        <EditView label="验证码" name="请输入验证码" onChangeText={captcha => this.setState({captcha})}/>
+                    </View>
+                    <View>
+                        <Text style={styles.errormsg}>{this.state.error}</Text>
+                    </View>
+                    <LoginButton name="下一步" onPress={() => this.next()} disabled={this.state.loading}/>
                 </View>
-                <View>
-                    <Text style={styles.errormsg}>{this.state.error}</Text>
-                </View>
-                <LoginButton name="下一步" onPress={() => this.next()} disabled={this.state.loading}/>
                 <View style={{flex: 1, flexDirection: 'column-reverse'}}>
                     <Image resizeMode='contain' source={require('../resources/logo-bottom.png')}
                            style={styles.loginIcon}/>
@@ -179,6 +181,8 @@ const
         container: {
             flex: 1,
             backgroundColor: '#f4f4f4',
+        },
+        padding: {
             paddingHorizontal: 16,
         },
         errormsg: {
@@ -206,10 +210,7 @@ const
         logout: () => dispatch({type: 'Logout'}),
     });
 
-export
-default
-
-connect(mapStateToProps, mapDispatchToProps)
+export default connect(mapStateToProps, mapDispatchToProps)
 
 (
     ForgetPwd

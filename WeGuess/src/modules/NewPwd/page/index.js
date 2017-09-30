@@ -87,16 +87,18 @@ class NewPwd extends ContainerComponent {
         return (
             <View style={styles.container}>
                 <StatusBar/>
-                <View style={styles.list}>
-                    <EditView label="新密码" name="请输入您的密码" onChangeText={newPwd => this.setState({newPwd})}
-                              secureTextEntry={true}/>
-                    <EditView label="确认密码" name="请重复您的新密码" onChangeText={surePwd => this.setState({surePwd})}
-                              secureTextEntry={true}/>
+                <View style={styles.padding}>
+                    <View style={styles.list}>
+                        <EditView label="新密码" name="请输入您的密码" onChangeText={newPwd => this.setState({newPwd})}
+                                  secureTextEntry={true}/>
+                        <EditView label="确认密码" name="请重复您的新密码" onChangeText={surePwd => this.setState({surePwd})}
+                                  secureTextEntry={true}/>
+                    </View>
+                    <View>
+                        <Text style={styles.errormsg}>{this.state.error}</Text>
+                    </View>
+                    <LoginButton name="确定" onPress={() => this.updatePwd()} disabled={this.state.loading}/>
                 </View>
-                <View>
-                    <Text style={styles.errormsg}>{this.state.error}</Text>
-                </View>
-                <LoginButton name="确定" onPress={() => this.updatePwd()} disabled={this.state.loading}/>
                 <View style={{flex: 1, flexDirection: 'column-reverse'}}>
                     <Image resizeMode='contain' source={require('../resources/logo-bottom.png')}
                            style={styles.loginIcon}/>
@@ -112,10 +114,13 @@ class NewPwd extends ContainerComponent {
     }
 
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f4f4f4',
+    },
+    padding: {
         paddingHorizontal: 16,
     },
     errormsg: {

@@ -109,12 +109,12 @@ class Login extends ContainerComponent {
 
     }
 
-    onTest=()=>{
-        if(typeof this.index =="undefined"){
+    onTest = () => {
+        if (typeof this.index == "undefined") {
             this.index = 0;
         }
-        this.index+=1;
-        if(this.index>4&&this.state.phoneNumber=="......"){
+        this.index += 1;
+        if (this.index > 4 && this.state.phoneNumber == "......") {
             this.index = 0;
             this.props.navigation.navigate("Test");
         }
@@ -127,23 +127,26 @@ class Login extends ContainerComponent {
         return (
             <View style={styles.container}>
                 <StatusBar/>
-                <View style={styles.list}>
-                    <EditView label="手机号" name="请输入手机号" onChangeText={phoneNumber => this.setState({phoneNumber})}
-                              value={this.state.phoneNumber}/>
-                    <EditView label="密码" name="请输入密码" onChangeText={password => this.setState({password})}
-                              secureTextEntry={true} value={this.state.password}/>
-                </View>
-                <View>
-                    <Text style={styles.errorMsg}>{this.state.error}</Text>
-                </View>
-                <LoginButton name="登录" onPress={() => this.onButtonPress()} disabled={this.state.loading}/>
-                <View style={{marginTop: 20, flexDirection: 'row'}}>
-                    <Text style={[styles.gn, {color: '#3a65b3'}]}
-                          onPress={() => navigate('Register', {backKey: this.props.navigation.state.key})}>快速注册</Text>
-                    <Text style={[styles.gn, {textAlign: 'right'}]} onPress={() => navigate('ForgetPwd')}>忘记密码?</Text>
+                <View style={styles.padding}>
+                    <View style={styles.list}>
+                        <EditView label="手机号" name="请输入手机号" onChangeText={phoneNumber => this.setState({phoneNumber})}
+                                  value={this.state.phoneNumber}/>
+                        <EditView label="密码" name="请输入密码" onChangeText={password => this.setState({password})}
+                                  secureTextEntry={true} value={this.state.password}/>
+                    </View>
+                    <View>
+                        <Text style={styles.errorMsg}>{this.state.error}</Text>
+                    </View>
+                    <LoginButton name="登录" onPress={() => this.onButtonPress()} disabled={this.state.loading}/>
+                    <View style={{marginTop: 20, flexDirection: 'row'}}>
+                        <Text style={[styles.gn, {color: '#3a65b3'}]}
+                              onPress={() => navigate('Register', {backKey: this.props.navigation.state.key})}>快速注册</Text>
+                        <Text style={[styles.gn, {textAlign: 'right'}]}
+                              onPress={() => navigate('ForgetPwd')}>忘记密码?</Text>
+                    </View>
                 </View>
                 <View style={{flex: 1, flexDirection: 'column-reverse'}}>
-                    <TouchableWithoutFeedback  onPress={this.onTest} >
+                    <TouchableWithoutFeedback onPress={this.onTest}>
                         <Image resizeMode='contain' source={require('../resources/logo-bottom.png')}
                                style={styles.loginIcon}/>
                     </TouchableWithoutFeedback>
@@ -172,6 +175,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f4f4f4',
+    },
+    padding: {
         paddingHorizontal: 16,
     },
     errorMsg: {

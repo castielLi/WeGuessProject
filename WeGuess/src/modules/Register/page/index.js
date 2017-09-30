@@ -23,6 +23,7 @@ import {isPhone, isCaptcha, checkPassword} from '../../Utils/check';
 import TokenManager from '../../TokenManager';
 import {StatusBar} from "../../Component/BackButton";
 import Partner from "../../Config/spreadConfig";
+
 var Dimensions = require('Dimensions');
 
 class Register extends ContainerComponent {
@@ -194,32 +195,35 @@ class Register extends ContainerComponent {
         return (
             <View style={styles.container}>
                 <StatusBar/>
-                <View style={styles.list}>
-                    <EditView label="手机号" name="请输入手机号" onChangeText={phone => this.setState({phone})}/>
-                    <EditView label="验证码" name="请输入验证码" getyzm={this.state.getCaptchaMsg} disabled={this.state.disabled}
-                              onChangeText={captcha => this.setState({captcha})} onPress={() => this.getCaptcha()}/>
-                    <EditView label="密码" name="请输入8-20个字符(包含至少一个字母)"
-                              onChangeText={password => this.setState({password})} secureTextEntry={true}/>
-                </View>
-                <View style={{marginTop: 16, flexDirection: 'row', justifyContent: 'center'}}>
-                    <TouchableWithoutFeedback onPress={() => this.protocolChoose()}>
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <Image source={require('../resources/noarg.png')}
-                                   style={{width: 16, height: 16, position: 'absolute'}}
-                            />
-                            <Animated.Image source={require('../resources/yesarg.png')}
-                                            style={{width: 16, height: 16, opacity: this.state.protocol}}/>
-                            <Text style={styles.protocol}>&nbsp;我已阅读&nbsp;</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <Text style={[styles.protocol, {color: '#3b67b2', textDecorationLine: "underline"}]}
-                          onPress={() => this.showWebView(WebViewUrl.registerAgreement.url, WebViewUrl.registerAgreement.title)}>"用户协议"</Text>
-                </View>
-                <View>
-                    <Text style={styles.errorMsg}>{this.state.error}</Text>
-                </View>
-                <LoginButton name="注册" onPress={() => this.register()} disabled={this.state.loading}/>
+                <View style={styles.padding}>
+                    <View style={styles.list}>
+                        <EditView label="手机号" name="请输入手机号" onChangeText={phone => this.setState({phone})}/>
+                        <EditView label="验证码" name="请输入验证码" getyzm={this.state.getCaptchaMsg}
+                                  disabled={this.state.disabled}
+                                  onChangeText={captcha => this.setState({captcha})} onPress={() => this.getCaptcha()}/>
+                        <EditView label="密码" name="请输入8-20个字符(包含至少一个字母)"
+                                  onChangeText={password => this.setState({password})} secureTextEntry={true}/>
+                    </View>
+                    <View style={{marginTop: 16, flexDirection: 'row', justifyContent: 'center'}}>
+                        <TouchableWithoutFeedback onPress={() => this.protocolChoose()}>
+                            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                <Image source={require('../resources/noarg.png')}
+                                       style={{width: 16, height: 16, position: 'absolute'}}
+                                />
+                                <Animated.Image source={require('../resources/yesarg.png')}
+                                                style={{width: 16, height: 16, opacity: this.state.protocol}}/>
+                                <Text style={styles.protocol}>&nbsp;我已阅读&nbsp;</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <Text style={[styles.protocol, {color: '#3b67b2', textDecorationLine: "underline"}]}
+                              onPress={() => this.showWebView(WebViewUrl.registerAgreement.url, WebViewUrl.registerAgreement.title)}>"用户协议"</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.errorMsg}>{this.state.error}</Text>
+                    </View>
+                    <LoginButton name="注册" onPress={() => this.register()} disabled={this.state.loading}/>
 
+                </View>
                 <View style={{flex: 1, flexDirection: 'column-reverse'}}>
                     <Image resizeMode="contain" source={require('../resources/logo-bottom.png')}
                            style={styles.loginIcon}/>
@@ -244,12 +248,15 @@ function select(store) {
         isLoggedIn: store.loginStore.isLoggedIn,
     }
 }
+
 export default connect(select)(Register);
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f4f4f4',
+    },
+    padding: {
         paddingHorizontal: 16,
     },
     errorMsg: {
