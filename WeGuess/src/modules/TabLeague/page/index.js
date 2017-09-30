@@ -249,7 +249,9 @@ class League extends ContainerComponent {
         return (
             <View style={styles.container}>
                 <StatusBar/>
-                <TabView tabList={this.tabList} onPress={this._changeType}></TabView>
+                <View style={{height:44,borderTopWidth:0}}>
+                  <TabView tabList={this.tabList} onPress={this._changeType}></TabView>
+                </View> 
                 {
                     this.state.type == 2 ? null:(
                 <View style={styles.body}>

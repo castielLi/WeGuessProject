@@ -164,7 +164,10 @@ class LeagueResult extends ContainerComponent {
                     <Text style={{flex: 1, textAlign: 'center', color: '#ff5b06'}}>{time}</Text>
                 </View>
                 <View style={styles.team}>
-                    <Text style={{textAlign: 'right', flex: 3, color: '#000'}}>{rowData.HN}</Text>
+                    <View style={{flex:3,flexDirection:"row",justifyContent:"flex-end"}}>
+                        {rowData.HC>0?(<View style={{justifyContent:"center",alignItems:"center",height:14,marginTop:3,backgroundColor:"#d80204",borderRadius:2}}><Text style={{color:"#fff"}}>{rowData.HC}</Text></View>):null}
+                        <Text style={{color: '#000'}}> {rowData.HN}</Text> 
+                    </View>
                     <View style={{flex: 1,}}>
                         <Text style={{textAlign: 'center', fontSize: 12}}>({rowData.HSH}-{rowData.ASH})</Text>
 
@@ -175,7 +178,11 @@ class LeagueResult extends ContainerComponent {
                             fontWeight: '500'
                         }}>{rowData.HS}-{rowData.AS}</Text>
                     </View>
-                    <Text style={{textAlign: 'left', flex: 3, color: '#000'}}>{rowData.AN}</Text>
+                     <View style={{flex:3,flexDirection:"row",justifyContent:"flex-start"}}>
+                        <Text style={{color: '#000'}}>{rowData.AN} </Text>
+                        {rowData.AC>0?(<View style={{justifyContent:"center",alignItems:"center",height:14,marginTop:3,backgroundColor:"#d80204",borderRadius:2}}><Text style={{color:"#fff"}}>{rowData.AC}</Text></View>):null} 
+                    </View>
+                    
                 </View>
             </View>
           </TouchableOpacity>
