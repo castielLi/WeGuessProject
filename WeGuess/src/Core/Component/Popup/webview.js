@@ -17,6 +17,7 @@ import {
     Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 var Dimensions = require('Dimensions');
 var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
@@ -39,8 +40,8 @@ export default class WebViewModal extends Component {
 
     show(url, title) {
         this.setState({
-            modalVisible: true,
             url: url,
+            modalVisible: true,
             title: title
         });
     };
@@ -51,12 +52,6 @@ export default class WebViewModal extends Component {
             url: "",
             title: ""
         });
-    }
-    onNavigationStateChange = () => {
-
-    }
-    onShouldStartLoadWithRequest = () => {
-
     }
 
     render() {
@@ -81,8 +76,6 @@ export default class WebViewModal extends Component {
                                     javaScriptEnabled={true}
                                     domStorageEnabled={true}
                                     decelerationRate="normal"
-                                    onNavigationStateChange={this.onNavigationStateChange}
-                                    onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest}
                                     startInLoadingState={true}
                                     scalesPageToFit={this.state.scalesPageToFit}
                                 />
@@ -90,7 +83,7 @@ export default class WebViewModal extends Component {
                             <View style={[styles.webViewHeader]}>
                                 <TouchableWithoutFeedback onPress={this.close}>
                                     <Icon.Button name="ios-arrow-back" backgroundColor="#ffffff" color="#3a66b3"
-                                                 iconStyle={{fontSize:  (Platform.OS === 'ios') ? 20 : 30}}>
+                                                 iconStyle={{fontSize: (Platform.OS === 'ios') ? 20 : 30}}>
                                         <Text style={{width: 20}}/>
                                     </Icon.Button>
                                 </TouchableWithoutFeedback>
@@ -120,8 +113,8 @@ const styles = StyleSheet.create({
     statusBar: {
         height: (Platform.OS === 'ios') ? 20 : 0,
         backgroundColor: 'rgba(255, 255, 255, 1.0)',
-        borderBottomWidth:1,
-        borderBottomColor:"#cccccc"
+        borderBottomWidth: 1,
+        borderBottomColor: "#cccccc"
     },
     hidden: {
         position: 'absolute',
