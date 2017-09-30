@@ -69,13 +69,11 @@ export default class SportRank extends ContainerComponent {
 
     //网络请求
     fetchData() {
-        this.showLoading();
         let params = { //请求参数
             type: this.state.type //0 周排行 1 月排行
         };
         let that = this;
         this.networking.get(GetRankList, params, {}).then((responseData) => {
-            that.hideLoading();
             let {
                 Result,
                 Data
@@ -103,11 +101,10 @@ export default class SportRank extends ContainerComponent {
                 }
                 
             } else {
-                 that.hideLoading();
                 that.showError(Result);
             }
         }).catch((error) => {
-              that.hideLoading();
+            that.showError(error);
         })
     }
 
