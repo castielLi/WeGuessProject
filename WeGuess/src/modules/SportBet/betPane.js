@@ -162,13 +162,27 @@ export default class SportBetList extends ContainerComponent {
         this.keyboardDidShowListener = this.keyboardShow();
         this.keyboardDidHideListener = this.keyboardHide();
     }
+
+    calcHeight=()=>{
+        if(this.props.isCommon){
+            return this.state.keyboardSpace;
+        }else if(Platform.OS=='ios'){
+            if(this.state.keyboardSpace>0){
+                return this.state.keyboardSpace -46;
+            }else{
+                return 0;
+            }
+        }else{
+            return 0;
+        }
+    }
     render() {
         let {Limit, Ticket, TicketList} = this.props.betInfo;
         return (
             <TouchableWithoutFeedback onPress={()=>{this.props.closeBetPanel()}}>
-            <View style={[styles.container,{bottom:this.props.isCommon?(Platform.os=='ios'?(0):this.state.keyboardSpace):(Platform.os=='ios'?this.state.keyboardSpace-20:0)}]}>
+            <View style={[styles.container,{bottom:this.calcHeight()}]}>
                 <TouchableWithoutFeedback onPress={()=>{}}>
-                <View style={[styles.body,{bottom:Platform.os=='ios'?this.state.keyboardSpace:0}]}>
+                <View style={[styles.body]}>
                     <View style={styles.btPaneTitle}>
                         <View style={styles.banlace}>
                             <Image source={require('./resource/icon_15.png')} style={styles.banlanceImg}></Image>
@@ -319,11 +333,9 @@ const styles = StyleSheet.create({
         width: width,
         height: height,
         position: 'absolute',
-        bottom: Platform.os=='ios'?-20:0,
+        bottom: 0,
         left: 0,
         backgroundColor: "rgba(0,0,0,0.6)",
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
     },
     banlace: {
         flexDirection: 'row',
