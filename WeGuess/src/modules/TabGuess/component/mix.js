@@ -41,7 +41,9 @@ class Mix extends ContainerComponent {
                 return r1 !== r2;
             }
         });
-        this.mixData = [];
+        this.mixData = [];//分页数据
+        this.allData = [];//全部数据
+        this.dataLen = 30;
         this.state = {
             sportId: 1,//运动种类
             updateTime: "",//请求时间
@@ -232,7 +234,8 @@ class Mix extends ContainerComponent {
                 for (let i = 0; i < length; i++) {
                     Object.assign(mh[i], {show: false});
                 }
-                this.mixData = mh;
+                this.allData = mh;
+                this.mixData = this.mixData.concat(this.allData.splice(0,30));
 
                 this.setState({
                     listViewData: [...mh],
@@ -249,7 +252,20 @@ class Mix extends ContainerComponent {
             this.showError(0);
         });
     }
-
+    loadMOre = ()=>{
+        if(this.allData.length > 0){
+                if(this.allData.length<=30){
+                            this.mixData = this.mixData.concat(this.allData.splice(0,this.allData.length));
+                }else{
+                            this.mixData = this.mixData.concat(this.allData.splice(0,30));
+                }
+        }else{
+            return;
+        }
+        this.setState({	
+            dataSource: this.state.dataSource.cloneWithRows(this.mixData)
+        });
+    }
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
@@ -273,6 +289,8 @@ class Mix extends ContainerComponent {
                     this.state.listViewData.length>0?(
                          
                             <ListView
+                                onEndReachedThreshold = {6}
+                                onEndReached = {()=>{this.loadMOre()}}
                                 initialListSize = {10}
                                 pageSize = {1}
                                 extraData={this.state}
