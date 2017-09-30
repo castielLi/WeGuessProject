@@ -25,8 +25,8 @@ import {
 } from 'react-redux';
 
 import {
-  GetResultLeague,
-  GetProcessLeague
+    GetResultLeague,
+    GetProcessLeague
 } from "../../Config/apiUrlConfig"
 import {bindActionCreators} from "redux";
 import Networking from '../../../Core/WGNetworking/Network.js';
@@ -43,22 +43,24 @@ import * as Actions from '../reducer/leagueAction';
 import {StatusBar} from "../../Component/BackButton";
 import BackgroundTimer from 'react-native-background-timer';
 
-const urlObj={
-    '0':GetResultLeague,
-    '1':GetProcessLeague
+const urlObj = {
+    '0': GetResultLeague,
+    '1': GetProcessLeague
 }
+
 class League extends ContainerComponent {
     static navigationOptions = ({
-        navigation
-    }) => {
+                                    navigation
+                                }) => {
         return {
             header: null //隐藏navigation
         }
     };
+
     constructor(props) {
         super(props);
         this.state = {
-            data:[],
+            data: [],
             showGameType: false,
             showCalander: false,
             today: new Date(),
@@ -66,65 +68,70 @@ class League extends ContainerComponent {
             dateList: [],
             type: '2',
             sportId: 1,
-            dataSource :new ListView.DataSource({
+            dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => r1 !== r2
             })
 
         }
         this.timer = null;
-        this.tabList = ["即时", "赛果","赛程"];
-}
+        this.tabList = ["即时", "赛果", "赛程"];
+    }
+
     componentWillUnmount() {
         if (this.timer) {
             BackgroundTimer.clearInterval(this.timer);
         }
-    }  
-   fetchData=(sportId = this.state.sportId)=>{
-      this.showLoading();
-      let url = "";
-      let params = {
-        "SportId": sportId,
-        'reportDate':this.state.dateList[this.state.currentTime].day
-      };
-      if(this.state.type == 6){
-            url = GetResultLeague;
-      }else{
-            url = GetProcessLeague;
-      }
-      //this.refreshData();
-      this.networking.get(url, params, {}).then((responseData) => {
-          this.hideLoading();
-          this.setState({
-            dataSource:this.state.dataSource.cloneWithRows(responseData.Data)
-          });
-      },(error)=>{
-               this.hideLoading();
-               this.showError(error);
-           }).catch((error) => {
-          this.hideLoading();
-          this.showError(0);
-      })
     }
-    fetchRefreshData(sportId = this.props.sportId) {
-      let url = "";
-      let params = {
-        "SportId": sportId,
-        'reportDate':this.state.dateList[this.state.currentTime].day
-      };
-      if(this.state.type == 6){
-            url = GetResultLeague;
-      }else{
-            url = GetProcessLeague;
-      }
-      this.networking.get(url, params, {}).then((responseData) => {
-          this.hideLoading();
-          this.setState({
-            dataSource:this.state.dataSource.cloneWithRows(responseData.Data)
-          });
-      },()=>{this.hideLoading()}).catch((error) => {
-          this.hideLoading();
 
-      })
+    fetchData = (sportId = this.state.sportId) => {
+        this.showLoading();
+        let url = "";
+        let params = {
+            "SportId": sportId,
+            'reportDate': this.state.dateList[this.state.currentTime].day
+        };
+        if (this.state.type == 6) {
+            url = GetResultLeague;
+        } else {
+            url = GetProcessLeague;
+        }
+        //this.refreshData();
+        this.networking.get(url, params, {}).then((responseData) => {
+            this.hideLoading();
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(responseData.Data)
+            });
+        }, (error) => {
+            this.hideLoading();
+            this.showError(error);
+        }).catch((error) => {
+            this.hideLoading();
+            this.showError(0);
+        })
+    }
+
+    fetchRefreshData(sportId = this.props.sportId) {
+        let url = "";
+        let params = {
+            "SportId": sportId,
+            'reportDate': this.state.dateList[this.state.currentTime].day
+        };
+        if (this.state.type == 6) {
+            url = GetResultLeague;
+        } else {
+            url = GetProcessLeague;
+        }
+        this.networking.get(url, params, {}).then((responseData) => {
+            this.hideLoading();
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(responseData.Data)
+            });
+        }, () => {
+            this.hideLoading()
+        }).catch((error) => {
+            this.hideLoading();
+
+        })
     }
 
     //刷新盘口数据
@@ -135,6 +142,7 @@ class League extends ContainerComponent {
         }, 10000);
 
     }
+
     getDateList(type) {
         let that = this;
         let arr = [],
@@ -154,7 +162,7 @@ class League extends ContainerComponent {
                 dateList: arr
             })
 
-        } else{ //赛程
+        } else { //赛程
             this.setState({
                 currentTime: 0
             })
@@ -171,27 +179,35 @@ class League extends ContainerComponent {
 
         }
     }
+
     goForwardDay() {
         if (this.state.currentTime <= 0) {
             return;
         }
         this.setState({
             currentTime: this.state.currentTime - 1
-        },()=>{ this.fetchData();});
+        }, () => {
+            this.fetchData();
+        });
 
     }
+
     goAfterDay() {
         if (this.state.currentTime >= 6) {
             return;
         }
         this.setState({
             currentTime: this.state.currentTime + 1
-        },()=>{ this.fetchData();})
+        }, () => {
+            this.fetchData();
+        })
 
     }
+
     componentWillMount() {
         this.getDateList(this.state.type);
     }
+
     _changeCalander = (newState) => {
         this.setState({
             showCalander: newState
@@ -201,7 +217,7 @@ class League extends ContainerComponent {
         this.setState({
             currentTime: newState
         })
-        setTimeout(this.fetchData,200);
+        setTimeout(this.fetchData, 200);
     }
     _changeImgType = (newBallType) => {
         this.setState({
@@ -219,25 +235,25 @@ class League extends ContainerComponent {
     }
 
     _changeType = (flag) => {
-        if(flag==0){
+        if (flag == 0) {
             flag = 2
-        }else if(flag==1){
+        } else if (flag == 1) {
             flag = 6
-        }else{
+        } else {
             flag = 0
         }
         this.setState({
             type: flag,
             showGameType: false,
-            currentTime:flag,
+            currentTime: flag,
         })
-        setTimeout(this.getDataFunc,100);
-        setTimeout(this.fetchData,200);
+        setTimeout(this.getDataFunc, 100);
+        setTimeout(this.fetchData, 200);
 
     }
 
-    SelectMatch=(mid)=>{
-        this.props.navigation.navigate("SportMatch",{matchId:mid})
+    SelectMatch = (mid) => {
+        this.props.navigation.navigate("SportMatch", {matchId: mid})
     }
 
     render() {
@@ -249,98 +265,132 @@ class League extends ContainerComponent {
         return (
             <View style={styles.container}>
                 <StatusBar/>
-                <View style={{height:44,borderTopWidth:0}}>
-                  <TabView tabList={this.tabList} onPress={this._changeType}></TabView>
-                </View> 
+                <View style={{height: 44,marginTop:2}}>
+                    <TabView tabList={this.tabList} onPress={this._changeType} styleFather={{height:44}}></TabView>
+                </View>
                 {
-                    this.state.type == 2 ? null:(
-                <View style={styles.body}>
-                    <View>
-                        <TouchableWithoutFeedback onPress={()=>{this.setState({showGameType:!this.state.showGameType})}}>
-                            <View style = {styles.buttonImg}>
-                                 {
-                                    this.state.sportId == 1?(<Image source = {require('../resource/icon_57.png')} style={styles.ballIcon}></Image>):
-                                    (this.state.sportId==2?(<Image source = {require('../resource/icon_75.png')} style={styles.ballIcon}></Image>):
-                                    (<Image source ={require('../resource/icon_68.png')} style={styles.ballIcon}></Image>))
-                                }
-                                {
-                                    !this.state.showGameType ? (<Image source = {require('../resource/icon_18.png')} style = {styles.downButton}></Image>) : (<Image source = {require('../resource/icon_20.png')} style = {styles.downButton}></Image>)
-                                }
+                    this.state.type == 2 ? null : (
+                        <View style={styles.body}>
+                            <View>
+                                <TouchableWithoutFeedback onPress={() => {
+                                    this.setState({showGameType: !this.state.showGameType})
+                                }}>
+                                    <View style={styles.buttonImg}>
+                                        {
+                                            this.state.sportId == 1 ? (
+                                                    <Image source={require('../resource/icon_57.png')}
+                                                           style={styles.ballIcon}></Image>) :
+                                                (this.state.sportId == 2 ? (
+                                                        <Image source={require('../resource/icon_75.png')}
+                                                               style={styles.ballIcon}></Image>) :
+                                                    (<Image source={require('../resource/icon_68.png')}
+                                                            style={styles.ballIcon}></Image>))
+                                        }
+                                        {
+                                            !this.state.showGameType ? (
+                                                <Image source={require('../resource/icon_18.png')}
+                                                       style={styles.downButton}></Image>) : (
+                                                <Image source={require('../resource/icon_20.png')}
+                                                       style={styles.downButton}></Image>)
+                                        }
+                                    </View>
+                                </TouchableWithoutFeedback>
+
                             </View>
-                        </TouchableWithoutFeedback>
-                            
-                    </View>
-                    <View style={{flexDirection:'row',justifyContent:'center',}}>
-                        <View style={styles.touchButtonView}>
-                            
-                            {
-                                this.state.currentTime !== 0?
-                                (
-                                    <TouchableWithoutFeedback onPress={()=>{this.goForwardDay()}} style = {styles.touchButton}>
-                                        <View style={{width:60,height:40,justifyContent:"center",alignItems:"center"}}>
-                                             <Image source = {require('../resource/icon_22.png')}></Image> 
-                                        </View>
-                                    </TouchableWithoutFeedback>)
-                                :(<Image source = {require('../resource/icon_26.png')}></Image>)
-                            }
-                           
-                        </View>
-                        <View>
-                            <Text style={{marginRight:10,marginLeft:10,color:"#3a66b3"}}>
-                                {week+this.state.dateList[this.state.currentTime]['day']}
-                            </Text>
-                        </View>
-                            <View style={styles.touchButtonView}>
+                            <View style={{flexDirection: 'row', justifyContent: 'center',}}>
+                                <View style={styles.touchButtonView}>
+
                                     {
-                                        this.state.currentTime !== 6?
-                                        (<TouchableWithoutFeedback onPress = {()=>{this.goAfterDay()}} style = {styles.touchButton}>
-                                            <View style={{width:60,height:40,justifyContent:"center",alignItems:"center"}}>
-                                                <Image source = {require('../resource/icon_24.png')}></Image>
-                                            </View>
-                                        </TouchableWithoutFeedback>):(<Image source = {require('../resource/icon_34.png')}></Image>)
+                                        this.state.currentTime !== 0 ?
+                                            (
+                                                <TouchableWithoutFeedback onPress={() => {
+                                                    this.goForwardDay()
+                                                }} style={styles.touchButton}>
+                                                    <View style={{
+                                                        width: 60,
+                                                        height: 40,
+                                                        justifyContent: "center",
+                                                        alignItems: "center"
+                                                    }}>
+                                                        <Image source={require('../resource/icon_22.png')}></Image>
+                                                    </View>
+                                                </TouchableWithoutFeedback>)
+                                            : (<Image source={require('../resource/icon_26.png')}></Image>)
                                     }
-                                
+
+                                </View>
+                                <View>
+                                    <Text style={{marginRight: 10, marginLeft: 10, color: "#3a66b3"}}>
+                                        {week + this.state.dateList[this.state.currentTime]['day']}
+                                    </Text>
+                                </View>
+                                <View style={styles.touchButtonView}>
+                                    {
+                                        this.state.currentTime !== 6 ?
+                                            (<TouchableWithoutFeedback onPress={() => {
+                                                this.goAfterDay()
+                                            }} style={styles.touchButton}>
+                                                <View style={{
+                                                    width: 60,
+                                                    height: 40,
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}>
+                                                    <Image source={require('../resource/icon_24.png')}></Image>
+                                                </View>
+                                            </TouchableWithoutFeedback>) : (
+                                                <Image source={require('../resource/icon_34.png')}></Image>)
+                                    }
+
+                                </View>
                             </View>
-                    </View>
-                    <View style={styles.DataImg}>
-                        <TouchableWithoutFeedback onPress={()=>{this.setState({showCalander:!this.state.showCalander})}}>
-                            <View style={{width:60,height:40,justifyContent:"center",alignItems:"center"}}>
-                                <Image source = {require('../resource/icon_54.png')} style ={{resizeMode:'stretch',height: 22,width: 22,}}></Image>
+                            <View style={styles.DataImg}>
+                                <TouchableWithoutFeedback onPress={() => {
+                                    this.setState({showCalander: !this.state.showCalander})
+                                }}>
+                                    <View
+                                        style={{width: 60, height: 40, justifyContent: "center", alignItems: "center"}}>
+                                        <Image source={require('../resource/icon_54.png')}
+                                               style={{resizeMode: 'stretch', height: 22, width: 22,}}></Image>
+                                    </View>
+                                </TouchableWithoutFeedback>
                             </View>
-                        </TouchableWithoutFeedback>
-                    </View>
-                </View>)
+                        </View>)
 
                 }
                 <View>
-                   {
-                     this.state.type==2?(<LeagueLive SelectMatch={this.SelectMatch}></LeagueLive>):this.state.type==6?(<LeagueResult dataSource={this.state.dataSource}></LeagueResult>):(<LeagueProcess dataSource = {this.state.dataSource} SelectMatch={this.SelectMatch}></LeagueProcess>)   
-                   }
+                    {
+                        this.state.type == 2 ? (
+                            <LeagueLive SelectMatch={this.SelectMatch}></LeagueLive>) : this.state.type == 6 ? (
+                            <LeagueResult dataSource={this.state.dataSource}></LeagueResult>) : (
+                            <LeagueProcess dataSource={this.state.dataSource}
+                                           SelectMatch={this.SelectMatch}></LeagueProcess>)
+                    }
                 </View>
                 {
                     this.state.showGameType == false ? (null) : (
-                        <GameType 
-                        changeGameType = {this._changeGameType} 
-                        showGameType = {this.state.showGameType} 
-                        changeImgType = {this._changeImgType} 
-                        sportId = {this.state.sportId}></GameType>)
-                }   
+                        <GameType
+                            changeGameType={this._changeGameType}
+                            showGameType={this.state.showGameType}
+                            changeImgType={this._changeImgType}
+                            sportId={this.state.sportId}></GameType>)
+                }
                 {
                     this.state.showCalander == false ? null : (
-                        <Calander dateList = {this.state.dateList} 
-                        currentTime = {this.state.currentTime} 
-                        changeCalander = {this._changeCalander} 
-                        showCalander = {this.state.showCalander}
-                        changeCurrentTime = {this._changeCurrentTime}
+                        <Calander dateList={this.state.dateList}
+                                  currentTime={this.state.currentTime}
+                                  changeCalander={this._changeCalander}
+                                  showCalander={this.state.showCalander}
+                                  changeCurrentTime={this._changeCurrentTime}
                         ></Calander>)
                 }
-                {this.state.showGameType?<View style = {styles.forthFive}></View>:null}
+                {this.state.showGameType ? <View style={styles.forthFive}></View> : null}
                 <Alert ref={(refAlert) => {
-                            this.alert = refAlert
-                        }}></Alert>
+                    this.alert = refAlert
+                }}></Alert>
                 <Loading ref={(refLoading) => {
-                            this.loading = refLoading
-                        }}></Loading>    
+                    this.loading = refLoading
+                }}></Loading>
             </View>
         );
 
@@ -353,7 +403,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    ...bindActionCreators(Actions,dispatch)
+    ...bindActionCreators(Actions, dispatch)
 });
 
 
@@ -399,7 +449,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical:10,
+        paddingVertical: 10,
     },
     DataImg: {
         height: 40,
@@ -407,19 +457,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     touchButton: {
-        width:60,
-        height:40,
+        width: 60,
+        height: 40,
         justifyContent: 'center',
-        alignItems:'center',
+        alignItems: 'center',
     },
-    touchButtonView:{
-        justifyContent:'center',
-        alignItems:'center',
-        width:20,
-        height:20,
+    touchButtonView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 20,
+        height: 20,
     },
     tTouch: {
-        flex: 1, 
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -439,7 +489,7 @@ const styles = StyleSheet.create({
         width: 14,
         backgroundColor: '#fff',
         position: 'absolute',
-        top: Platform.OS=='ios'?98:78,
+        top: Platform.OS == 'ios' ? 98 : 78,
         transform: [{
             rotateZ: '45deg'
         }],
