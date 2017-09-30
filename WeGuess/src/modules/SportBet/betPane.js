@@ -166,9 +166,9 @@ export default class SportBetList extends ContainerComponent {
         let {Limit, Ticket, TicketList} = this.props.betInfo;
         return (
             <TouchableWithoutFeedback onPress={()=>{this.props.closeBetPanel()}}>
-            <View style={[styles.container,{bottom:this.props.isCommon?(Platform.os=='ios'?(this.state.keyboardSpace-20):this.state.keyboardSpace):(Platform.os=='ios'?this.state.keyboardSpace-20:0)}]}>
+            <View style={[styles.container,{bottom:this.props.isCommon?(Platform.os=='ios'?(0):this.state.keyboardSpace):(Platform.os=='ios'?this.state.keyboardSpace-20:0)}]}>
                 <TouchableWithoutFeedback onPress={()=>{}}>
-                <View style={styles.body}>
+                <View style={[styles.body,{bottom:Platform.os=='ios'?this.state.keyboardSpace:0}]}>
                     <View style={styles.btPaneTitle}>
                         <View style={styles.banlace}>
                             <Image source={require('./resource/icon_15.png')} style={styles.banlanceImg}></Image>
