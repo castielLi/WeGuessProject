@@ -75,13 +75,13 @@ class LeagueProcess extends ContainerComponent {
       <TouchableOpacity onPress={()=>{this.SelectMatch(rowData.MID)}}>
                <View style={[styles.item,{backgroundColor:rowID%2==0?"#ededed":"#f7f7f7"}]}>
                           <View style={styles.league}>
-                              <Text style={{flex:1,textAlign:'center',paddingTop:10,color:'#4c4c4c'}}>{rowData.LN}</Text>
+                              <Text numberOfLines={1} style={{flex:1,textAlign:'center',paddingTop:10,color:'#4c4c4c'}}>{rowData.LN}</Text>
                               <Text style={{flex:1,textAlign:'center',color:'#808080'}}>{rowData.MD.split(" ")[1]}</Text>
                           </View>
                           <View style={styles.team}>
-                            <Text style={{textAlign:'right',flex:3,color:'#000',fontSize:14}}>{rowData.HN}</Text>
+                            <Text numberOfLines={1} style={{textAlign:'right',flex:3,color:'#000',fontSize:14}}>{rowData.HN}</Text>
                             <Text style={{flex:1,textAlign:'center',fontSize:12}}>VS</Text>
-                            <Text style={{textAlign:'left',flex:3,color:'#000',fontSize:14}}>{rowData.AN}</Text>
+                            <Text numberOfLines={1} style={{textAlign:'left',flex:3,color:'#000',fontSize:14}}>{rowData.AN}</Text>
                           </View>
                 </View>
                 </TouchableOpacity>

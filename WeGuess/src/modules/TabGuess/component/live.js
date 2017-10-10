@@ -53,7 +53,6 @@ class Live extends ContainerComponent {
 
 fetchData(sportId = this.props.sportId, refresh, callback) {
         let that = this;
-
         let params = {
             SportId: sportId,
             UpdateTime: "",
@@ -87,7 +86,6 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
 
     fetchRefreshData(sportId = this.props.sportId, refresh, callback) {
         let that = this;
-
         let params = {
             SportId: sportId,
             UpdateTime: "",
@@ -105,7 +103,11 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
                 }
             }
 
-        },(error)=>{this.showError(error)}).catch((error) => {
+        },(error)=>{
+                        if(error!=-2){
+               this.showError(error);
+            }
+        }).catch((error) => {
 
             this.showError(error);
         });

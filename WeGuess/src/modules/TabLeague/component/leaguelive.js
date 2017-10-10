@@ -105,7 +105,11 @@ class LeagueResult extends ContainerComponent {
                     // isHiddenFooter: true
                 });
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        },(error)=>{
+            if(error!=-2){
+               this.showError(error);
+            }
+        }).catch((error) => {
 
             this.showError(error);
         })
@@ -207,7 +211,7 @@ const styles = StyleSheet.create({
         borderTopColor: '#ccc',
     },
     wraper: {
-        height: ScreenHeight - 154
+        height: ScreenHeight - 108
     },
     item: {
         flexDirection: 'row',

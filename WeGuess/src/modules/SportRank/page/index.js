@@ -63,6 +63,7 @@ export default class SportRank extends ContainerComponent {
         this.setState({
             type: index
         },()=>{
+            this.showLoading();
         	this.fetchData()
         })
     }
@@ -74,6 +75,7 @@ export default class SportRank extends ContainerComponent {
         };
         let that = this;
         this.networking.get(GetRankList, params, {}).then((responseData) => {
+            that.hideLoading();
             let {
                 Result,
                 Data
@@ -103,12 +105,14 @@ export default class SportRank extends ContainerComponent {
             } else {
                 that.showError(Result);
             }
-        }).catch((error) => {
+        },(error)=>{that.hideLoading();that.showError(error);}).catch((error) => {
+            that.hideLoading();
             that.showError(error);
         })
     }
 
     componentDidMount() {
+        this.showLoading();
         this.fetchData();
     }
 

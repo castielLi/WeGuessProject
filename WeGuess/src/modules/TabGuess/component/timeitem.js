@@ -113,10 +113,12 @@ class TimeItem extends ContainerComponent {
         }, (error) => {
 
             this.hideLoading();
-            this.showError(error);
+            if(error!=-2){
+               this.showError(error);
+            }
+            
         }).catch((error) => {
             this.hideLoading();
-
             this.showError(error);
         })
     }

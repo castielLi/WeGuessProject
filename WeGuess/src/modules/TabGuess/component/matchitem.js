@@ -107,7 +107,9 @@ class TimeItem extends ContainerComponent {
                     matchList: responseData.Data[this.state.currentIndex].MList
                 });
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        },(error)=>{            if(error!=-2){
+               this.showError(error);
+            }}).catch((error) => {
             this.showError(error);
         })
     }

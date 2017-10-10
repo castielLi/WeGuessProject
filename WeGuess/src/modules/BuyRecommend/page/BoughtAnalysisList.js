@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#edeff2"
     },
     headerStyle: {
-        flexDirection: 'row',
+        flexDirection: 'row',   
         backgroundColor: '#edeff2',
         borderBottomWidth: 1,
         borderColor: '#ccc',

@@ -58,17 +58,17 @@ class LeagueResult extends Component {
     return (
       <View style={[styles.item,{backgroundColor:rowID%2==0?"#ededed":"#f7f7f7"}]}>
                           <View style={styles.league}>
-                               <Text style={{flex:1,textAlign:'center',paddingTop:10,color:'#4c4c4c'}}>{rowData.LN}</Text>
+                              <Text numberOfLines={1} style={{flex:1,textAlign:'center',paddingTop:10,color:'#4c4c4c'}}>{rowData.LN}</Text>
                               <Text style={{flex:1,textAlign:'center',color:'#808080'}}>{rowData.MD.split(" ")[1]}</Text>
                           </View>
                           <View style={styles.team}>
-                            <Text style={{textAlign:'right',flex:3,color:'#000'}}>{rowData.HN}</Text>
+                            <Text numberOfLines={1} style={{textAlign:'right',flex:3,color:'#000'}}>{rowData.HN}</Text>
                             <View style={{flex:1,}}>
                               <Text style={{textAlign:'center',fontSize:10,}}>{rowData.HalfScore}</Text>
                               {rowData.Status=="等待"?<Text style={{textAlign:'center',fontSize:10}}>{rowData.Status}</Text>:null}
                               <Text style={{textAlign:'center',color:'#D80100',fontSize:14}}>{rowData.FullScore}</Text>
                             </View>
-                            <Text style={{textAlign:'left',flex:3,color:'#000'}}>{rowData.AN}</Text>
+                            <Text numberOfLines={1} style={{textAlign:'left',flex:3,color:'#000'}}>{rowData.AN}</Text>
                           </View>
                 </View>
     );

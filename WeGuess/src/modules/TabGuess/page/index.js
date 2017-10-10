@@ -165,7 +165,7 @@ class Guess extends ContainerComponent {
             })
         }
     }
-    //请求投注
+    //请求投注 type:{true:串关，false:普通投注}
     initBet = (type, parma) => {
         this.setState({
             hideBetMsg: false,
