@@ -40,7 +40,7 @@ export default function fetchPolyfill (input, init) {
     if (init.timeout) {
       xhr.timeout = init.timeout;
     }else{
-      xhr.timeout = config.TIMEOUT; 
+      xhr.timeout = config.TIMEOUT?config.TIMEOUT:30000;
     }
 
 

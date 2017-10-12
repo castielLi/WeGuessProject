@@ -18,6 +18,7 @@ import {
     Dimensions,
     Platform,
     ScrollView,
+    Alert,
 } from 'react-native';
 import {
     connect
@@ -48,6 +49,7 @@ import {StatusBar} from "../../Component/BackButton";
 import {bindActionCreators} from "redux";
 import AppUpdate from '../../AppUpdate/page/index';
 import * as Actions from '../reducer/action';
+import * as ActionsBean from '../../TokenManager/reducer/action';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -284,17 +286,16 @@ class Guess extends ContainerComponent {
         })
         //显示loading;
         this.showLoading();
-        var that = this;
+        let that = this;
         if (this.state.isMix) { //混合投注;
             this.networking.post(BetMix, params, {}).then((data) => {
-
-                this.hideLoading();
-                that.getBalance();
-
-                let {BetID, SubBets, BetValue, BackAmount} = data.Data;
+                that.hideLoading();
+                if(data.Data !=null){
+                   let {BetID, SubBets, BetValue, BackAmount} = data.Data;
+                
                 if (data.BetResult === 0) {
-                    this.props.getMemberInfo();
-                    this.showAlert("投注成功", (<View style={{maxHeight: 300,}}><ScrollView>{
+                    that.props.getMemberInfo();
+                    that.showAlert("投注成功", (<View style={{maxHeight: 300,}}><ScrollView>{
                         SubBets.map((match, index) => {
                             return (
                                 <View style={styles.detail} key={index}>
@@ -317,16 +318,19 @@ class Guess extends ContainerComponent {
                         })
                     }</ScrollView></View>), () => {
                     });
-                    this.setState({
+                    that.setState({
                         hideBetMsg: true,
                         betParams: null,
                     })
+                    
 
-                }
+                }}
                 else if (data.BetResult === 2 || data.BetResult === 3) {
-                    this.showAlert("提示", "串关赔率已变化");
+                       that.showAlert("提示", "串关赔率已变化");
                 } else {
-                    this.showAlert("提示", "投注失败");
+                        this.showAlert("提示",data.ErrorMsg,()=>{
+                            this.props.navigation.navigate("VoucherCenter", {state:0})
+                        },()=>{},"充值","取消")
                 }
 
             }).catch((err) => {
@@ -341,18 +345,17 @@ class Guess extends ContainerComponent {
             this.setState({
                 isShowBet: false
             });
-            let that = this;
             this.networking.post(Bet, params, {}).then((responseData) => {
                 this.hideLoading();
                 that.setState.selectBetitem = "";
                 let data = responseData;
 
-
                 //投注成功
                 if (data.BetResult === 0) {
-                    let {BetID, SubBets, BetValue, BackAmount} = data.Data;
-                    this.props.getMemberInfo();
-                    this.showAlert("投注成功", (<View>{
+                     that.props.getMemberInfo();
+                    if(data.Data !=null){
+                        let {BetID, SubBets, BetValue, BackAmount} = data.Data;                   
+                        that.showAlert("投注成功", (<View>{
                         SubBets.map((match, index) => {
                             return (
                                 <View style={styles.detail} key={index}>
@@ -374,34 +377,30 @@ class Guess extends ContainerComponent {
                         })
                     }</View>), () => {
                     });
-                    this.setState({
+                    that.setState({
                         betResult: data.Data,
                         betParams: "",
                         betSuccess: true,
                     })
-
+                }
+               
                 } else if (data.BetResult === 2 || data.BetResult === 3) {
                     var str = "";
                     if (data.Changed.NewOdds != data.Changed.OldOdds) {
                         str += "赔率已从{0}变化为{1} ".format(data.Changed.OldOdds, data.Changed.NewOdds);
                     }
-                    if (data.Changed.NewHdp != data.Changed.OldHdp) {
-                        str += "球头已从{0}变化为{1} ".format(data.Changed.OldHdp, data.Changed.NewHdp);
-                    }
-                    str += "是否继续投注?";
-                    this.setState({
-                        betParams: "",
-                        betFail: true,
-                        errorMsg: str,
-                    })
+                   that.showAlert("提示", str,()=>{
+                       that.initBet(false,{betOdds:params.Odds,betPos:params.BetPos,couid:params.CouID,matchId:params.MatchID,marketId:params.MarketID,});
+                   },()=>{},"继续投注","取消");
 
                 } else {
                     //处理异常状态
-                    this.showAlert("提示", "投注异常:" + data.ErrorMsg);
+                    this.showAlert("提示",data.ErrorMsg,()=>{
+                    this.props.navigation.navigate("VoucherCenter", {state:0})
+                },()=>{},"充值","取消")
                 }
-                this.getBalance();
             }).catch((error) => {
-                this.hideLoading();
+                that.hideLoading();
 
             })
         }
@@ -461,13 +460,6 @@ class Guess extends ContainerComponent {
         if (this.props.loginStore.hasToken) {
             this.getBalance();
         }
-
-        //1.判断是否已经做导航判断
-        //2.根据版本判断是否初始化
-        //3.已初始化，splash.hide()
-        //4.未初始化，路由跳转，在导航页splash.hide();
-        //5.导航页Android返回监听
-
     }
 
     renderGameType = () => {
@@ -599,12 +591,12 @@ class Guess extends ContainerComponent {
 }
 
 const mapStateToProps = state => ({
-    guessStore: state.guessStore,
     loginStore: state.loginStore,
 });
 
 const mapDispatchToProps = dispatch => ({
-    ...bindActionCreators(Actions, dispatch)
+    ...bindActionCreators(Actions, dispatch),
+    ...bindActionCreators(ActionsBean,dispatch)
 });
 
 

@@ -10,7 +10,8 @@ import {
     Text,
     Image,
     ListView,
-    Dimensions
+    Dimensions,
+    ActivityIndicator
 } from 'react-native';
 import ContainerComponent from '../../../Core/Component/ContainerComponent';
 import TabView from '../../Component/TabView';
@@ -45,6 +46,7 @@ export default class SportRank extends ContainerComponent {
             dataSourceMonth: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => r1 !== r2
             }),
+            showLoading:false,
         }
         this.weekData=[];
         this.monthData=[];
@@ -63,7 +65,9 @@ export default class SportRank extends ContainerComponent {
         this.setState({
             type: index
         },()=>{
-            this.showLoading();
+            this.setState({
+                showLoading:true
+            })
         	this.fetchData()
         })
     }
@@ -75,7 +79,9 @@ export default class SportRank extends ContainerComponent {
         };
         let that = this;
         this.networking.get(GetRankList, params, {}).then((responseData) => {
-            that.hideLoading();
+            this.setState({
+                  showLoading:false
+            })
             let {
                 Result,
                 Data
@@ -106,13 +112,17 @@ export default class SportRank extends ContainerComponent {
                 that.showError(Result);
             }
         },(error)=>{that.hideLoading();that.showError(error);}).catch((error) => {
-            that.hideLoading();
+            this.setState({
+              showLoading:false
+            })
             that.showError(error);
         })
     }
 
     componentDidMount() {
-        this.showLoading();
+        this.setState({
+            showLoading:true
+        })
         this.fetchData();
     }
 
@@ -166,7 +176,13 @@ export default class SportRank extends ContainerComponent {
                         <Text style={styles.titleText}>胜率</Text>
                     </View>
                 </View>
-                {
+                {this.state.showLoading?(<View style={{backgroundColor:"#fff",justifyContent:"center",height:Dimensions.get('window').height - 180}}>
+                              <ActivityIndicator
+                                    color="#3a67b3"
+                                    style={[styles.centering, {height: 80}]}
+                                    size="large"
+                                />
+                    </View>):
                 	this.state.type==0?(
                 		<ListView
 		                    style={{maxHeight: Dimensions.get('window').height - 180}}

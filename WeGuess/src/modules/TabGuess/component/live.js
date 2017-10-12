@@ -13,7 +13,8 @@ import {
     Image,
     Text,
     View,
-    Dimensions
+    Dimensions,
+    ActivityIndicator
 } from 'react-native';
 import {GetOddsByLive} from '../../Config/apiUrlConfig';
 import ContainerComponent from '../../.././Core/Component/ContainerComponent';
@@ -73,13 +74,19 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
             }else{
                that.showAlert("提示", ErrorMsg);
             }
-            that.hideLoading();
+            this.setState({
+               showLoading:false
+           })
 
         }, (error) => {
-            that.hideLoading();
+            this.setState({
+                showLoading:false,
+            })
             this.showError(error);
         }).catch((error) => {
-            that.hideLoading();
+            this.setState({
+                showLoading:false,
+            })
             this.showError(error);
         });
     }
@@ -180,6 +187,9 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
+            this.setState({
+               showLoading:true
+           })
             this.fetchData();
         }
         return true
@@ -187,7 +197,9 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
 
     componentDidMount() {
         if (this.props.loginStore.hasToken) {
-           this.showLoading();
+           this.setState({
+               showLoading:true
+           })
             this.fetchData();
         }
     }
@@ -199,7 +211,13 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
         return (
             <View style={styles.body}>
                <ScrollView style={{height:height-146}}>
-                {
+                 {this.state.showLoading?(<View style={{flex:1,backgroundColor:"#fff",justifyContent:"center",marginTop:(height-148)*0.5}}>
+                              <ActivityIndicator
+                                    color="#3a67b3"
+                                    style={[styles.centering, {height: 80}]}
+                                    size="large"
+                                />
+                    </View>):
                     MH ? (
                         MH.map((match, index) => {
                             return (
@@ -338,7 +356,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    // ...bindActionCreators(tabbarAction,dispatch)
+    //...bindActionCreators(tabbarAction,dispatch)
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Live);
 const styles = StyleSheet.create({

@@ -11,7 +11,8 @@ import {
     StyleSheet,
     Text,
     View,
-    Dimensions
+    Dimensions,
+    ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux';
 import HTTPBase from '../network/http.js';
@@ -34,6 +35,7 @@ class TimeItem extends ContainerComponent {
             data: [],
             matchList: [],
             currentIndex: 0,
+            showLoading:false,
         };
         this.timer=null;
         this.fetchData = this.fetchData.bind(this);
@@ -63,14 +65,15 @@ class TimeItem extends ContainerComponent {
     }
     //网络请求
     fetchData(sportId = this.props.sportId) {
-        this.showLoading();
         let params = {
             "SportId": sportId,
         };
        
         this.refreshData();
         this.networking.get(GetOddsByLeague, params, {}).then((responseData) => {
-            this.hideLoading();
+            this.setState({
+                showLoading:false,
+            })
             if (responseData.Data.length <= 0) {
                 this.setState({
                      data: responseData.Data,
@@ -83,11 +86,15 @@ class TimeItem extends ContainerComponent {
                 });
             }
         }, (error) => {
-            this.hideLoading();
+            this.setState({
+                showLoading:false,
+            })
             this.showError(error);
         }).catch((error) => {
-            this.hideLoading();
-            this.showError(0);
+            this.setState({
+                showLoading:false,
+            })
+            this.showError(error);
         })
     }
     fetchRefreshData=(sportId = this.props.sportId)=>{
@@ -124,6 +131,9 @@ class TimeItem extends ContainerComponent {
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
+             this.setState({
+                showLoading:true,
+            })
             this.fetchData();
         }
         return true
@@ -131,6 +141,9 @@ class TimeItem extends ContainerComponent {
 
     componentDidMount() {
         if (this.props.loginStore.hasToken) {
+            this.setState({
+                showLoading:true,
+            })
             this.fetchData();
         }
     }
@@ -140,7 +153,14 @@ class TimeItem extends ContainerComponent {
         let Loading = this.Loading;
         return (
             <View style={styles.container}>
-                {this.state.data.length>0?(<View style={styles.body}>
+                {this.state.showLoading?(<View style={{flex:1,backgroundColor:"#fff",justifyContent:"center"}}>
+                              <ActivityIndicator
+                                    color="#3a67b3"
+                                    style={[styles.centering, {height: 80}]}
+                                    size="large"
+                                />
+                    </View>):
+                this.state.data.length>0?(<View style={styles.body}>
                         <LeftItem data={this.state.data} kind='2' changeIndex={(index) => {
                             this.changeIndex(index)
                         }}></LeftItem>
@@ -178,6 +198,8 @@ const styles = StyleSheet.create({
         borderTopColor: '#ccc',
     },
     container:{
-        height:height-148
+        height:height-148,
+        borderTopWidth: 1,
+        borderTopColor: '#ccc',
     }
 });

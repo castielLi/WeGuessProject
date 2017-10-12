@@ -16,7 +16,8 @@ import {
     View,
     ScrollView,
     Dimensions,
-    Platform
+    Platform,
+    ActivityIndicator
 } from 'react-native';
 import {connect} from 'react-redux';
 import {GetOddsByMix} from '../../Config/apiUrlConfig';
@@ -216,14 +217,15 @@ class Mix extends ContainerComponent {
     }
 
     fetchData(sportId=this.props.sportId) {
-        this.showLoading();
         let params = {
             SportId: sportId,
             UpdateTime: this.state.updateTime,
             isMix: true,
         }
         this.networking.get(GetOddsByMix, params).then((responseData) => {
-            this.hideLoading();
+             this.setState({
+                showLoading:false
+            })
             if (responseData.Data.MH == null) {
                 this.setState({
                     listViewData:[],
@@ -245,10 +247,14 @@ class Mix extends ContainerComponent {
                 })
             }
         }, (error) => {
-            this.hideLoading();
+            this.setState({
+                showLoading:false,
+            })
             this.showError(error);
         }).catch((error) => {
-            this.hideLoading();
+            this.setState({
+                showLoading:false,
+            })
             this.showError(0);
         });
     }
@@ -269,6 +275,9 @@ class Mix extends ContainerComponent {
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
+             this.setState({
+                showLoading:true
+            })
             this.fetchData();
         }
         return true
@@ -276,6 +285,9 @@ class Mix extends ContainerComponent {
 
     componentDidMount() {
         if (this.props.loginStore.hasToken) {
+            this.setState({
+                showLoading:true
+            })
             this.fetchData();
         }
     }
@@ -285,7 +297,13 @@ class Mix extends ContainerComponent {
         let Loading = this.Loading;
         return (
             <View style={styles.body}>
-                {
+                 {this.state.showLoading?(<View style={{flex:1,backgroundColor:"#fff",justifyContent:"center"}}>
+                              <ActivityIndicator
+                                    color="#3a67b3"
+                                    style={[styles.centering, {height: 80}]}
+                                    size="large"
+                                />
+                    </View>):
                     this.state.listViewData.length>0?(
                          
                             <ListView

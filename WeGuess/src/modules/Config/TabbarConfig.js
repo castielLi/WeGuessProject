@@ -2,9 +2,9 @@
  * Created by ml23 on 2017/08/04.
  */
 
-import React, {Component} from 'react';
+import React from 'react';
 import {StyleSheet, Image, Text} from 'react-native';
-import {TabNavigator, addNavigationHelpers} from "react-navigation";
+import {TabNavigator} from "react-navigation";
 import TabRecommend from '../TabRecommend/page';
 import TabLeague from '../TabLeague/page';
 import TabGuess from '../TabGuess/page';

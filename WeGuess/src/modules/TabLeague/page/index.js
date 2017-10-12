@@ -19,6 +19,7 @@ import {
     Image,
     ListView,
     Platform,
+    ActivityIndicator,
 } from 'react-native';
 import {
     connect
@@ -70,7 +71,8 @@ class League extends ContainerComponent {
             sportId: 1,
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => r1 !== r2
-            })
+            }),
+            showLoading:false,
 
         }
         this.timer = null;
@@ -84,7 +86,7 @@ class League extends ContainerComponent {
     }
 
     fetchData = (sportId = this.state.sportId) => {
-        this.showLoading();
+        //this.showLoading();
         let url = "";
         let params = {
             "SportId": sportId,
@@ -97,14 +99,23 @@ class League extends ContainerComponent {
         }
         //this.refreshData();
         this.networking.get(url, params, {}).then((responseData) => {
+            this.setState({
+               showLoading:false
+           })
             this.hideLoading();
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.Data)
             });
         }, (error) => {
+             this.setState({
+               showLoading:false
+           })
             this.hideLoading();
             this.showError(error);
         }).catch((error) => {
+            this.setState({
+               showLoading:false
+           })
             this.hideLoading();
             this.showError(0);
         })
@@ -187,6 +198,7 @@ class League extends ContainerComponent {
         this.setState({
             currentTime: this.state.currentTime - 1
         }, () => {
+            this.showLoading();
             this.fetchData();
         });
 
@@ -199,6 +211,7 @@ class League extends ContainerComponent {
         this.setState({
             currentTime: this.state.currentTime + 1
         }, () => {
+            this.showLoading();
             this.fetchData();
         })
 
@@ -234,13 +247,22 @@ class League extends ContainerComponent {
         return this.getDateList(this.state.type);
     }
 
-    _changeType = (flag) => {
+    _changeType = (flag) => {//2:live 6:result 0:process
         if (flag == 0) {
-            flag = 2
+            flag = 2;
+            this.setState({
+                showLoading:false
+            })
         } else if (flag == 1) {
-            flag = 6
+            flag = 6;
+            this.setState({
+                showLoading:true
+            })
         } else {
-            flag = 0
+            flag = 0;
+            this.setState({
+                showLoading:true
+            })
         }
         this.setState({
             type: flag,
@@ -359,7 +381,13 @@ class League extends ContainerComponent {
 
                 }
                 <View>
-                    {
+                     {this.state.showLoading?(<View style={{backgroundColor:"#fff",justifyContent:"center",height:Screen.ScreenHeight-148}}>
+                              <ActivityIndicator
+                                    color="#3a67b3"
+                                    style={[styles.centering, {height: 80}]}
+                                    size="large"
+                                />
+                    </View>):
                         this.state.type == 2 ? (
                             <LeagueLive SelectMatch={this.SelectMatch}></LeagueLive>) : this.state.type == 6 ? (
                             <LeagueResult dataSource={this.state.dataSource}></LeagueResult>) : (

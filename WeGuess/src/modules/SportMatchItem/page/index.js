@@ -248,7 +248,9 @@ class Match extends ContainerComponent {
             that.hideLoading();
             that.setState.selectBetitem = "";
             let data = responseData;
-            let {BetID, SubBets, BetValue, BackAmount} = data.Data;
+            if(data.Data !=null){
+              let {BetID, SubBets, BetValue, BackAmount} = data.Data;
+            }
 
             //投注成功
             if (data.BetResult === 0) {
@@ -292,24 +294,19 @@ class Match extends ContainerComponent {
                 if (data.Changed.NewOdds != data.Changed.OldOdds) {
                     str += "赔率已从{0}变化为{1} ".format(data.Changed.OldOdds, data.Changed.NewOdds);
                 }
-                if (data.Changed.NewHdp != data.Changed.OldHdp) {
-                    str += "球头已从{0}变化为{1} ".format(data.Changed.OldHdp, data.Changed.NewHdp);
-                }
-                str += "是否继续投注?";
-                this.setState({
-                    betParams: "",
-                    betFail: true,
-                    errorMsg: str,
-                })
+                that.showAlert("提示", str,()=>{
+                       that.initBet({betOdds:params.Odds,betPos:params.BetPos,couid:params.CouID,marketId:params.MarketID,});
+                   },()=>{},"继续投注","取消");
             } else {
                 //处理异常状态
-                this.showAlert("提示", "投注异常:" + data.ErrorMsg)
+                this.showAlert("提示",data.ErrorMsg,()=>{
+                    this.props.navigation.navigate("VoucherCenter", {state:0})
+                },()=>{},"充值","取消")
                 switch (data.BetResult) {
                     default:
                         break;
                 }
             }
-            this.getBalance();
         },(error)=>{this.showError(error)}).catch((error) => {
             this.hideLoading();
 

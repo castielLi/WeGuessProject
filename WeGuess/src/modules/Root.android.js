@@ -20,23 +20,11 @@ import * as Actions from './TokenManager/reducer/action';
 import AppUpdate from './AppUpdate/page/index';
 import ContainerComponent from '../Core/Component/ContainerComponent';
 import DeviceInfo from 'react-native-device-info';
+import HOCFactory from "../Core/HOC";
 
 class App extends ContainerComponent {
     constructor(props) {
         super(props);
-    }
-
-    componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
-            if (this.lastBackPressed && this.lastBackPressed + 1000 >= Date.now()) {
-                //最近2秒内按过back键，可以退出应用。
-                BackHandler.exitApp();
-                return false;
-            }
-            this.lastBackPressed = Date.now();
-            ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-            return true;
-        });
     }
 
     componentDidMount() {
@@ -72,10 +60,8 @@ class App extends ContainerComponent {
     render() {
         return (
             <View style={{flex: 1}}>
-                <View style={{flex: 1}}>
-                    <AppNavigator onNavigationStateChange={this.onNavigationStateChange.bind(this)}/>
-                    <AppUpdate />
-                </View>
+                <AppNavigator onNavigationStateChange={this.onNavigationStateChange.bind(this)}/>
+                <AppUpdate />
             </View>
         );
     }
@@ -86,7 +72,7 @@ const mapDispatchToProps = dispatch => ({
     ...bindActionCreators(Actions, dispatch)
 });
 
-export const AppWithNavigationState = connect(mapStateToProps, mapDispatchToProps)(App);
+export const AppWithNavigationState = HOCFactory(connect(mapStateToProps, mapDispatchToProps)(App),["HocAndroidBack"]);
 
 const navReducer = (state, action) => {
     let newAction = action;

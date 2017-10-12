@@ -12,7 +12,8 @@ import {
     ScrollView,
     Image,
     TouchableWithoutFeedback,
-    Dimensions
+    Dimensions,
+    ActivityIndicator
 } from 'react-native';
 import ContainerComponent from '../../../Core/Component/ContainerComponent';
 import {GetUnbalancedBets, GetBalancedBetDate, GetBalancedBets, PublishBet} from "../../Config/apiUrlConfig";
@@ -62,16 +63,18 @@ export default class SportBetList extends ContainerComponent {
             dataDateListLength: 0,
             betData: null,
             publishList: null,
+            showLoading:false,
         }
         this.tabList = ["未结算", "已结算"];
     }
 
     //获取未结算数据
     getBetList = () => {
-        this.showLoading();
         let that = this;
         this.networking.get(GetUnbalancedBets, null, {}).then((responseData) => {
-            that.hideLoading();
+           this.setState({
+               showLoading:false
+           })
             let {Success, Data, ErrorMsg} = responseData;
             if (Success) {
                 this.setState({
@@ -83,17 +86,21 @@ export default class SportBetList extends ContainerComponent {
                 this.showAlert("提示", ErrorMsg);
             }
         }, (error) => {
-            that.hideLoading();
+            this.setState({
+               showLoading:false
+           })
             this.showError(error);
         }).catch((error) => {
-            that.hideLoading();
+            this.setState({
+               showLoading:false
+           })
             this.showError(error);
         })
     }
 
     //获取已结算数据
     getBetDate = (date) => {
-        this.showLoading();
+       // this.showLoading();
         let params = {
             repDate: date
         }
@@ -107,20 +114,26 @@ export default class SportBetList extends ContainerComponent {
             } else {
                 this.showAlert("提示", ErrorMsg);
             }
-            this.hideLoading();
+            this.setState({
+               showLoading:false
+           })
         }, (error) => {
-            this.hideLoading();
+            this.setState({
+               showLoading:false
+           })
             this.showError(error);
         }).catch((error) => {
 
-            this.hideLoading();
+           this.setState({
+               showLoading:false
+           })
             this.showError(error);
         })
     }
 
     //获取已结算日期数据
     getBetDateList = () => {
-        this.showLoading();
+        //this.showLoading();
         let that = this;
         this.networking.get(GetBalancedBetDate, null, {}).then((responseData) => {
             that.hideLoading();
@@ -133,21 +146,31 @@ export default class SportBetList extends ContainerComponent {
             } else {
                 this.showAlert("提示", ErrorMsg);
             }
+            this.setState({
+               showLoading:false
+           })
         }, (error) => {
-            that.hideLoading();
+           this.setState({
+               showLoading:false
+           })
             this.showError(error);
         }).catch((error) => {
-            that.hideLoading();
+            this.setState({
+               showLoading:false
+           })
             this.showError(error);
         })
     }
 
     componentDidMount() {
+        this.setState({
+            showLoading:true
+        })
         this.getBetList();
     }
 
     changeType = (index) => {
-        this.setState({type: index, betData: null});
+        this.setState({type: index, betData: null,showLoading:true});
         if (index == 0) {
             this.getBetList();
         } else {
@@ -279,7 +302,7 @@ export default class SportBetList extends ContainerComponent {
     }
 
     changeGetBetList = (date) => {
-        this.setState({betData: date});
+        this.setState({betData: date,showLoading:true});
         this.getBetDate(date);
     }
 
@@ -351,9 +374,15 @@ export default class SportBetList extends ContainerComponent {
         return (
             <View style={styles.container}>
                 <TabView tabList={this.tabList} onPress={this.changeType}></TabView>
-                <View style={styles.betView}>
+                {this.state.showLoading?(<View style={{backgroundColor:"#fff",justifyContent:"center",flex:1}}>
+                              <ActivityIndicator
+                                    color="#3a67b3"
+                                    style={[styles.centering, {height: 80}]}
+                                    size="large"
+                                />
+                    </View>):<View style={styles.betView}>
                     {this._renderList()}
-                </View>
+                </View>}
                 <Alert ref={(refAlert) => {
                     this.alert = refAlert
                 }}></Alert>

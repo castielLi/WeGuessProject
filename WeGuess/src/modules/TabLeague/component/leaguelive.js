@@ -14,7 +14,8 @@ import {
     TouchableOpacity,
     ListView,
     Text,
-    View
+    View,
+    ActivityIndicator
 } from 'react-native';
 
 import {
@@ -40,7 +41,8 @@ class LeagueResult extends ContainerComponent {
             dateList: '',
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => r1 !== r2
-            })
+            }),
+            showLoading:false,
         }
         this.timer = null;
         this.fetchData = this.fetchData.bind(this);
@@ -70,6 +72,9 @@ class LeagueResult extends ContainerComponent {
         let that = this;
         that.refreshData();
         this.networking.get(GetTimeLeague, params, {}).then((responseData) => {
+            this.setState({
+                showLoading:false
+            })
                 // 清空数组
             if (responseData.Data.length<=0) {
                     return;
@@ -82,8 +87,14 @@ class LeagueResult extends ContainerComponent {
                 });
             }
         },(error)=>{
+            this.setState({
+                showLoading:false
+            })
             this.showError(error);
         }).catch((error) => {
+            this.setState({
+                showLoading:false
+            })
             this.showError(error);
         })
     }
@@ -127,6 +138,9 @@ class LeagueResult extends ContainerComponent {
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
+            this.setState({
+                showLoading:true
+            })
             this.fetchData();
         }
         return true
@@ -134,6 +148,9 @@ class LeagueResult extends ContainerComponent {
 
     componentDidMount() {
         if (this.props.loginStore.hasToken) {
+            this.setState({
+                showLoading:true
+            })
             this.fetchData();
         }
     }
@@ -142,7 +159,13 @@ class LeagueResult extends ContainerComponent {
         return (
             
             <View style={styles.body}>
-                {
+                {this.state.showLoading?(<View style={{backgroundColor:"#fff",justifyContent:"center",height: ScreenHeight - 108}}>
+                              <ActivityIndicator
+                                    color="#3a67b3"
+                                    style={[styles.centering, {height: 80}]}
+                                    size="large"
+                                />
+                    </View>):
                     this.state.dataSource.rowIdentities.length>0?(
                         <View style={styles.wraper}>
                                 <ListView
