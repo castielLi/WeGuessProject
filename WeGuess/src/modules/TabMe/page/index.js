@@ -11,6 +11,7 @@ import {
     ScrollView,
     Image,
     TouchableWithoutFeedback,
+    Platform
 } from 'react-native';
 import {connect} from 'react-redux';
 import ContainerComponent from '../../.././Core/Component/ContainerComponent';
@@ -19,6 +20,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {numFormat} from "../../Utils/money";
 import {StatusBar} from "../../Component/BackButton";
 import {WebViewUrl} from "../../Config/apiUrlConfig";
+import Account from '../../Config/config'
 
 class Me extends ContainerComponent {
 
@@ -108,16 +110,47 @@ class Me extends ContainerComponent {
                     </TouchableWithoutFeedback>
                     <View style={styles.noLogin}>
                         <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate("Login")}>
-	                        <View>
-	                            <Text style={{fontSize: 16, color: '#3a66b3'}}>
-	                                 立即登录
-	                            </Text>
-	                        </View>                           
+                            <View>
+                                <Text style={{fontSize: 16, color: '#3a66b3'}}>
+                                    立即登录
+                                </Text>
+                            </View>
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
             )
         }
+    }
+
+    renderVoucher = () => {
+        if (Platform.OS == "ios") {
+            if(!this.props.loginStore.isLoggedIn||this.props.loginStore.account===Account){
+                return null
+            }
+        }
+
+        return (
+            <View>
+                <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 0})}>
+                    <View style={styles.userListLi}>
+                        <View style={{flex: 1, flexDirection: 'row'}}>
+                            <Image source={require('../resources/charge.png')} style={styles.listIcon}/>
+                            <Text style={[styles.customFont]}>充值中心</Text>
+                        </View>
+                        <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                    </View>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 2})}>
+                    <View style={styles.userListLi}>
+                        <View style={{flex: 1, flexDirection: 'row'}}>
+                            <Image source={require('../resources/lottery.png')} style={styles.listIcon}/>
+                            <Text style={[styles.customFont]}>抽奖中心</Text>
+                        </View>
+                        <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
+        )
     }
 
     render() {
@@ -132,84 +165,62 @@ class Me extends ContainerComponent {
                     {this.renderUserMsg()}
 
                     <View style={styles.userList}>
-                        <TouchableWithoutFeedback
-                                          onPress={() => this.tabGo("VoucherCenter", {state: 0})}>
-                            <View style={styles.userListLi}>
-	                            <View style={{flex: 1, flexDirection: 'row'}}>
-	                                <Image source={require('../resources/charge.png')} style={styles.listIcon}/>
-	                                <Text style={[styles.customFont]}>充值中心</Text>
-	                            </View>
-	                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback
-                                          onPress={() => this.tabGo("VoucherCenter", {state: 2})}>
-                            <View style={styles.userListLi}>
-	                            <View style={{flex: 1, flexDirection: 'row'}}>
-	                                <Image source={require('../resources/lottery.png')} style={styles.listIcon}/>
-	                                <Text style={[styles.customFont]}>抽奖中心</Text>
-	                            </View>
-	                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                            </View>
-                        </TouchableWithoutFeedback>
+                        {this.renderVoucher()}
                         <TouchableWithoutFeedback onPress={() => this.tabGo("MoneyRecord", {})}>
                             <View style={styles.userListLi}>
-	                            <View style={{flex: 1, flexDirection: 'row'}}>
-	                                <Image source={require('../resources/moneyrecord.png')} style={styles.listIcon}/>
-	                                <Text style={[styles.customFont]}>账目明细</Text>
-	                            </View>
-	                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <Image source={require('../resources/moneyrecord.png')} style={styles.listIcon}/>
+                                    <Text style={[styles.customFont]}>账目明细</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                             </View>
                         </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback onPress={() => this.tabGo("BuyRecommend", {})}>
                             <View style={styles.userListLi}>
-	                            <View style={{flex: 1, flexDirection: 'row'}}>
-	                                <Image source={require('../resources/buyrecommend.png')} style={styles.listIcon}/>
-	                                <Text style={[styles.customFont]}>购买推荐</Text>
-	                            </View>
-	                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <Image source={require('../resources/buyrecommend.png')} style={styles.listIcon}/>
+                                    <Text style={[styles.customFont]}>购买推荐</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                             </View>
                         </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback
-                                          onPress={() => this.tabGo("UserRank", {
-                                              OpenID: this.props.loginStore.openID,
-                                              title: "我的发布"
-                                          })}>
+                        <TouchableWithoutFeedback onPress={() => this.tabGo("UserRank", {
+                            OpenID: this.props.loginStore.openID,
+                            title: "我的发布"
+                        })}>
                             <View style={styles.userListLi}>
-	                            <View style={{flex: 1, flexDirection: 'row'}}>
-	                                <Image source={require('../resources/mypublish.png')} style={styles.listIcon}/>
-	                                <Text style={{fontSize: 14}}>我的发布</Text>
-	                            </View>
-	                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <Image source={require('../resources/mypublish.png')} style={styles.listIcon}/>
+                                    <Text style={{fontSize: 14}}>我的发布</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                             </View>
                         </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback onPress={() => this.tabGo("BindPhone", {state: 2})}>
                             <View style={styles.userListLi}>
-	                            <View style={{flex: 1, flexDirection: 'row'}}>
-	                                <Image source={require('../resources/bindphone.png')} style={styles.listIcon}/>
-	                                <Text style={{fontSize: 14}}>绑定手机号</Text>
-	                            </View>
-	                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <Image source={require('../resources/bindphone.png')} style={styles.listIcon}/>
+                                    <Text style={{fontSize: 14}}>绑定手机号</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                             </View>
                         </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback
-                                          onPress={() => this.showWebViewTabMe(0)}>
+                        <TouchableWithoutFeedback onPress={() => this.showWebViewTabMe(0)}>
                             <View style={styles.userListLi}>
-	                            <View style={{flex: 1, flexDirection: 'row'}}>
-	                                <Image source={require('../resources/argument.png')} style={styles.listIcon}/>
-	                                <Text style={{fontSize: 14}}>用户协议</Text>
-	                            </View>
-	                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <Image source={require('../resources/argument.png')} style={styles.listIcon}/>
+                                    <Text style={{fontSize: 14}}>用户协议</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                             </View>
                         </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback
-                                          onPress={() => this.showWebViewTabMe(1)}>
+                        <TouchableWithoutFeedback onPress={() => this.showWebViewTabMe(1)}>
                             <View style={[styles.userListLi, {borderBottomWidth: 0}]}>
-	                            <View style={{flex: 1, flexDirection: 'row'}}>
-	                                <Image source={require('../resources/winbean.png')} style={styles.listIcon}/>
-	                                <Text style={{fontSize: 14}}>如何获取猜豆</Text>
-	                            </View>
-	                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <Image source={require('../resources/winbean.png')} style={styles.listIcon}/>
+                                    <Text style={{fontSize: 14}}>如何获取猜豆</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>

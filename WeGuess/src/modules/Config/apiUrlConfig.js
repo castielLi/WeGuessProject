@@ -5,6 +5,7 @@ export const hostUrl = "http://m.weguess.cn";
 const baseUrl = "http://m.weguess.cn/memberapi/api/";
 // const baseUrl = "http://192.168.0.133:803/memberapi/api/";
 const sportBaseUrl = "http://sport.weguess.cn/api/";
+export const PayUrl = "http://m.weguess.cn";
 
 export const WebViewUrl = {
     userAgreement: {

@@ -11,6 +11,8 @@ import {
     StyleSheet,
     ListView,
     Image,
+    Platform,
+    Linking
 } from 'react-native';
 import {
     connect
@@ -20,9 +22,10 @@ import ContainerComponent from '../../.././Core/Component/ContainerComponent';
 import {BackButton, BlankButton} from "../../Component/BackButton";
 import method from '../../TabRecommend/common/method';
 
-import {GetAllAnalysis, GetMemberInfo, BuyAnalysis} from '../../Config/apiUrlConfig';
+import {GetAllAnalysis, GetMemberInfo, BuyAnalysis,PayUrl} from '../../Config/apiUrlConfig';
 import ListViewPull from '../../TabRecommend/common/listViewPull';
 import AnalysisItem from '../../TabRecommend/common/analysisItem';
+import Account from '../../Config/config';
 
 class Analysis extends ContainerComponent {
     static navigationOptions = ({navigation}) => {
@@ -130,7 +133,7 @@ class Analysis extends ContainerComponent {
                         </View>
                     </View>,
                     <Text style={{textAlign: 'center', paddingVertical: 30, paddingHorizontal: 20}}>钻石余额不足，请充值</Text>,
-                    () => navigate('VoucherCenter', {state: 0}),
+                    this.goToVoucherCenter,
                     () => {
                     },
                     '立即充值'
@@ -146,6 +149,17 @@ class Analysis extends ContainerComponent {
             that.showError(error);
 
         })
+    }
+
+    goToVoucherCenter=()=>{
+        if (Platform.OS === "ios") {
+            if(!this.props.loginStore.isLoggedIn||this.props.loginStore.account===Account){
+                Linking.openURL(PayUrl).catch(err => console.error('An error occurred', err));
+                return false;
+            }
+        }
+
+        this.props.navigation.navigate('VoucherCenter', {state: 0})
     }
 
     isShowAlert(isLogin, matchData) {

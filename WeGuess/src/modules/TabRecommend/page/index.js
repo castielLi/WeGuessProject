@@ -7,12 +7,14 @@ import {
     Text,
     View,
     Image,
+    Platform,
+    Linking
 } from 'react-native';
 
 import {connect} from 'react-redux';
 import ContainerComponent from '../../.././Core/Component/ContainerComponent';
 
-import {GetPublishRankUrl, GetAnalysisUrl, GetMemberInfo, BuyAnalysis,WebViewUrl} from '../../Config/apiUrlConfig';
+import {GetPublishRankUrl, GetAnalysisUrl, GetMemberInfo, BuyAnalysis,WebViewUrl,PayUrl} from '../../Config/apiUrlConfig';
 import method from '../../TabRecommend/common/method';
 
 import RankItem from '../common/rankItem';
@@ -20,6 +22,7 @@ import AnalysisItem from '../common/analysisItem';
 import Header from './header';
 import {StatusBar} from "../../Component/BackButton";
 import {PullView} from 'react-native-pull';
+import Account from '../../Config/config';
 
 class Recommend extends ContainerComponent {
     static navigationOptions = ({navigation}) => {
@@ -170,7 +173,7 @@ class Recommend extends ContainerComponent {
                         </View>
                     </View>,
                     <Text style={{textAlign: 'center', paddingVertical: 30, paddingHorizontal: 20}}>钻石余额不足，请充值</Text>,
-                    () => navigate('VoucherCenter', {state: 0}),
+                    this.goToVoucherCenter,
                     () => {
                     },
                     '立即充值'
@@ -186,6 +189,17 @@ class Recommend extends ContainerComponent {
             that.showError(error);
 
         })
+    }
+
+    goToVoucherCenter=()=>{
+        if (Platform.OS === "ios") {
+            if(!this.props.loginStore.isLoggedIn||this.props.loginStore.account===Account){
+                Linking.openURL(PayUrl).catch(err => console.error('An error occurred', err));
+                return false;
+            }
+        }
+
+        this.props.navigation.navigate('VoucherCenter', {state: 0})
     }
 
     isShowAlert(isLogin, matchData) {

@@ -11,6 +11,8 @@ import {
     View,
     Image,
     ListView,
+    Platform,
+    Linking
 } from 'react-native';
 import {
     connect
@@ -22,8 +24,9 @@ import ListViewPull from '../../TabRecommend/common/listViewPull';
 import RankItem from '../../TabRecommend/common/rankItem';
 import UserGuessItem from '../../TabRecommend/common/userGuessItem';
 
-import {GetPublishBetByOpenID, GetMyPublishBet, GetMemberInfo, BuyBetRecord} from '../../Config/apiUrlConfig';
+import {GetPublishBetByOpenID, GetMyPublishBet, GetMemberInfo, BuyBetRecord,PayUrl} from '../../Config/apiUrlConfig';
 import method from '../../TabRecommend/common/method';
+import Account from '../../Config/config';
 
 class UserRank extends ContainerComponent {
     static navigationOptions = ({navigation}) => {
@@ -192,7 +195,7 @@ class UserRank extends ContainerComponent {
                         </View>
                     </View>,
                     <Text style={{textAlign: 'center', paddingVertical: 30, paddingHorizontal: 20}}>钻石余额不足，请充值</Text>,
-                    () => navigate('VoucherCenter', {state: 0}),
+                    this.goToVoucherCenter,
                     () => {
                     },
                     '立即充值'
@@ -216,6 +219,18 @@ class UserRank extends ContainerComponent {
 
         })
     }
+
+    goToVoucherCenter=()=>{
+        if (Platform.OS === "ios") {
+            if(!this.props.loginStore.isLoggedIn||this.props.loginStore.account===Account){
+                Linking.openURL(PayUrl).catch(err => console.error('An error occurred', err));
+                return false;
+            }
+        }
+
+        this.props.navigation.navigate('VoucherCenter', {state: 0})
+    }
+
 
     isShowAlert(isLogin, matchData) {
         const {navigate} = this.props.navigation;

@@ -70,9 +70,9 @@ class VoucherCenter extends ContainerComponent {
             getAwardList: false,  //抽奖加载状态
             getAwardEndTime: ''   //获取抽奖截止时间
         }
-        this.diamondsData=[];    //获取钻石数据
-        this.propListData=[];    //获取道具数据
-        this.awardListData=[];   //获取抽奖数据
+        this.diamondsData = [];    //获取钻石数据
+        this.propListData = [];    //获取道具数据
+        this.awardListData = [];   //获取抽奖数据
         this.renderRow = this.renderRow.bind(this);
         this.tabList = ["钻石充值", "道具购买", "抽奖"];
         this.canPress = {
@@ -131,13 +131,7 @@ class VoucherCenter extends ContainerComponent {
         if (this.state.getAwardList) {
             return (
                 <View>
-                    <View style={{
-                        margin: 10,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginBottom: 0,
-                        marginRight: 24
-                    }}>
+                    <View style={styles.tip}>
                         <Text style={{color: '#b2b2b2', flex: 1, opacity: 0.8}}>截止时间:{this.state.GetAwardEndTime}</Text>
                         <TouchableWithoutFeedback
                             onPress={() => this.showWebView(WebViewUrl.awardRule.url, WebViewUrl.awardRule.title)}>
@@ -151,6 +145,16 @@ class VoucherCenter extends ContainerComponent {
                         renderRow={this.renderRow}
                         ref={component => this._scrollView2 = component}
                     />
+
+                    {
+                        Platform.OS == 'ios' ?
+                            (
+                                <View style={styles.tip}>
+                                    <Text style={{color: '#b2b2b2', flex: 1, opacity: 0.8}}>本活动所包含内容，与苹果公司Apple
+                                        lnc.无关。</Text>
+                                </View>
+                            ) :null
+                    }
                 </View>
             )
         }
@@ -220,36 +224,36 @@ class VoucherCenter extends ContainerComponent {
     //支付
     Pay = (token, money, bean) => {
         let that = this
-            that.showAlert(
-                (<View style={[styles.alertTitle]}>
-                    <Text style={{textAlign: 'left'}}>支付方式</Text>
-                    <TouchableWithoutFeedback onPress={() => {
-                        that.alert.Ok()
+        that.showAlert(
+            (<View style={[styles.alertTitle]}>
+                <Text style={{textAlign: 'left'}}>支付方式</Text>
+                <TouchableWithoutFeedback onPress={() => {
+                    that.alert.Ok()
+                }}>
+                    <View style={[styles.titleCancel]}>
+                        <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>),
+            (
+                <View style={[styles.alertContent]}>
+                    <View style={[styles.alertMoney]}>
+                        <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
+                        <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
+                    </View>
+                    <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
+                        that.WFTPay(0, token)
                     }}>
-                        <View style={[styles.titleCancel]}>
-                            <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
+                        <View style={[styles.payType]}>
+                            <View style={[styles.payItem]}>
+                                <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
+                                <Text style={[styles.customFont]}>支付宝支付</Text>
+                            </View>
+                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                         </View>
                     </TouchableWithoutFeedback>
-                </View>),
-                (
-                    <View style={[styles.alertContent]}>
-                        <View style={[styles.alertMoney]}>
-                            <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
-                            <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
-                        </View>
-                        <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                            that.WFTPay(0, token)
-                        }}>
-                            <View style={[styles.payType]}>
-                                <View style={[styles.payItem]}>
-                                    <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
-                                    <Text style={[styles.customFont]}>支付宝支付</Text>
-                                </View>
-                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </View>), false, null
-            )
+                </View>), false, null
+        )
     }
 
     WFTPay = (type, token) => {
@@ -467,15 +471,15 @@ class VoucherCenter extends ContainerComponent {
     getDiamonds() {
         let that = this;
         this.setState({
-        	getDiamonds: true,
+            getDiamonds: true,
             getPropList: false,
             getAwardList: false,
         })
         this.networking.get(GetDiamondsUrl, null, {}).then((data) => {
             let {Result, Data} = data;
             if (Result == 1) {
-            	this.diamondsData=Data;
-                that.setState({                   
+                this.diamondsData = Data;
+                that.setState({
                     dataSourceDiamonds: this.state.dataSourceDiamonds.cloneWithRows(this.diamondsData),
                 })
             } else {
@@ -492,14 +496,14 @@ class VoucherCenter extends ContainerComponent {
     getPropList() {
         let that = this;
         this.setState({
-        	getDiamonds: false,
+            getDiamonds: false,
             getPropList: true,
             getAwardList: false,
         })
         this.networking.get(GetPropListUrl, null, {}).then((data) => {
             let {Result, Data} = data;
             if (Result == 1) {
-            	this.propListData=Data;
+                this.propListData = Data;
                 that.setState({
                     dataSourceProp: this.state.dataSourceProp.cloneWithRows(this.propListData),
                 })
@@ -518,14 +522,14 @@ class VoucherCenter extends ContainerComponent {
     getAwardList() {
         let that = this;
         this.setState({
-        	getDiamonds: false,
+            getDiamonds: false,
             getPropList: false,
             getAwardList: true,
         })
         this.networking.get(GetAwardListUrl, null, {}).then((data) => {
             let {Result, Data} = data;
             if (Result == 1) {
-            	this.awardListData=Data;
+                this.awardListData = Data;
                 that.setState({
                     dataSourceAward: this.state.dataSourceAward.cloneWithRows(this.awardListData),
                 })
@@ -712,6 +716,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 56,
         alignItems: 'center'
+    },
+    tip: {
+        margin: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 0,
+        marginRight: 24
     }
 })
 

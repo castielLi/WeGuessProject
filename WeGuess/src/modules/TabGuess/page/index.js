@@ -19,6 +19,7 @@ import {
     Platform,
     ScrollView,
     Alert,
+    Linking
 } from 'react-native';
 import {
     connect
@@ -50,6 +51,8 @@ import {bindActionCreators} from "redux";
 import AppUpdate from '../../AppUpdate/page/index';
 import * as Actions from '../reducer/action';
 import * as ActionsBean from '../../TokenManager/reducer/action';
+import Account from '../../Config/config';
+import {PayUrl} from '../../Config/apiUrlConfig';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -290,47 +293,56 @@ class Guess extends ContainerComponent {
         if (this.state.isMix) { //混合投注;
             this.networking.post(BetMix, params, {}).then((data) => {
                 that.hideLoading();
-                if(data.Data !=null){
-                   let {BetID, SubBets, BetValue, BackAmount} = data.Data;
-                
-                if (data.BetResult === 0) {
-                    that.props.getMemberInfo();
-                    that.showAlert("投注成功", (<View style={{maxHeight: 300,}}><ScrollView>{
-                        SubBets.map((match, index) => {
-                            return (
-                                <View style={styles.detail} key={index}>
-                                    <View style={styles.league}><Text
-                                        style={styles.leagueText}>{match.Stage == 3 ? "滚球" : "赛前"}.{this.MarketName(match)}:{match.BetPosName} {this.showHDP(match.Hdp, match.BetPos, match.MarketID)}</Text></View>
-                                    <View style={styles.team}><Text>{match.HomeName}
-                                        vs {match.AwayName}</Text><Text>{match.LeagueName}@{match.ReportDate}</Text></View>
-                                    <View style={styles.bets}>
-                                        <View style={styles.betBean}>
-                                            <Text>投注猜豆:</Text><Text style={{color: "#ff5b06"}}>{(BetValue)}</Text>
+                if (data.Data != null) {
+                    let {BetID, SubBets, BetValue, BackAmount} = data.Data;
 
-                                        </View>
-                                        <View style={styles.getBean}>
-                                            <Text>预计返还:</Text><Text
-                                            style={{color: "#ff5b06"}}>{Math.round(BackAmount)}</Text>
+                    if (data.BetResult === 0) {
+                        that.props.getMemberInfo();
+                        that.showAlert("投注成功", (<View style={{maxHeight: 300,}}><ScrollView>{
+                            SubBets.map((match, index) => {
+                                return (
+                                    <View style={styles.detail} key={index}>
+                                        <View style={styles.league}><Text
+                                            style={styles.leagueText}>{match.Stage == 3 ? "滚球" : "赛前"}.{this.MarketName(match)}:{match.BetPosName} {this.showHDP(match.Hdp, match.BetPos, match.MarketID)}</Text></View>
+                                        <View style={styles.team}><Text>{match.HomeName}
+                                            vs {match.AwayName}</Text><Text>{match.LeagueName}@{match.ReportDate}</Text></View>
+                                        <View style={styles.bets}>
+                                            <View style={styles.betBean}>
+                                                <Text>投注猜豆:</Text><Text style={{color: "#ff5b06"}}>{(BetValue)}</Text>
+
+                                            </View>
+                                            <View style={styles.getBean}>
+                                                <Text>预计返还:</Text><Text
+                                                style={{color: "#ff5b06"}}>{Math.round(BackAmount)}</Text>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            )
+                                )
+                            })
+                        }</ScrollView></View>), () => {
+                        });
+                        that.setState({
+                            hideBetMsg: true,
+                            betParams: null,
                         })
-                    }</ScrollView></View>), () => {
-                    });
-                    that.setState({
-                        hideBetMsg: true,
-                        betParams: null,
-                    })
-                    
 
-                }}
+
+                    }
+                }
                 else if (data.BetResult === 2 || data.BetResult === 3) {
-                       that.showAlert("提示", "串关赔率已变化");
+                    that.showAlert("提示", "串关赔率已变化");
                 } else {
-                        this.showAlert("提示",data.ErrorMsg,()=>{
-                            this.props.navigation.navigate("VoucherCenter", {state:0})
-                        },()=>{},"充值","取消")
+                    this.showAlert("提示", data.ErrorMsg, () => {
+
+                        if (Platform.OS === "ios") {
+                            if (!this.props.loginStore.isLoggedIn || this.props.loginStore.account === Account) {
+                                Linking.openURL(PayUrl).catch(err => console.error('An error occurred', err));
+                                return false;
+                            }
+                        }
+                        this.props.navigation.navigate("VoucherCenter", {state: 0})
+                    }, () => {
+                    }, "充值", "取消")
                 }
 
             }).catch((err) => {
@@ -352,52 +364,67 @@ class Guess extends ContainerComponent {
 
                 //投注成功
                 if (data.BetResult === 0) {
-                     that.props.getMemberInfo();
-                    if(data.Data !=null){
-                        let {BetID, SubBets, BetValue, BackAmount} = data.Data;                   
+                    that.props.getMemberInfo();
+                    if (data.Data != null) {
+                        let {BetID, SubBets, BetValue, BackAmount} = data.Data;
                         that.showAlert("投注成功", (<View>{
-                        SubBets.map((match, index) => {
-                            return (
-                                <View style={styles.detail} key={index}>
-                                    <View style={styles.league}><Text
-                                        style={styles.leagueText}>{match.Stage == 3 ? "滚球" : "赛前"}.{this.MarketName(match)}:{match.BetPosName} {this.showHDP(match.Hdp, match.BetPos, match.MarketID)}</Text></View>
-                                    <View style={styles.team}><Text>{match.HomeName}
-                                        vs {match.AwayName}</Text><Text>{match.LeagueName}@{match.ReportDate}</Text></View>
-                                    <View style={styles.bets}>
-                                        <View style={styles.betBean}>
-                                            <Text>投注猜豆:</Text><Text style={{color: "#ff5b06"}}>{(BetValue)}</Text>
+                            SubBets.map((match, index) => {
+                                return (
+                                    <View style={styles.detail} key={index}>
+                                        <View style={styles.league}><Text
+                                            style={styles.leagueText}>{match.Stage == 3 ? "滚球" : "赛前"}.{this.MarketName(match)}:{match.BetPosName} {this.showHDP(match.Hdp, match.BetPos, match.MarketID)}</Text></View>
+                                        <View style={styles.team}><Text>{match.HomeName}
+                                            vs {match.AwayName}</Text><Text>{match.LeagueName}@{match.ReportDate}</Text></View>
+                                        <View style={styles.bets}>
+                                            <View style={styles.betBean}>
+                                                <Text>投注猜豆:</Text><Text style={{color: "#ff5b06"}}>{(BetValue)}</Text>
 
-                                        </View>
-                                        <View style={styles.getBean}>
-                                            <Text>预计返还:</Text><Text style={{color: "#ff5b06"}}>{(BackAmount)}</Text>
+                                            </View>
+                                            <View style={styles.getBean}>
+                                                <Text>预计返还:</Text><Text style={{color: "#ff5b06"}}>{(BackAmount)}</Text>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            )
+                                )
+                            })
+                        }</View>), () => {
+                        });
+                        that.setState({
+                            betResult: data.Data,
+                            betParams: "",
+                            betSuccess: true,
                         })
-                    }</View>), () => {
-                    });
-                    that.setState({
-                        betResult: data.Data,
-                        betParams: "",
-                        betSuccess: true,
-                    })
-                }
-               
+                    }
+
                 } else if (data.BetResult === 2 || data.BetResult === 3) {
                     var str = "";
                     if (data.Changed.NewOdds != data.Changed.OldOdds) {
                         str += "赔率已从{0}变化为{1} ".format(data.Changed.OldOdds, data.Changed.NewOdds);
                     }
-                   that.showAlert("提示", str,()=>{
-                       that.initBet(false,{betOdds:params.Odds,betPos:params.BetPos,couid:params.CouID,matchId:params.MatchID,marketId:params.MarketID,});
-                   },()=>{},"继续投注","取消");
+                    that.showAlert("提示", str, () => {
+                        that.initBet(false, {
+                            betOdds: params.Odds,
+                            betPos: params.BetPos,
+                            couid: params.CouID,
+                            matchId: params.MatchID,
+                            marketId: params.MarketID,
+                        });
+                    }, () => {
+                    }, "继续投注", "取消");
 
                 } else {
                     //处理异常状态
-                    this.showAlert("提示",data.ErrorMsg,()=>{
-                    this.props.navigation.navigate("VoucherCenter", {state:0})
-                },()=>{},"充值","取消")
+                    this.showAlert("提示", data.ErrorMsg, () => {
+
+                        if (Platform.OS === "ios") {
+                            if (!this.props.loginStore.isLoggedIn || this.props.loginStore.account === Account) {
+                                Linking.openURL(PayUrl).catch(err => console.error('An error occurred', err));
+                                return false;
+                            }
+                        }
+                        this.props.navigation.navigate("VoucherCenter", {state: 0})
+                    }, () => {
+                    }, "充值", "取消")
                 }
             }).catch((error) => {
                 that.hideLoading();
@@ -467,10 +494,10 @@ class Guess extends ContainerComponent {
             if (this.state.showGameType) {
                 return (
                     <View style={styles.buttonImg}>
-                        
-                            <Image source={require('../resource/icon_57.png')} style={styles.ballIcon}></Image>
-                            <Image source={require('../resource/icon_20.png')} style={styles.downButton}></Image>
-                     
+
+                        <Image source={require('../resource/icon_57.png')} style={styles.ballIcon}></Image>
+                        <Image source={require('../resource/icon_20.png')} style={styles.downButton}></Image>
+
                     </View>
                 );
             } else {
@@ -529,7 +556,7 @@ class Guess extends ContainerComponent {
                              goBetList={this.goBetList}></Headers>
                 </View>
                 <View style={styles.gameContainer}>
-                    <View style={{width: width * 0.2, height: 42, justifyContent: "center",alignItems:"center"}}>
+                    <View style={{width: width * 0.2, height: 42, justifyContent: "center", alignItems: "center"}}>
                         <TouchableWithoutFeedback onPress={() => {
                             this.setState({showGameType: !this.state.showGameType})
                         }}>
@@ -567,7 +594,8 @@ class Guess extends ContainerComponent {
                 }
                 {this.state.showGameType ? <View style={styles.forthFive}></View> : null}
                 {this.state.isShowBet ?
-                    <BetPanel isCommon = {false} removeMatch={this.removeMatch} balance={this.state.balance} betInfo={this.state.betInfo}
+                    <BetPanel isCommon={false} removeMatch={this.removeMatch} balance={this.state.balance}
+                              betInfo={this.state.betInfo}
                               isMix={this.state.isMix}
                               SubmitBet={this.SubmitBet} closeBetPanel={this.closeBetPanel}/> : null}
                 {
@@ -596,7 +624,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     ...bindActionCreators(Actions, dispatch),
-    ...bindActionCreators(ActionsBean,dispatch)
+    ...bindActionCreators(ActionsBean, dispatch)
 });
 
 
@@ -647,7 +675,7 @@ const styles = StyleSheet.create({
         resizeMode: 'stretch',
     },
     buttonImg: {
-        width:50,
+        width: 50,
         height: 40,
         flexDirection: 'row',
         alignItems: 'center',
