@@ -5,7 +5,6 @@ export const hostUrl = "http://m.weguess.cn";
 const baseUrl = "http://m.weguess.cn/memberapi/api/";
 // const baseUrl = "http://192.168.0.133:803/memberapi/api/";
 const sportBaseUrl = "http://sport.weguess.cn/api/";
-export const PayUrl = "http://m.weguess.cn";
 
 export const WebViewUrl = {
     userAgreement: {
@@ -38,6 +37,9 @@ export const WebViewUrl = {
     }
 }
 
+export const PayUrl = "http://m.weguess.cn";
+//同步一些信息
+export const SyncUrl = "http://192.168.0.133:803/memberapi/api/" + "WeChat/Sync";
 //获取版本信息
 export const GetVersionUrl =  baseUrl + "WeChat/GetVersion";
 //获取Token

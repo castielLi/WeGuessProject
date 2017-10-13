@@ -333,16 +333,11 @@ class Guess extends ContainerComponent {
                     that.showAlert("提示", "串关赔率已变化");
                 } else {
                     this.showAlert("提示", data.ErrorMsg, () => {
-
-                        if (Platform.OS === "ios") {
-                            if (!this.props.loginStore.isLoggedIn || this.props.loginStore.account === Account) {
-                                Linking.openURL(PayUrl).catch(err => console.error('An error occurred', err));
-                                return false;
-                            }
+                        if (this.props.loginStore.isPay) {
+                            this.props.navigation.navigate("VoucherCenter", {state: 0});
                         }
-                        this.props.navigation.navigate("VoucherCenter", {state: 0})
                     }, () => {
-                    }, "充值", "取消")
+                    }, this.props.loginStore.isPay?"充值":"确定", "取消")
                 }
 
             }).catch((err) => {
@@ -415,16 +410,11 @@ class Guess extends ContainerComponent {
                 } else {
                     //处理异常状态
                     this.showAlert("提示", data.ErrorMsg, () => {
-
-                        if (Platform.OS === "ios") {
-                            if (!this.props.loginStore.isLoggedIn || this.props.loginStore.account === Account) {
-                                Linking.openURL(PayUrl).catch(err => console.error('An error occurred', err));
-                                return false;
-                            }
+                        if (this.props.loginStore.isPay) {
+                            this.props.navigation.navigate("VoucherCenter", {state: 0});
                         }
-                        this.props.navigation.navigate("VoucherCenter", {state: 0})
                     }, () => {
-                    }, "充值", "取消")
+                    }, this.props.loginStore.isPay?"充值":"确定", "取消")
                 }
             }).catch((error) => {
                 that.hideLoading();

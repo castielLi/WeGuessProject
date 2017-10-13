@@ -123,34 +123,32 @@ class Me extends ContainerComponent {
     }
 
     renderVoucher = () => {
-        if (Platform.OS == "ios") {
-            if(!this.props.loginStore.isLoggedIn||this.props.loginStore.account===Account){
-                return null
-            }
+        if (this.props.loginStore.isPay) {
+            return (
+                <View>
+                    <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 0})}>
+                        <View style={styles.userListLi}>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <Image source={require('../resources/charge.png')} style={styles.listIcon}/>
+                                <Text style={[styles.customFont]}>充值中心</Text>
+                            </View>
+                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 2})}>
+                        <View style={styles.userListLi}>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <Image source={require('../resources/lottery.png')} style={styles.listIcon}/>
+                                <Text style={[styles.customFont]}>抽奖中心</Text>
+                            </View>
+                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+            )
+        }else{
+            return null;
         }
-
-        return (
-            <View>
-                <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 0})}>
-                    <View style={styles.userListLi}>
-                        <View style={{flex: 1, flexDirection: 'row'}}>
-                            <Image source={require('../resources/charge.png')} style={styles.listIcon}/>
-                            <Text style={[styles.customFont]}>充值中心</Text>
-                        </View>
-                        <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                    </View>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 2})}>
-                    <View style={styles.userListLi}>
-                        <View style={{flex: 1, flexDirection: 'row'}}>
-                            <Image source={require('../resources/lottery.png')} style={styles.listIcon}/>
-                            <Text style={[styles.customFont]}>抽奖中心</Text>
-                        </View>
-                        <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>
-        )
     }
 
     render() {

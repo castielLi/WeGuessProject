@@ -38,6 +38,12 @@ export function hasToken() {
     return {type: TYPES.HAS_TOKEN}
 }
 
+export function startIOSPay(payload) {
+    return {
+        type: TYPES.SET_STARTIOSPAY,
+        payload: payload
+    };
+}
 
 export function setMemberInfo(payload) {
     return {

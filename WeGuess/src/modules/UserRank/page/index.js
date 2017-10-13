@@ -194,11 +194,11 @@ class UserRank extends ContainerComponent {
                             <Text style={{color: '#3a66b3'}}>&nbsp;{method.numberFormat(userData.Gold)}</Text>
                         </View>
                     </View>,
-                    <Text style={{textAlign: 'center', paddingVertical: 30, paddingHorizontal: 20}}>钻石余额不足，请充值</Text>,
+                    <Text style={{textAlign: 'center', paddingVertical: 30, paddingHorizontal: 20}}>钻石余额不足</Text>,
                     this.goToVoucherCenter,
                     () => {
                     },
-                    '立即充值'
+                    this.props.loginStore.isPay?"立即充值":"确定"
                 )
             )
         }
@@ -221,14 +221,9 @@ class UserRank extends ContainerComponent {
     }
 
     goToVoucherCenter=()=>{
-        if (Platform.OS === "ios") {
-            if(!this.props.loginStore.isLoggedIn||this.props.loginStore.account===Account){
-                Linking.openURL(PayUrl).catch(err => console.error('An error occurred', err));
-                return false;
-            }
+        if (this.props.loginStore.isPay) {
+            this.props.navigation.navigate('VoucherCenter', {state: 0});
         }
-
-        this.props.navigation.navigate('VoucherCenter', {state: 0})
     }
 
 

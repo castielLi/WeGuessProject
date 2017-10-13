@@ -67,7 +67,6 @@ export default class ContainerComponent extends Component {
             this.alert.show("提示", TipMsg["NoLogin"], ok, () => {
             }, null, null, null, callback);
         }
-
     }
 
     showLogout(ok, callback) {
@@ -99,6 +98,5 @@ export default class ContainerComponent extends Component {
         if (this.loading) {
             this.loading.hide(callback);
         }
-
     }
 }

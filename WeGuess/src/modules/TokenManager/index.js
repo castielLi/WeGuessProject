@@ -2,11 +2,12 @@
  * Created by ml23 on 2017/08/02.
  */
 
+import {Platform} from 'react-native';
 import NetWorking from '../../Core/WGNetworking/Network';
 import StorageHelper from '../../Core/StorageHelper';
-import {GetTokenUrl} from '../Config/apiUrlConfig';
+import {GetTokenUrl,SyncUrl} from '../Config/apiUrlConfig';
 
-import {loginIn, loginOut, getMemberInfo, clearMemberInfo, hasToken} from './reducer/action';
+import {loginIn, loginOut, getMemberInfo, clearMemberInfo, hasToken,startIOSPay} from './reducer/action';
 import BackgroundTimer from 'react-native-background-timer';
 
 
@@ -54,6 +55,17 @@ export default class TokenManager {
             });
             ;
             that.CircleToken();
+        });
+        this.Sync();
+
+    }
+
+    Sync(){
+        netWorking.get(SyncUrl, null, {}).then((response) => {
+            if (response.Result == 1&&Platform.OS ==="ios") {
+                this.store.dispatch(startIOSPay(response.Data));
+            }
+        }, (error) => {
         });
     }
 
