@@ -81,8 +81,6 @@ export default class LeftItem extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        height:height-146,
-        //justifyContent: 'space-between',
         borderRightWidth: 1,
         borderRightColor: '#ccc'
     },

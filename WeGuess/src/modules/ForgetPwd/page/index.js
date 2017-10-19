@@ -176,8 +176,7 @@ class ForgetPwd extends ContainerComponent {
     }
 }
 
-const
-    styles = StyleSheet.create({
+const styles = StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: '#f4f4f4',
@@ -200,19 +199,12 @@ const
         },
     });
 
-const
-    mapStateToProps = state => ({
-        loginStore: state.loginStore
-    });
+const mapStateToProps = state => ({
+    loginStore: state.loginStore
+});
 
-const
-    mapDispatchToProps = dispatch => ({
-        logout: () => dispatch({type: 'Logout'}),
-    });
+const mapDispatchToProps = dispatch => ({
+    logout: () => dispatch({type: 'Logout'}),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)
-
-(
-    ForgetPwd
-)
-;
+export default connect(mapStateToProps, mapDispatchToProps)(ForgetPwd);

@@ -53,7 +53,6 @@ export default class TokenManager {
             that.refreashToken().then((response) => {
                 this.store.dispatch(hasToken());
             });
-            ;
             that.CircleToken();
         });
         this.Sync();
@@ -64,6 +63,10 @@ export default class TokenManager {
         netWorking.get(SyncUrl, null, {}).then((response) => {
             if (response.Result == 1&&Platform.OS ==="ios") {
                 this.store.dispatch(startIOSPay(response.Data));
+            }
+            else{
+                /*test*/
+                // this.store.dispatch(startIOSPay(false));
             }
         }, (error) => {
         });

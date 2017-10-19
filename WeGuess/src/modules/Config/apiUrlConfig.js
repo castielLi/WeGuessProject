@@ -5,7 +5,6 @@ export const hostUrl = "http://m.weguess.cn";
 const baseUrl = "http://m.weguess.cn/memberapi/api/";
 // const baseUrl = "http://192.168.0.133:803/memberapi/api/";
 const sportBaseUrl = "http://sport.weguess.cn/api/";
-
 export const WebViewUrl = {
     userAgreement: {
         url: "http://m.weguess.cn/#/tab/userargreement",
@@ -57,6 +56,8 @@ export const GetMemberInfoUrl = baseUrl + "WeChat/GetMemberInfo";
 //登录
 export const PostLoginUrl = baseUrl + "WeChat/LoginByMobileAndPassword";
 
+//公告
+export const NoticeUrl = baseUrl+"WeChat/GetNotice";
 //赛事
 //赛事---赛程
 export const GetProcessLeague = sportBaseUrl + "getmatchschedule";

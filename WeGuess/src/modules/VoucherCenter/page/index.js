@@ -153,7 +153,7 @@ class VoucherCenter extends ContainerComponent {
                                     <Text style={{color: '#b2b2b2', flex: 1, opacity: 0.8}}>本活动所包含内容，与苹果公司Apple
                                         lnc.无关。</Text>
                                 </View>
-                            ) :null
+                            ) : null
                     }
                 </View>
             )
@@ -241,27 +241,50 @@ class VoucherCenter extends ContainerComponent {
                         <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
                         <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
                     </View>
-                    <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                        that.WFTPay(0, token)
-                    }}>
-                        <View style={[styles.payType]}>
-                            <View style={[styles.payItem]}>
-                                <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
-                                <Text style={[styles.customFont]}>支付宝支付</Text>
-                            </View>
-                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                        </View>
-                    </TouchableWithoutFeedback>
+                    {
+                        this.props.loginStore.isPay ? (
+                            <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
+                                that.WFTPay(0, token)
+                            }}>
+                                <View style={[styles.payType]}>
+                                    <View style={[styles.payItem]}>
+                                        <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
+                                        <Text style={[styles.customFont]}>支付宝支付</Text>
+                                    </View>
+                                    <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        ) : (
+                            <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
+                                that.WFTPay(1,"", money)
+                            }}>
+                                <View style={[styles.payType]}>
+                                    <View style={[styles.payItem]}>
+                                        <Image source={require('../resources/applepay.png')} style={styles.listIcon}/>
+                                        <Text style={[styles.customFont]}>Apple Pay</Text>
+                                    </View>
+                                    <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        )
+                    }
+
                 </View>), false, null
         )
     }
 
-    WFTPay = (type, token) => {
+    WFTPay = (type, token,money) => {
         let that = this;
         that.alert.BackInit(() => {
-            WFTPay.pay(token, () => {
-                that.props.getMemberInfo();
-            })
+            if (type === 0) {
+                WFTPay.pay(token, () => {
+                    that.props.getMemberInfo();
+                })
+            } else if(type===1) {
+                WFTPay.pay(token, () => {
+                    that.props.getMemberInfo();
+                })
+            }
         });
     }
 
@@ -726,7 +749,9 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+    loginStore: state.loginStore
+});
 const mapDispatchToProps = dispatch => ({
     ...bindActionCreators(Actions, dispatch)
 });

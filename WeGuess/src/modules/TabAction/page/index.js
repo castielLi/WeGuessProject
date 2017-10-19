@@ -86,7 +86,7 @@ class TabAction extends ContainerComponent {
                     resolve(true);
                 } else {
                     resolve();
-                    this.setState({pageIndex: this.state.pageIndex + 1})
+                    that.setState({pageIndex: this.state.pageIndex + 1})
                 }
             } else {
                 that.showError(Result);

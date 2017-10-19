@@ -5,11 +5,13 @@
 import HocLoading from './Loading';
 import HocAndroidBack from './AndroidBack';
 import HocAlert from './Alert';
+import HocError from './Error';
 
 let HocObj = {
     HocLoading: HocLoading,
     HocAndroidBack: HocAndroidBack,
     HocAlert: HocAlert,
+    HocError:HocError
 }
 
 export default HOCFactory = (component, hoc) => {

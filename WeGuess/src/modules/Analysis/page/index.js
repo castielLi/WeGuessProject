@@ -22,10 +22,9 @@ import ContainerComponent from '../../.././Core/Component/ContainerComponent';
 import {BackButton, BlankButton} from "../../Component/BackButton";
 import method from '../../TabRecommend/common/method';
 
-import {GetAllAnalysis, GetMemberInfo, BuyAnalysis,PayUrl} from '../../Config/apiUrlConfig';
+import {GetAllAnalysis, GetMemberInfo, BuyAnalysis, PayUrl} from '../../Config/apiUrlConfig';
 import ListViewPull from '../../TabRecommend/common/listViewPull';
 import AnalysisItem from '../../TabRecommend/common/analysisItem';
-import Account from '../../Config/config';
 
 class Analysis extends ContainerComponent {
     static navigationOptions = ({navigation}) => {
@@ -103,7 +102,9 @@ class Analysis extends ContainerComponent {
                     that.showError(Result);
                     reject(Result);
                 }
-            },(error)=>{this.showError(error)}).catch((error) => {
+            }, (error) => {
+                this.showError(error)
+            }).catch((error) => {
                 that.showError(error);
 
                 throw error;
@@ -136,25 +137,25 @@ class Analysis extends ContainerComponent {
                     this.goToVoucherCenter,
                     () => {
                     },
-                    this.props.loginStore.isPay?'立即充值':"确定"
+                    '立即充值'
                 )
             }
             else if (Result === 1) {
                 navigate("AnalysisDetail", {AnalysisNo: params.analysisNo, callback: () => this.onPullRelease()})
             }
-            else{
+            else {
                 this.showError(Result)
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             that.showError(error);
 
         })
     }
 
-    goToVoucherCenter=()=>{
-        if (this.props.loginStore.isPay) {
-            this.props.navigation.navigate('VoucherCenter', {state: 0});
-        }
+    goToVoucherCenter = () => {
+        this.props.navigation.navigate('VoucherCenter', {state: 0});
     }
 
     isShowAlert(isLogin, matchData) {
@@ -237,7 +238,9 @@ class Analysis extends ContainerComponent {
             } else {
                 that.showError(Result);
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             that.showError(error);
 
         })
@@ -290,7 +293,7 @@ class Analysis extends ContainerComponent {
 
 
     render() {
-        let Alert=this.Alert;
+        let Alert = this.Alert;
         return (
             <View style={styles.container}>
                 {this.data.length > 0 ? (
@@ -309,7 +312,9 @@ class Analysis extends ContainerComponent {
                         {this.state.isInit ? (<ActivityIndicator size="large" color="#3a66b3"/>) : (<Text>暂无新数据</Text>)}
                     </View
                     >)}
-                <Alert ref={(refAlert)=>{this.alert = refAlert}}></Alert>
+                <Alert ref={(refAlert) => {
+                    this.alert = refAlert
+                }}></Alert>
             </View>
         );
 

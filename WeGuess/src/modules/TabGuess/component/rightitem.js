@@ -114,8 +114,6 @@ export default class RightItem extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 3,
-        height:height-146,
-        //justifyContent: 'space-between',
         marginLeft: 10,
         marginRight: 10,
     },

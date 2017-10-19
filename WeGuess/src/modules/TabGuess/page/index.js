@@ -51,8 +51,7 @@ import {bindActionCreators} from "redux";
 import AppUpdate from '../../AppUpdate/page/index';
 import * as Actions from '../reducer/action';
 import * as ActionsBean from '../../TokenManager/reducer/action';
-import Account from '../../Config/config';
-import {PayUrl} from '../../Config/apiUrlConfig';
+import Notice from '../../Notice/components/notice';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -332,12 +331,11 @@ class Guess extends ContainerComponent {
                 else if (data.BetResult === 2 || data.BetResult === 3) {
                     that.showAlert("提示", "串关赔率已变化");
                 } else {
-                    this.showAlert("提示", data.ErrorMsg, () => {
-                        if (this.props.loginStore.isPay) {
-                            this.props.navigation.navigate("VoucherCenter", {state: 0});
-                        }
+                    that.showAlert("提示", data.ErrorMsg, () => {
+                        that.props.navigation.navigate("VoucherCenter", {state: 0});
                     }, () => {
-                    }, this.props.loginStore.isPay?"充值":"确定", "取消")
+                        that.props.navigation.navigate("TabAction", {state: 0});
+                    }, "立即充值", "参与活动")
                 }
 
             }).catch((err) => {
@@ -410,11 +408,10 @@ class Guess extends ContainerComponent {
                 } else {
                     //处理异常状态
                     this.showAlert("提示", data.ErrorMsg, () => {
-                        if (this.props.loginStore.isPay) {
-                            this.props.navigation.navigate("VoucherCenter", {state: 0});
-                        }
+                        this.props.navigation.navigate("VoucherCenter", {state: 0});
                     }, () => {
-                    }, this.props.loginStore.isPay?"充值":"确定", "取消")
+                        this.props.navigation.navigate("TabAction", {state: 0});
+                    }, "立即充值", "参与活动")
                 }
             }).catch((error) => {
                 that.hideLoading();
@@ -537,6 +534,13 @@ class Guess extends ContainerComponent {
     render() {
         let Alert = this.Alert;
         let Loading = this.Loading;
+        let noticeHeight = 40;
+        let contentHeight = height - 146;
+
+        if (this.props.loginStore.isPay) {
+            noticeHeight = 0;
+            contentHeight = contentHeight - 40;
+        }
         return (
             <View style={styles.container}>
                 <AppUpdate/>
@@ -545,6 +549,13 @@ class Guess extends ContainerComponent {
                     <Headers navigation={this.props.navigation} balance={this.state.balance} goRank={this.goRank}
                              goBetList={this.goBetList}></Headers>
                 </View>
+                {/*公告*/}
+                {
+                    this.props.loginStore.isPay ? (
+                        <Notice navigation={this.props.navigation}></Notice>
+                    ) : null
+                }
+
                 <View style={styles.gameContainer}>
                     <View style={{width: width * 0.2, height: 42, justifyContent: "center", alignItems: "center"}}>
                         <TouchableWithoutFeedback onPress={() => {
@@ -559,7 +570,7 @@ class Guess extends ContainerComponent {
                     <TabView tabList={this.tabList} styleFather={{height: 40, borderBottomWidth: 0, width: width * 0.8}}
                              styleChild={{height: 40}} onPress={this.onPress}></TabView>
                 </View>
-                <View style={styles.content}>
+                <View style={[styles.content, {height: contentHeight}]}>
                     {
                         this.state.type == 1 ? (
                             <TimeItem sportId={this.state.sportId}
@@ -582,7 +593,8 @@ class Guess extends ContainerComponent {
                         changeGameType={this._changeShowType}
                     ></GameType>) : null
                 }
-                {this.state.showGameType ? <View style={styles.forthFive}></View> : null}
+                {this.state.showGameType ? <View
+                    style={[styles.forthFive, {top: Platform.OS == 'ios' ? 134 - noticeHeight : 114 - noticeHeight}]}></View> : null}
                 {this.state.isShowBet ?
                     <BetPanel isCommon={false} removeMatch={this.removeMatch} balance={this.state.balance}
                               betInfo={this.state.betInfo}
@@ -677,7 +689,7 @@ const styles = StyleSheet.create({
         width: 14,
         backgroundColor: '#fff',
         position: 'absolute',
-        top: Platform.OS == 'ios' ? 94 : 74,
+        top: Platform.OS == 'ios' ? 134 : 114,
         transform: [{
             rotateZ: '45deg'
         }],
@@ -735,6 +747,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     content: {
-        height: height - 120
+        height: height - 146
     }
 });

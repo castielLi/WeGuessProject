@@ -24,6 +24,7 @@ import SportRank from "../SportRank/page";
 import SportBetList from "../SportBetList/page";
 import GuessRule from "../Rule/guessRule";
 import EventDetails from '../EventDetails/page/index';
+import NoticePage from '../Notice/page/index';
 const AppNavigator = StackNavigator({
     TabHome: {screen: MainTabBar},
     Login: {screen: Login},
@@ -45,6 +46,7 @@ const AppNavigator = StackNavigator({
     SportBetList: {screen: SportBetList},
     GuessRule: {screen: GuessRule},
     EventDetails:{screen:EventDetails},
+    NoticePage:{screen:NoticePage},
 }, {
     initialRouteName:'TabHome',
     navigationOptions: {

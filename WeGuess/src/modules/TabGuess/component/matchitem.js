@@ -65,6 +65,9 @@ class TimeItem extends ContainerComponent {
     }
     //网络请求
     fetchData(sportId = this.props.sportId) {
+        this.setState({
+            showLoading:true,
+            })
         let params = {
             "SportId": sportId,
         };
@@ -131,9 +134,7 @@ class TimeItem extends ContainerComponent {
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
-             this.setState({
-                showLoading:true,
-            })
+
             this.fetchData();
         }
         return true
@@ -141,9 +142,7 @@ class TimeItem extends ContainerComponent {
 
     componentDidMount() {
         if (this.props.loginStore.hasToken) {
-            this.setState({
-                showLoading:true,
-            })
+
             this.fetchData();
         }
     }
@@ -198,7 +197,7 @@ const styles = StyleSheet.create({
         borderTopColor: '#ccc',
     },
     container:{
-        height:height-148,
+        flex:1,
         borderTopWidth: 1,
         borderTopColor: '#ccc',
     }

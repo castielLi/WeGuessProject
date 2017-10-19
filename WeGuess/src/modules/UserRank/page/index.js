@@ -24,9 +24,8 @@ import ListViewPull from '../../TabRecommend/common/listViewPull';
 import RankItem from '../../TabRecommend/common/rankItem';
 import UserGuessItem from '../../TabRecommend/common/userGuessItem';
 
-import {GetPublishBetByOpenID, GetMyPublishBet, GetMemberInfo, BuyBetRecord,PayUrl} from '../../Config/apiUrlConfig';
+import {GetPublishBetByOpenID, GetMyPublishBet, GetMemberInfo, BuyBetRecord, PayUrl} from '../../Config/apiUrlConfig';
 import method from '../../TabRecommend/common/method';
-import Account from '../../Config/config';
 
 class UserRank extends ContainerComponent {
     static navigationOptions = ({navigation}) => {
@@ -141,7 +140,7 @@ class UserRank extends ContainerComponent {
                     that.showError(Result);
                     reject(Result);
                 }
-            },(error)=>{
+            }, (error) => {
                 that.showError(error);
             }).catch((error) => {
                 that.showError(error);
@@ -198,7 +197,7 @@ class UserRank extends ContainerComponent {
                     this.goToVoucherCenter,
                     () => {
                     },
-                    this.props.loginStore.isPay?"立即充值":"确定"
+                    "立即充值"
                 )
             )
         }
@@ -214,16 +213,16 @@ class UserRank extends ContainerComponent {
             else {
                 this.showError(Result)
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             that.showError(error);
 
         })
     }
 
-    goToVoucherCenter=()=>{
-        if (this.props.loginStore.isPay) {
-            this.props.navigation.navigate('VoucherCenter', {state: 0});
-        }
+    goToVoucherCenter = () => {
+        this.props.navigation.navigate('VoucherCenter', {state: 0});
     }
 
 
@@ -295,7 +294,9 @@ class UserRank extends ContainerComponent {
             } else {
                 that.showError(Result);
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             that.showError(error);
 
         })
@@ -324,7 +325,9 @@ class UserRank extends ContainerComponent {
             else {
                 that.showError(Result);
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             that.showError(error);
 
         });

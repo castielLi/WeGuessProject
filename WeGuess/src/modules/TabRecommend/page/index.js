@@ -13,7 +13,7 @@ import {
 import {connect} from 'react-redux';
 import ContainerComponent from '../../.././Core/Component/ContainerComponent';
 
-import {GetPublishRankUrl, GetAnalysisUrl, GetMemberInfo, BuyAnalysis,WebViewUrl} from '../../Config/apiUrlConfig';
+import {GetPublishRankUrl, GetAnalysisUrl, GetMemberInfo, BuyAnalysis, WebViewUrl} from '../../Config/apiUrlConfig';
 import method from '../../TabRecommend/common/method';
 
 import RankItem from '../common/rankItem';
@@ -47,9 +47,9 @@ class Recommend extends ContainerComponent {
     }
 
     showWebViewTab = (index) => {
-        if(index==0){
+        if (index == 0) {
             this.showWebView(WebViewUrl.analysisRule.url, WebViewUrl.analysisRule.title);
-        }else{
+        } else {
             this.showWebView(WebViewUrl.userRankRule.url, WebViewUrl.userRankRule.title);
         }
     }
@@ -174,25 +174,25 @@ class Recommend extends ContainerComponent {
                     this.goToVoucherCenter,
                     () => {
                     },
-                    this.props.loginStore.isPay?"立即充值":"确定"
+                    "立即充值"
                 )
             }
             else if (Result === 1) {
-                navigate("AnalysisDetail", {AnalysisNo: params.analysisNo,callback:()=>this.onPullRelease()})
+                navigate("AnalysisDetail", {AnalysisNo: params.analysisNo, callback: () => this.onPullRelease()})
             }
             else if (Result === 0) {
                 this.showError(Result)
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             that.showError(error);
 
         })
     }
 
-    goToVoucherCenter=()=>{
-        if (this.props.loginStore.isPay) {
-            this.props.navigation.navigate('VoucherCenter', {state: 0})
-        }
+    goToVoucherCenter = () => {
+        this.props.navigation.navigate('VoucherCenter', {state: 0})
     }
 
     isShowAlert(isLogin, matchData) {
@@ -275,7 +275,9 @@ class Recommend extends ContainerComponent {
             } else {
                 that.showError(Result);
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             that.showError(error);
 
         })

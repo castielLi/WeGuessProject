@@ -217,6 +217,9 @@ class Mix extends ContainerComponent {
     }
 
     fetchData(sportId=this.props.sportId) {
+         this.setState({
+                showLoading:true
+            })
         let params = {
             SportId: sportId,
             UpdateTime: this.state.updateTime,
@@ -275,9 +278,7 @@ class Mix extends ContainerComponent {
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
-             this.setState({
-                showLoading:true
-            })
+
             this.fetchData();
         }
         return true
@@ -285,9 +286,6 @@ class Mix extends ContainerComponent {
 
     componentDidMount() {
         if (this.props.loginStore.hasToken) {
-            this.setState({
-                showLoading:true
-            })
             this.fetchData();
         }
     }
@@ -510,9 +508,9 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Mix);
 const styles = StyleSheet.create({
     body: {
+        flex:1,
         borderTopWidth: 1,
         borderTopColor: '#ccc',
-        height:height-144,
     },
     itemTitle: {
         flexDirection: 'row',

@@ -66,6 +66,9 @@ class LeagueResult extends ContainerComponent {
 
     //网络请求
     fetchData() {
+        this.setState({
+                showLoading:true
+            })
         let params = {
             "SportId": 1,
         };
@@ -138,9 +141,7 @@ class LeagueResult extends ContainerComponent {
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
-            this.setState({
-                showLoading:true
-            })
+
             this.fetchData();
         }
         return true
@@ -148,9 +149,7 @@ class LeagueResult extends ContainerComponent {
 
     componentDidMount() {
         if (this.props.loginStore.hasToken) {
-            this.setState({
-                showLoading:true
-            })
+
             this.fetchData();
         }
     }

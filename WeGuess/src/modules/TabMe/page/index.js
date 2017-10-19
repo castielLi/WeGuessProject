@@ -20,7 +20,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {numFormat} from "../../Utils/money";
 import {StatusBar} from "../../Component/BackButton";
 import {WebViewUrl} from "../../Config/apiUrlConfig";
-import Account from '../../Config/config'
 
 class Me extends ContainerComponent {
 
@@ -122,35 +121,6 @@ class Me extends ContainerComponent {
         }
     }
 
-    renderVoucher = () => {
-        if (this.props.loginStore.isPay) {
-            return (
-                <View>
-                    <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 0})}>
-                        <View style={styles.userListLi}>
-                            <View style={{flex: 1, flexDirection: 'row'}}>
-                                <Image source={require('../resources/charge.png')} style={styles.listIcon}/>
-                                <Text style={[styles.customFont]}>充值中心</Text>
-                            </View>
-                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 2})}>
-                        <View style={styles.userListLi}>
-                            <View style={{flex: 1, flexDirection: 'row'}}>
-                                <Image source={require('../resources/lottery.png')} style={styles.listIcon}/>
-                                <Text style={[styles.customFont]}>抽奖中心</Text>
-                            </View>
-                            <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </View>
-            )
-        }else{
-            return null;
-        }
-    }
-
     render() {
         const {navigate} = this.props.navigation;
         let WebView = this.WebView;
@@ -163,7 +133,24 @@ class Me extends ContainerComponent {
                     {this.renderUserMsg()}
 
                     <View style={styles.userList}>
-                        {this.renderVoucher()}
+                        <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 0})}>
+                            <View style={styles.userListLi}>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <Image source={require('../resources/charge.png')} style={styles.listIcon}/>
+                                    <Text style={[styles.customFont]}>充值中心</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 2})}>
+                            <View style={styles.userListLi}>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <Image source={require('../resources/lottery.png')} style={styles.listIcon}/>
+                                    <Text style={[styles.customFont]}>抽奖中心</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                            </View>
+                        </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback onPress={() => this.tabGo("MoneyRecord", {})}>
                             <View style={styles.userListLi}>
                                 <View style={{flex: 1, flexDirection: 'row'}}>

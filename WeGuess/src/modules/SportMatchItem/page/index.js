@@ -20,7 +20,7 @@ import {
     Linking
 } from 'react-native';
 import {connect} from 'react-redux';
-import {GetMatchOdd, GetBet, GetBalance, Bet, PublishBet,PayUrl} from '../../Config/apiUrlConfig';
+import {GetMatchOdd, GetBet, GetBalance, Bet, PublishBet, PayUrl} from '../../Config/apiUrlConfig';
 import ContainerComponent from '../../.././Core/Component/ContainerComponent';
 import HandleData from '../../Utils/sportHandle';
 import config from '../../Utils/sportConfig';
@@ -34,7 +34,6 @@ import {bindActionCreators} from "redux";
 import * as Actions from '../../TokenManager/reducer/action';
 import BackgroundTimer from 'react-native-background-timer';
 import ExtendText from '../../Component/ExtendText';
-import Account from '../../Config/config';
 
 let match, mk;
 const ScreenHeight = Dimensions.get('window').height;
@@ -71,18 +70,20 @@ class Match extends ContainerComponent {
             isLive: this.props.navigation.state.params.isLive,
             marketID: this.props.navigation.state.params.marketId,
             betPos: this.props.navigation.state.params.betPos,
-            changeList:[],
+            changeList: [],
 
 
         }
         this.fetchData = this.fetchData.bind(this);
-        this.timer= null;
+        this.timer = null;
     }
+
     componentWillUnmount() {
         if (this.timer) {
             BackgroundTimer.clearInterval(this.timer);
         }
     }
+
     closeSucPanel = () => {
         this.setState({
             betSuccess: false,
@@ -133,7 +134,9 @@ class Match extends ContainerComponent {
             this.setState({
                 balance: responseData.Data
             })
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
 
             this.showError(error);
         })
@@ -175,7 +178,7 @@ class Match extends ContainerComponent {
             this.showLogin(() => navigate('Login'));
             return;
         }
-       
+
         this.getBalance();
         if (betodd == 0) {
             this.showAlert("提示", "该盘口此时为关闭状态.");
@@ -223,7 +226,10 @@ class Match extends ContainerComponent {
                     this.showAlert("提示", "请求注单失败,请重试或者刷新页面.");
                     break;
             }
-        },(error)=>{this.showError(error);this.hideLoading();}).catch((error) => {
+        }, (error) => {
+            this.showError(error);
+            this.hideLoading();
+        }).catch((error) => {
             this.hideLoading();
             this.showAlert("提示", "请求注单失败,请重试或者刷新页面.");
         });
@@ -251,12 +257,10 @@ class Match extends ContainerComponent {
             that.hideLoading();
             that.setState.selectBetitem = "";
             let data = responseData;
-            if(data.Data !=null){
-              let {BetID, SubBets, BetValue, BackAmount} = data.Data;
-            }
 
             //投注成功
             if (data.BetResult === 0) {
+                let {BetID, SubBets, BetValue, BackAmount} = data.Data;
                 that.props.getMemberInfo();
                 that.showAlert("投注成功", (
                     <View>
@@ -297,18 +301,26 @@ class Match extends ContainerComponent {
                 if (data.Changed.NewOdds != data.Changed.OldOdds) {
                     str += "赔率已从{0}变化为{1} ".format(data.Changed.OldOdds, data.Changed.NewOdds);
                 }
-                that.showAlert("提示", str,()=>{
-                       that.initBet({betOdds:params.Odds,betPos:params.BetPos,couid:params.CouID,marketId:params.MarketID,});
-                   },()=>{},"继续投注","取消");
+                that.showAlert("提示", str, () => {
+                    that.initBet({
+                        betOdds: params.Odds,
+                        betPos: params.BetPos,
+                        couid: params.CouID,
+                        marketId: params.MarketID,
+                    });
+                }, () => {
+                }, "继续投注", "取消");
             } else {
                 //处理异常状态
-                this.showAlert("提示",data.ErrorMsg,()=>{
-                    if (this.props.loginStore.isPay) {
-                        this.props.navigation.navigate("VoucherCenter", {state:0})
-                    }
-                },()=>{},this.props.loginStore.isPay?"充值":"确定","取消");
+                this.showAlert("提示", data.ErrorMsg, () => {
+                    this.props.navigation.navigate("VoucherCenter", {state: 0});
+                }, () => {
+                    this.props.navigation.navigate("TabAction", {state: 0});
+                }, "立即充值", "参与活动")
             }
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
             this.hideLoading();
             this.showError(error);
         })
@@ -343,16 +355,20 @@ class Match extends ContainerComponent {
                 that.initBet(betodd, betPos, couid, marketID);
             }
             //if(match.Stage===3){
-                that.refreshData(match);
+            that.refreshData(match);
             //}
 
-        },(error)=>{this.showError(error);this.hideLoading();}).catch((error) => {
+        }, (error) => {
+            this.showError(error);
+            this.hideLoading();
+        }).catch((error) => {
             this.showError(error);
 
             this.hideLoading();
         });
 
     }
+
     fetchRefreshData() {
         let params = {
                 matchId: this.state.matchId,
@@ -369,9 +385,11 @@ class Match extends ContainerComponent {
 
                 that.initBet(betodd, betPos, couid, marketID);
             }
-             that.MatchChange(match);
+            that.MatchChange(match);
 
-        },(error)=>{this.showError(error)}).catch((error) => {
+        }, (error) => {
+            this.showError(error)
+        }).catch((error) => {
 
             this.showError(error);
         });
@@ -393,19 +411,23 @@ class Match extends ContainerComponent {
             matchData: newdata,
         })
     }
-     //计算赔率变更0:无变更,1上升,2下降
-    OddChange = ( maketid, index, betpos) => {
+    //计算赔率变更0:无变更,1上升,2下降
+    OddChange = (maketid, index, betpos) => {
         var key = "{0}-{1}-{2}".format(maketid, index, betpos);
-        if (this.state.changeList.hasOwnProperty(key)){ 
+        if (this.state.changeList.hasOwnProperty(key)) {
             let flag = this.state.changeList[key];
             if (flag == 1) {
-              return (<Image style={{marginTop:5,height:36,width:14}} source={require('../resource/icon_09.png')}/>);
+                return (
+                    <Image style={{marginTop: 5, height: 36, width: 14}} source={require('../resource/icon_09.png')}/>);
             } else if (flag == 2) {
-              return (<Image style={{marginTop:5,height:36,width:14}} source={require('../resource/icon_06.png')}/>);
-        } else {
-             return null;
-        }};
-       return null;
+                return (
+                    <Image style={{marginTop: 5, height: 36, width: 14}} source={require('../resource/icon_06.png')}/>);
+            } else {
+                return null;
+            }
+        }
+        ;
+        return null;
     }
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
@@ -461,7 +483,8 @@ class Match extends ContainerComponent {
                 </View>
                 {
                     this.state.isShowBet ? (
-                        <BetPane isCommon={true} isMix={this.state.isMix} betInfo={this.state.betInfo} balance={this.state.balance}
+                        <BetPane isCommon={true} isMix={this.state.isMix} betInfo={this.state.betInfo}
+                                 balance={this.state.balance}
                                  SubmitBet={this.SubmitBet} closeBetPanel={this.closeBetPanel}/>) : null
                 }
                 {
@@ -499,11 +522,16 @@ class Match extends ContainerComponent {
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(5, 0, 1)}]}>
                             {/*<Text numberOfLines={1} style={[styles.teamName, {color: this.fontColor(5, 0, 1, "#000"),flex:1,}]}>{match.HN}</Text>*/}
-                            <ExtendText txt={match.HN} sty={[styles.teamName, {color: this.fontColor(5, 0, 1, "#000")}]}/>
+                            <ExtendText txt={match.HN}
+                                        sty={[styles.teamName, {color: this.fontColor(5, 0, 1, "#000")}]}/>
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(5, 0, 1, "#ff5b06")}]}>{this.FO(mk["5"][0][1])}
-                                 {this.OddChange(5,0,1)}
-                                </Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(5, 0, 1, "#ff5b06")
+                                }]}>{this.FO(mk["5"][0][1])}
+                                {this.OddChange(5, 0, 1)}
+                            </Text>
 
                         </View>
                     </TouchableHighlight>
@@ -511,24 +539,34 @@ class Match extends ContainerComponent {
                         this.initBet(match.MK[5][0][3], 3, match.MK[5][0][0], 5)
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(5, 0, 3)}]}>
-                            <Text numberOfLines={1} style={[styles.teamName, {color: this.fontColor(5, 0, 3, "#000"),flex:1}]}>和局</Text>
+                            <Text numberOfLines={1}
+                                  style={[styles.teamName, {color: this.fontColor(5, 0, 3, "#000"), flex: 1}]}>和局</Text>
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(5, 0, 3, "#ff5b06")}]}>
-                                   {this.FO(mk["5"][0][3])}
-                                   {this.OddChange(5,0,3)}
-                                </Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(5, 0, 3, "#ff5b06")
+                                }]}>
+                                {this.FO(mk["5"][0][3])}
+                                {this.OddChange(5, 0, 3)}
+                            </Text>
 
                         </View>
                     </TouchableHighlight>
                     <TouchableHighlight underlayColor='#3a66b3' style={styles.TeamTwoWin} onPress={() => {
                         this.initBet(match.MK[5][0][2], 2, match.MK[5][0][0], 5)
                     }}>
-                        <View  style={[styles.teamBet, {backgroundColor: this.bgColor(5, 0, 2)}]}>
+                        <View style={[styles.teamBet, {backgroundColor: this.bgColor(5, 0, 2)}]}>
                             {/*<Text numberOfLines={1} style={[styles.teamName, {flex:1,color: this.fontColor(5, 0, 2, "#000")}]}>{match.AN}</Text>*/}
-                            <ExtendText txt={match.AN} sty={[styles.teamName, {color: this.fontColor(5, 0, 2, "#000")}]}/>
+                            <ExtendText txt={match.AN}
+                                        sty={[styles.teamName, {color: this.fontColor(5, 0, 2, "#000")}]}/>
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(5, 0, 2, "#ff5b06")}]}>{this.FO(match.MK["5"][0][2])}
-                                   {this.OddChange(5,0,2)}</Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(5, 0, 2, "#ff5b06")
+                                }]}>{this.FO(match.MK["5"][0][2])}
+                                {this.OddChange(5, 0, 2)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -549,19 +587,24 @@ class Match extends ContainerComponent {
                         this.initBet(match.MK[1][0][1], 1, match.MK[1][0][0], 1)
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(1, 0, 1)}]}>
-                            
-                            <View style={{flexDirection:"row"}}>
+
+                            <View style={{flexDirection: "row"}}>
                                 {/*<Text numberOfLines={1}
-                                        style={[styles.teamName, {color: this.fontColor(1, 0, 1, "#000")}]}>{match.HN}</Text>*/}
-                                <ExtendText txt={match.HN} sty={[styles.teamName, {color: this.fontColor(1, 0, 1, "#000")}]}/>
+                                 style={[styles.teamName, {color: this.fontColor(1, 0, 1, "#000")}]}>{match.HN}</Text>*/}
+                                <ExtendText txt={match.HN}
+                                            sty={[styles.teamName, {color: this.fontColor(1, 0, 1, "#000")}]}/>
                                 <Text numberOfLines={1}
-                                        style={[styles.teamName, {color: this.fontColor(1, 0, 1, "#000")}]}> {this.HdpH(match.MK["1"][0][3])}</Text>
+                                      style={[styles.teamName, {color: this.fontColor(1, 0, 1, "#000")}]}> {this.HdpH(match.MK["1"][0][3])}</Text>
                             </View>
-                                    
-                           
+
+
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(1, 0, 1, "#ff5b06")}]}>{this.FO(match.MK["1"][0][1])}
-                                   {this.OddChange(1,0,1)}</Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(1, 0, 1, "#ff5b06")
+                                }]}>{this.FO(match.MK["1"][0][1])}
+                                {this.OddChange(1, 0, 1)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -569,19 +612,23 @@ class Match extends ContainerComponent {
                         this.initBet(match.MK[1][0][2], 2, match.MK[1][0][0], 1)
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(1, 0, 2)}]}>
-                            <View style={{flexDirection:"row"}}>
-                                 {/*<Text numberOfLines={1}
-                                style={[styles.teamName, {flex:3,color: this.fontColor(1, 0, 2, "#000")}]}>{match.AN} {this.HdpA(match.MK["1"][0][3])}</Text>*/}
-                                <ExtendText txt={match.AN} sty={[styles.teamName, {color: this.fontColor(1, 0, 2, "#000")}]}/>
+                            <View style={{flexDirection: "row"}}>
+                                {/*<Text numberOfLines={1}
+                                 style={[styles.teamName, {flex:3,color: this.fontColor(1, 0, 2, "#000")}]}>{match.AN} {this.HdpA(match.MK["1"][0][3])}</Text>*/}
+                                <ExtendText txt={match.AN}
+                                            sty={[styles.teamName, {color: this.fontColor(1, 0, 2, "#000")}]}/>
                                 <Text
-                                style={[styles.teamName, {color: this.fontColor(1, 0, 2, "#000")}]}> {this.HdpA(match.MK["1"][0][3])}</Text>
+                                    style={[styles.teamName, {color: this.fontColor(1, 0, 2, "#000")}]}> {this.HdpA(match.MK["1"][0][3])}</Text>
                             </View>
-                                    
 
-                           
+
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(1, 0, 2, "#ff5b06")}]}>{this.FO(match.MK["1"][0][2])}
-                                   {this.OddChange(1,0,2)}</Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(1, 0, 2, "#ff5b06")
+                                }]}>{this.FO(match.MK["1"][0][2])}
+                                {this.OddChange(1, 0, 2)}</Text>
                         </View>
                     </TouchableHighlight>
                 </View>
@@ -604,7 +651,7 @@ class Match extends ContainerComponent {
                                 style={[styles.teamName, {color: this.fontColor(3, 0, 1, "#000")}]}>大于 {this.Hdp(match.MK["3"][0][3])}</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(3, 0, 1, "#ff5b06")}]}>{this.FO(match.MK["3"][0][1])}
-                                   {this.OddChange(3,0,1)}</Text>
+                                {this.OddChange(3, 0, 1)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -616,8 +663,8 @@ class Match extends ContainerComponent {
                                 style={[styles.teamName, {color: this.fontColor(3, 0, 2, "#000")}]}>小于 {this.Hdp(match.MK["3"][0][3])}</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(3, 0, 2, "#ff5b06")}]}>{this.FO(match.MK["3"][0][2])}
-                                
-                                   {this.OddChange(3,0,2)}</Text>
+
+                                {this.OddChange(3, 0, 2)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -638,10 +685,15 @@ class Match extends ContainerComponent {
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(6, 0, 1)}]}>
                             {/*<Text numberOfLines={1} style={[styles.teamName, {flex:1,color: this.fontColor(6, 0, 1, "#000")}]}>{match.HN}</Text>*/}
-                            <ExtendText txt={match.HN} sty={[styles.teamName, {color: this.fontColor(6, 0, 1, "#000")}]}/>
+                            <ExtendText txt={match.HN}
+                                        sty={[styles.teamName, {color: this.fontColor(6, 0, 1, "#000")}]}/>
                             <Text
-                                style={[styles.teamVotes, {flex:1,textAlign:"right",color: this.fontColor(6, 0, 1, "#ff5b06")}]}>{this.FO(mk["6"][0][1])}
-                                   {this.OddChange(6,0,1)}</Text>
+                                style={[styles.teamVotes, {
+                                    flex: 1,
+                                    textAlign: "right",
+                                    color: this.fontColor(6, 0, 1, "#ff5b06")
+                                }]}>{this.FO(mk["6"][0][1])}
+                                {this.OddChange(6, 0, 1)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -649,10 +701,15 @@ class Match extends ContainerComponent {
                         this.initBet(match.MK[6][0][3], 3, match.MK[6][0][0], 6)
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(6, 0, 3)}]}>
-                            <Text numberOfLines={1} style={[styles.teamName, {flex:1,color: this.fontColor(6, 0, 3, "#000")}]}>和局</Text>
+                            <Text numberOfLines={1}
+                                  style={[styles.teamName, {flex: 1, color: this.fontColor(6, 0, 3, "#000")}]}>和局</Text>
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(6, 0, 3, "#ff5b06")}]}>{this.FO(mk["6"][0][3])}
-                                   {this.OddChange(6,0,3)}</Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(6, 0, 3, "#ff5b06")
+                                }]}>{this.FO(mk["6"][0][3])}
+                                {this.OddChange(6, 0, 3)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -661,11 +718,16 @@ class Match extends ContainerComponent {
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(6, 0, 2)}]}>
                             {/*<Text numberOfLines={1} style={[styles.teamName, {flex:1,color: this.fontColor(6, 0, 2, "#000")}]}>{match.AN}</Text>*/}
-                            <ExtendText txt={match.AN} sty={[styles.teamName, {color: this.fontColor(6, 0, 2, "#000")}]}/>
+                            <ExtendText txt={match.AN}
+                                        sty={[styles.teamName, {color: this.fontColor(6, 0, 2, "#000")}]}/>
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(6, 0, 2, "#ff5b06")}]}>{this.FO(match.MK["6"][0][2])}
-                                
-                                   {this.OddChange(6,0,2)}</Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(6, 0, 2, "#ff5b06")
+                                }]}>{this.FO(match.MK["6"][0][2])}
+
+                                {this.OddChange(6, 0, 2)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -686,17 +748,22 @@ class Match extends ContainerComponent {
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(2, 0, 1)}]}>
 
-                                   
-                            <View style={{flexDirection:"row"}}>
-                                 {/*<Text numberOfLines={1}
-                                style={[styles.teamName, {flex:3,color: this.fontColor(2, 0, 1, "#000")}]}>{match.HN} {this.HdpH(match.MK["1"][0][3])}</Text>*/}
-                                <ExtendText txt={match.HN} sty={[styles.teamName, {color: this.fontColor(2, 0, 1, "#000")}]}/>
+
+                            <View style={{flexDirection: "row"}}>
+                                {/*<Text numberOfLines={1}
+                                 style={[styles.teamName, {flex:3,color: this.fontColor(2, 0, 1, "#000")}]}>{match.HN} {this.HdpH(match.MK["1"][0][3])}</Text>*/}
+                                <ExtendText txt={match.HN}
+                                            sty={[styles.teamName, {color: this.fontColor(2, 0, 1, "#000")}]}/>
                                 <Text numberOfLines={1}
-                                style={[styles.teamName, {color: this.fontColor(2, 0, 1, "#000")}]}> {this.HdpH(match.MK["1"][0][3])}</Text>
+                                      style={[styles.teamName, {color: this.fontColor(2, 0, 1, "#000")}]}> {this.HdpH(match.MK["1"][0][3])}</Text>
                             </View>
                             <Text
-                                style={[styles.teamVotes, {flex:1,textAlign:"right",color: this.fontColor(2, 0, 1, "#ff5b06")}]}>{this.FO(match.MK["2"][0][1])}
-                                   {this.OddChange(2,0,1)}</Text>
+                                style={[styles.teamVotes, {
+                                    flex: 1,
+                                    textAlign: "right",
+                                    color: this.fontColor(2, 0, 1, "#ff5b06")
+                                }]}>{this.FO(match.MK["2"][0][1])}
+                                {this.OddChange(2, 0, 1)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -704,18 +771,23 @@ class Match extends ContainerComponent {
                         this.initBet(match.MK[2][0][2], 2, match.MK[2][0][0], 2)
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(2, 0, 2)}]}>
-                                  <View style={{flexDirection:"row"}}>
-                                         {/*<Text numberOfLines={1}
-                                style={[styles.teamName, {flex:3,color: this.fontColor(2, 0, 2, "#000")}]}>{match.AN} {this.HdpA(match.MK["1"][0][3])}</Text>*/}
-                                <ExtendText txt={match.AN} sty={[styles.teamName, {color: this.fontColor(2, 0, 2, "#000")}]}/>
+                            <View style={{flexDirection: "row"}}>
+                                {/*<Text numberOfLines={1}
+                                 style={[styles.teamName, {flex:3,color: this.fontColor(2, 0, 2, "#000")}]}>{match.AN} {this.HdpA(match.MK["1"][0][3])}</Text>*/}
+                                <ExtendText txt={match.AN}
+                                            sty={[styles.teamName, {color: this.fontColor(2, 0, 2, "#000")}]}/>
                                 <Text numberOfLines={1}
-                                style={[styles.teamName, {color: this.fontColor(2, 0, 2, "#000")}]}> {this.HdpA(match.MK["1"][0][3])}</Text>
-                                  </View>
-                                  
-                            
+                                      style={[styles.teamName, {color: this.fontColor(2, 0, 2, "#000")}]}> {this.HdpA(match.MK["1"][0][3])}</Text>
+                            </View>
+
+
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(2, 0, 2, "#ff5b06")}]}>{this.FO(match.MK["2"][0][2])}
-                                   {this.OddChange(2,0,2)}</Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(2, 0, 2, "#ff5b06")
+                                }]}>{this.FO(match.MK["2"][0][2])}
+                                {this.OddChange(2, 0, 2)}</Text>
                         </View>
                     </TouchableHighlight>
                 </View>
@@ -738,7 +810,7 @@ class Match extends ContainerComponent {
                                 style={[styles.teamName, {color: this.fontColor(4, 0, 1, "#000")}]}>大于 {this.Hdp(match.MK["4"][0][3])}</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(4, 0, 1, "#ff5b06")}]}>{this.FO(match.MK["4"][0][1])}
-                                   {this.OddChange(4,0,1)}</Text>
+                                {this.OddChange(4, 0, 1)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -750,7 +822,7 @@ class Match extends ContainerComponent {
                                 style={[styles.teamName, {color: this.fontColor(4, 0, 2, "#000")}]}>小于 {this.Hdp(match.MK["4"][0][3])}</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(4, 0, 2, "#ff5b06")}]}>{this.FO(match.MK["4"][0][2])}
-                                   {this.OddChange(4,0,2)}</Text>
+                                {this.OddChange(4, 0, 2)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -773,7 +845,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 6, "#000")}]}>1:0</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 6, "#ff5b06")}]}>{this.FO(match.MK["9"][0][6])}
-                                   {this.OddChange(9,0,6)}</Text>
+                                {this.OddChange(9, 0, 6)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -784,8 +856,8 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 1, "#000")}]}>0:0</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 1, "#ff5b06")}]}>{this.FO(match.MK["9"][0][1])}
-                                
-                                   {this.OddChange(9,0,1)}</Text>
+
+                                {this.OddChange(9, 0, 1)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -796,7 +868,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 2, "#000")}]}>0:1</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 2, "#ff5b06")}]}>{this.FO(match.MK["9"][0][2])}
-                                   {this.OddChange(9,0,2)}</Text>
+                                {this.OddChange(9, 0, 2)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -809,7 +881,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 11, "#000")}]}>2:0</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 11, "#ff5b06")}]}>{this.FO(match.MK["9"][0][11])}
-                                   {this.OddChange(9,0,11)}</Text>
+                                {this.OddChange(9, 0, 11)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -820,7 +892,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 7, "#000")}]}>1:1</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 7, "#ff5b06")}]}>{this.FO(match.MK["9"][0][7])}
-                                   {this.OddChange(9,0,7)}</Text>
+                                {this.OddChange(9, 0, 7)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -831,7 +903,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 3, "#000")}]}>0:2</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 3, "#ff5b06")}]}>{this.FO(match.MK["9"][0][3])}
-                                   {this.OddChange(9,0,3)}</Text>
+                                {this.OddChange(9, 0, 3)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -844,8 +916,8 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 12, "#000")}]}>2:1</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 12, "#ff5b06")}]}>{this.FO(match.MK["9"][0][12])}
-                                
-                                   {this.OddChange(9,0,12)}</Text>
+
+                                {this.OddChange(9, 0, 12)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -856,7 +928,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 13, "#000")}]}>2:2</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 13, "#ff5b06")}]}>{this.FO(match.MK["9"][0][13])}
-                                   {this.OddChange(9,0,13)}</Text>
+                                {this.OddChange(9, 0, 13)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -867,7 +939,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 8, "#000")}]}>1:2</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 8, "#ff5b06")}]}>{this.FO(match.MK["9"][0][8])}
-                                   {this.OddChange(9,0,8)}</Text>
+                                {this.OddChange(9, 0, 8)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -880,8 +952,8 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 16, "#000")}]}>3:0</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 16, "#ff5b06")}]}>{this.FO(match.MK["9"][0][16])}
-                                
-                                   {this.OddChange(9,0,16)}</Text>
+
+                                {this.OddChange(9, 0, 16)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -892,7 +964,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 19, "#000")}]}>3:3</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 19, "#ff5b06")}]}>{this.FO(match.MK["9"][0][19])}
-                                   {this.OddChange(9,0,19)}</Text>
+                                {this.OddChange(9, 0, 19)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -903,7 +975,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 4, "#000")}]}>0:3</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 4, "#ff5b06")}]}>{this.FO(match.MK["9"][0][4])}
-                                   {this.OddChange(9,0,4)}</Text>
+                                {this.OddChange(9, 0, 4)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -916,7 +988,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 17, "#000")}]}>3:1</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 17, "#ff5b06")}]}>{this.FO(match.MK["9"][0][17])}
-                                   {this.OddChange(9,0,17)}</Text>
+                                {this.OddChange(9, 0, 17)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -927,7 +999,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 25, "#000")}]}>4:4</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 25, "#ff5b06")}]}>{this.FO(match.MK["9"][0][25])}
-                                   {this.OddChange(9,0,25)}</Text>
+                                {this.OddChange(9, 0, 25)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -938,7 +1010,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 9, "#000")}]}>1:3</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 9, "#ff5b06")}]}>{this.FO(match.MK["9"][0][9])}
-                                   {this.OddChange(9,0,9)}</Text>
+                                {this.OddChange(9, 0, 9)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -951,7 +1023,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 18, "#000")}]}>3:2</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 18, "#ff5b06")}]}>{this.FO(match.MK["9"][0][18])}
-                                   {this.OddChange(9,0,18)}</Text>
+                                {this.OddChange(9, 0, 18)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -960,10 +1032,15 @@ class Match extends ContainerComponent {
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(9, 0, 26)}]}>
                             {/*<Text numberOfLines={1} style={[styles.teamName, {flex:1,color: this.fontColor(9, 0, 26, "#000")}]}>主5球以上</Text>*/}
-                            <ExtendText txt='主5球以上' textLength={5} sty={[styles.teamName, {color: this.fontColor(9, 0, 26, "#000")}]}/>
+                            <ExtendText txt='主5球以上' textLength={5}
+                                        sty={[styles.teamName, {color: this.fontColor(9, 0, 26, "#000")}]}/>
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(9, 0, 26, "#ff5b06")}]}>{this.FO(match.MK["9"][0][26])}
-                                   {this.OddChange(9,0,26)}</Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(9, 0, 26, "#ff5b06")
+                                }]}>{this.FO(match.MK["9"][0][26])}
+                                {this.OddChange(9, 0, 26)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -974,7 +1051,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 14, "#000")}]}>2:3</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 14, "#ff5b06")}]}>{this.FO(match.MK["9"][0][14])}
-                                   {this.OddChange(9,0,14)}</Text>
+                                {this.OddChange(9, 0, 14)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -987,7 +1064,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 21, "#000")}]}>4:0</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 21, "#ff5b06")}]}>{this.FO(match.MK["9"][0][21])}
-                                   {this.OddChange(9,0,21)}</Text>
+                                {this.OddChange(9, 0, 21)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -996,10 +1073,15 @@ class Match extends ContainerComponent {
                     }}>
                         <View style={[styles.teamBet, {backgroundColor: this.bgColor(9, 0, 27)}]}>
                             {/*<Text numberOfLines={1} style={[styles.teamName, {flex:1,color: this.fontColor(9, 0, 27, "#000")}]}>客5球以上</Text>*/}
-                            <ExtendText txt='客5球以上' textLength={5} sty={[styles.teamName, {color: this.fontColor(9, 0, 27, "#000")}]}/>
+                            <ExtendText txt='客5球以上' textLength={5}
+                                        sty={[styles.teamName, {color: this.fontColor(9, 0, 27, "#000")}]}/>
                             <Text
-                                style={[styles.teamVotes, {textAlign:"right",flex:1,color: this.fontColor(9, 0, 27, "#ff5b06")}]}>{this.FO(match.MK["9"][0][27])}
-                                   {this.OddChange(9,0,27)}</Text>
+                                style={[styles.teamVotes, {
+                                    textAlign: "right",
+                                    flex: 1,
+                                    color: this.fontColor(9, 0, 27, "#ff5b06")
+                                }]}>{this.FO(match.MK["9"][0][27])}
+                                {this.OddChange(9, 0, 27)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -1010,7 +1092,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(9, 0, 5, "#000")}]}>0:4</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(9, 0, 5, "#ff5b06")}]}>{this.FO(match.MK["9"][0][5])}
-                                   {this.OddChange(9,0,5)}</Text>
+                                {this.OddChange(9, 0, 5)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -1034,7 +1116,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(11, 0, 1, "#000")}]}>0-1</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(11, 0, 1, "#ff5b06")}]}>{this.FO(match.MK["11"][0][1])}
-                                   {this.OddChange(11,0,1)}</Text>
+                                {this.OddChange(11, 0, 1)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -1045,7 +1127,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(11, 0, 2, "#000")}]}>2-3</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(11, 0, 2, "#ff5b06")}]}>{this.FO(match.MK["11"][0][2])}
-                                   {this.OddChange(11,0,2)}</Text>
+                                {this.OddChange(11, 0, 2)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -1058,7 +1140,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(11, 0, 3, "#000")}]}>4-6</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(11, 0, 3, "#ff5b06")}]}>{this.FO(match.MK["11"][0][3])}
-                                   {this.OddChange(11,0,3)}</Text>
+                                {this.OddChange(11, 0, 3)}</Text>
 
                         </View>
                     </TouchableHighlight>
@@ -1069,7 +1151,7 @@ class Match extends ContainerComponent {
                             <Text style={[styles.teamName, {color: this.fontColor(11, 0, 4, "#000")}]}>7以上</Text>
                             <Text
                                 style={[styles.teamVotes, {color: this.fontColor(11, 0, 4, "#ff5b06")}]}>{this.FO(match.MK["11"][0][4])}
-                                   {this.OddChange(11,0,4)}</Text>
+                                {this.OddChange(11, 0, 4)}</Text>
                         </View>
                     </TouchableHighlight>
                 </View>

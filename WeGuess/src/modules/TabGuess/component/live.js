@@ -53,6 +53,9 @@ class Live extends ContainerComponent {
     }   
 
 fetchData(sportId = this.props.sportId, refresh, callback) {
+         this.setState({
+               showLoading:true
+           })
         let that = this;
         let params = {
             SportId: sportId,
@@ -61,7 +64,7 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
         }
         this.networking.get(GetOddsByLive, params, {}).then((responseData) => {
             let {Success, Data, ErrorMsg} = responseData;
-            if(Success){
+            if(Success && Data){
                 if (refresh) {
                     if (typeof (callback) == "function") callback(Data);
                     } else {
@@ -87,7 +90,7 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
             this.setState({
                 showLoading:false,
             })
-            this.showError(error);
+            //this.showError(error);
         });
     }
 
@@ -100,7 +103,7 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
         }
         this.networking.get(GetOddsByLive, params, {}).then((responseData) => {
             let {Success, Data, ErrorMsg} = responseData;
-            if(Success){
+            if(Success && Data){
                 if (refresh) {
                         if (typeof (callback) == "function") callback(Data);
                 } else {
@@ -111,12 +114,12 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
             }
 
         },(error)=>{
-                        if(error!=-2){
+            if(error!=-2){
                this.showError(error);
             }
         }).catch((error) => {
-
-            this.showError(error);
+            
+            //this.showError(error);
         });
     }
 
@@ -184,12 +187,18 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
     GetLiveTime = (sportId, phase, livetime) => {
         return HandleData.ComputeLiveTime(1, phase, livetime);
     }
+    HasOwnProperty = (object, key)=>{
+                if (object && object[key] && object[key].length != null && object[key].length == 0) {
+                    return false;
+                }
+                if (object && object.hasOwnProperty(key) && object[key] != null) {
+                    return true;
+                }
+                return false;
+    }
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
-            this.setState({
-               showLoading:true
-           })
             this.fetchData();
         }
         return true
@@ -197,9 +206,6 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
 
     componentDidMount() {
         if (this.props.loginStore.hasToken) {
-           this.setState({
-               showLoading:true
-           })
             this.fetchData();
         }
     }
@@ -210,7 +216,7 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
         let {MH, LG} = this.state.data;
         return (
             <View style={styles.body}>
-               <ScrollView style={{height:height-146}}>
+               <ScrollView>
                  {this.state.showLoading?(<View style={{flex:1,backgroundColor:"#fff",justifyContent:"center",marginTop:(height-148)*0.5}}>
                               <ActivityIndicator
                                     color="#3a67b3"
@@ -281,56 +287,68 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
 
 
                                         <View style={[styles.detailLetBall]}>
-                                            <TouchableOpacity style={styles.topText} onPress={() => {
-                                                this.initBet(match.MK[1][0][1], 1, match.MK[1][0][0], match.MatchID, 1)
-                                            }}>
-                                                <Text style={{fontSize: 14,}}>
-                                                    {this.HdpH(match.MK["1"][0][3])}
-                                                </Text>
-                                                <Text style={{fontSize: 14, color: '#ff5b06'}}>
-                                                    {this.FO(match.MK["1"][0][1])}
-                                                     {this.OddChange(match.MatchID,1,0,1)}
-                                                </Text>
-                                               
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={styles.botText} onPress={() => {
-                                                this.initBet(match.MK[1][0][2], 2, match.MK[1][0][0], match.MatchID, 1)
-                                            }}>
-                                                <Text style={{fontSize: 14,}}>
-                                                    {this.HdpA(match.MK["1"][0][3])}
-                                                </Text>
-                                                <Text style={{fontSize: 14, color: '#ff5b06'}}>
-                                                    {this.FO(match.MK["1"][0][2])}
-                                                     {this.OddChange(match.MatchID,1,0,2)}
-                                                </Text>
-                                               
-                                            </TouchableOpacity>
+                                            {
+                                                this.HasOwnProperty(match.MK,1)?(
+                                                    <TouchableOpacity  style={styles.topText} onPress={() => {
+                                                        this.initBet(match.MK[1][0][1], 1, match.MK[1][0][0], match.MatchID, 1)
+                                                    }}>
+                                                        <Text style={{fontSize: 14,}}>
+                                                            {this.HdpH(match.MK["1"][0][3])}
+                                                        </Text>
+                                                        <Text style={{fontSize: 14, color: '#ff5b06'}}>
+                                                            {this.FO(match.MK["1"][0][1])}
+                                                            {this.OddChange(match.MatchID,1,0,1)}
+                                                        </Text>
+                                                    
+                                                    </TouchableOpacity>):null
+                                            }
+                                            {
+                                                this.HasOwnProperty(match.MK,1)?(
+                                                    <TouchableOpacity style={styles.botText} onPress={() => {
+                                                        this.initBet(match.MK[1][0][2], 2, match.MK[1][0][0], match.MatchID, 1)
+                                                    }}>
+                                                        <Text style={{fontSize: 14,}}>
+                                                            {this.HdpA(match.MK["1"][0][3])}
+                                                        </Text>
+                                                        <Text style={{fontSize: 14, color: '#ff5b06'}}>
+                                                            {this.FO(match.MK["1"][0][2])}
+                                                            {this.OddChange(match.MatchID,1,0,2)}
+                                                        </Text>
+                                                    
+                                                    </TouchableOpacity>):null
+                                            }
                                         </View>
 
 
                                         <View style={styles.detailBigBall}>
-                                            <TouchableOpacity style={styles.topText} onPress={() => {
-                                                this.initBet(match.MK[3][0][1], 1, match.MK[3][0][0], match.MatchID, 3)
-                                            }}>
-                                                <Text>
-                                                    大{this.Hdp(match.MK["3"][0][3])}
-                                                </Text>
-                                                <Text style={{color: '#ff5b06'}}>
-                                                    {this.FO(match.MK["3"][0][1])}
-                                                    {this.OddChange(match.MatchID,3,0,1)}
-                                                </Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={styles.botText} onPress={() => {
-                                                this.initBet(match.MK[3][0][2], 2, match.MK[3][0][0], match.MatchID, 3)
-                                            }}>
-                                                <Text style={{textAlign: 'center'}}>
-                                                    小{this.Hdp(match.MK["3"][0][3])}
-                                                </Text>
-                                                <Text style={{color: '#ff5b06'}}>
-                                                    {this.FO(match.MK["3"][0][2])}
-                                                     {this.OddChange(match.MatchID,3,0,2)}
-                                                </Text>
-                                            </TouchableOpacity>
+                                            {
+                                                this.HasOwnProperty(match.MK,3)?(
+                                                    <TouchableOpacity style={styles.topText} onPress={() => {
+                                                        this.initBet(match.MK[3][0][1], 1, match.MK[3][0][0], match.MatchID, 3)
+                                                    }}>
+                                                        <Text>
+                                                            大{this.Hdp(match.MK["3"][0][3])}
+                                                        </Text>
+                                                        <Text style={{color: '#ff5b06'}}>
+                                                            {this.FO(match.MK["3"][0][1])}
+                                                            {this.OddChange(match.MatchID,3,0,1)}
+                                                        </Text>
+                                                    </TouchableOpacity>):null
+                                            }
+                                            {
+                                                this.HasOwnProperty(match.MK,3)?(
+                                                    <TouchableOpacity style={styles.botText} onPress={() => {
+                                                        this.initBet(match.MK[3][0][2], 2, match.MK[3][0][0], match.MatchID, 3)
+                                                    }}>
+                                                        <Text style={{textAlign: 'center'}}>
+                                                            小{this.Hdp(match.MK["3"][0][3])}
+                                                        </Text>
+                                                        <Text style={{color: '#ff5b06'}}>
+                                                            {this.FO(match.MK["3"][0][2])}
+                                                            {this.OddChange(match.MatchID,3,0,2)}
+                                                        </Text>
+                                                    </TouchableOpacity>):null
+                                            }
                                         </View>
                                     </View>
                                 </View>
@@ -361,6 +379,7 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Live);
 const styles = StyleSheet.create({
     body: {
+        flex:1,
         borderTopWidth: 1,
         borderTopColor: '#ccc',
     },
