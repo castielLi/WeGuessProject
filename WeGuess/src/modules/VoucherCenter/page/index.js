@@ -222,7 +222,7 @@ class VoucherCenter extends ContainerComponent {
     }
 
     //支付
-    Pay = (token, money, bean) => {
+    Pay = (token, money, bean,name) => {
         let that = this
         that.showAlert(
             (<View style={[styles.alertTitle]}>
@@ -244,7 +244,7 @@ class VoucherCenter extends ContainerComponent {
                     {
                         this.props.loginStore.isPay ? (
                             <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                                that.WFTPay(0, token)
+                                that.WFTPay(0, token, money, bean,name)
                             }}>
                                 <View style={[styles.payType]}>
                                     <View style={[styles.payItem]}>
@@ -256,7 +256,7 @@ class VoucherCenter extends ContainerComponent {
                             </TouchableWithoutFeedback>
                         ) : (
                             <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                                that.WFTPay(1,"", money)
+                                that.WFTPay(1,token, money, bean,name)
                             }}>
                                 <View style={[styles.payType]}>
                                     <View style={[styles.payItem]}>
@@ -273,7 +273,7 @@ class VoucherCenter extends ContainerComponent {
         )
     }
 
-    WFTPay = (type, token,money) => {
+    WFTPay = (type, token, money, bean,name) => {
         let that = this;
         that.alert.BackInit(() => {
             if (type === 0) {
@@ -281,7 +281,7 @@ class VoucherCenter extends ContainerComponent {
                     that.props.getMemberInfo();
                 })
             } else if(type===1) {
-                WFTPay.pay(token, () => {
+                WFTPay.applepay(money.toString();,() => {
                     that.props.getMemberInfo();
                 })
             }
@@ -309,7 +309,7 @@ class VoucherCenter extends ContainerComponent {
                 let {Result, Data} = response;
                 that.hideLoading(() => {
                     if (Result == 1) {
-                        that.Pay(Data, data.Money);
+                        that.Pay(Data, data.Money,null,"虚拟钻石");
                     } else {
                         that.showError(Result);
                     }
@@ -351,7 +351,7 @@ class VoucherCenter extends ContainerComponent {
                 that.canPress.Prop = true;
                 that.hideLoading(() => {
                     if (Result == 1) {
-                        that.Pay(Data, data.Money, data.Bean);
+                        that.Pay(Data, data.Money, data.Bean,data.Name);
                     } else {
                         that.showError(Result);
                     }
