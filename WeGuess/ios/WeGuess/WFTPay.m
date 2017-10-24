@@ -31,7 +31,7 @@ RCT_EXPORT_METHOD(pay:(NSString *)token callback:(RCTResponseSenderBlock (^)())c
 }
 
 RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^)())callback){
-  
+
   if (![PKPaymentAuthorizationViewController class]) {
     //PKPaymentAuthorizationViewController需iOS8.0以上支持
     NSLog(@"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
