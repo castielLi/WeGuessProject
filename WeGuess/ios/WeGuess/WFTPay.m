@@ -17,6 +17,7 @@
 
 @implementation WFTPay
 
+
 RCT_EXPORT_MODULE()
 
 
@@ -30,6 +31,8 @@ RCT_EXPORT_METHOD(pay:(NSString *)token callback:(RCTResponseSenderBlock (^)())c
 }
 
 RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^)())callback){
+  
+  _payCallback = callback;
   
   //确认设备是否支持Apple Pay支付
   if([PKPaymentAuthorizationViewController canMakePayments]) {
@@ -101,6 +104,7 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
 //当支付过程完成的时候进行调用
 -(void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller{
   [controller dismissViewControllerAnimated:YES completion:nil];
+  _payCallback();
 }
 
 @end
