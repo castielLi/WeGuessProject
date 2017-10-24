@@ -32,42 +32,57 @@ RCT_EXPORT_METHOD(pay:(NSString *)token callback:(RCTResponseSenderBlock (^)())c
 
 RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^)())callback){
   
-  _payCallback = callback;
+  if (![PKPaymentAuthorizationViewController class]) {
+    //PKPaymentAuthorizationViewController需iOS8.0以上支持
+    NSLog(@"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
+//    @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持" userInfo:nil];
+    //callback();
+    return;
+  }
+  //检查当前设备是否可以支付
+  if (![PKPaymentAuthorizationViewController canMakePayments]) {
+    //支付需iOS9.0以上支持
+    NSLog(@"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
+//    @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持" userInfo:nil];
+    //callback();
+    return;
+  }
+  //检查用户是否可进行某种卡的支付，是否支持Amex、MasterCard、Visa与银联四种卡，根据自己项目的需要进行检测
+  NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard,PKPaymentNetworkVisa,PKPaymentNetworkChinaUnionPay];
+//  NSArray *supportedNetworks = @[PKPaymentNetworkChinaUnionPay];
+  if (![PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:supportedNetworks]) {
+    NSLog(@"没有绑定支付卡");
+//    callback();
+//    @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"没有绑定支付卡" userInfo:nil];
+    return;
+  }
   
-  //确认设备是否支持Apple Pay支付
-  if([PKPaymentAuthorizationViewController canMakePayments]) {
-    // 订单请求对象
-    PKPaymentRequest *request = [[PKPaymentRequest alloc]init];
-    //商品订单信息对象
-    PKPaymentSummaryItem *item1 = [PKPaymentSummaryItem summaryItemWithLabel:@"虚拟钻石" amount:[NSDecimalNumber decimalNumberWithString:money ]];
-    request.paymentSummaryItems = @[item1];
-    //指定国家地区编码
-    request.countryCode = @"CN";
-    //指定国家货币种类--人民币
-    request.currencyCode = @"CNY";
-    //指定支持的网上银行支付方式
-    request.supportedNetworks = @[PKPaymentNetworkVisa,PKPaymentNetworkChinaUnionPay,PKPaymentNetworkMasterCard];
-    //指定APP需要的商业ID
-    request.merchantIdentifier = @"merchant.com.qic.wechatweguess";
-    //指定支付的范围限制
-    request.merchantCapabilities = PKMerchantCapabilityEMV;
-    //指定订单接受的地址是哪里
-    request.requiredBillingAddressFields = PKAddressFieldEmail | PKAddressFieldPostalAddress;
-    
-    //支付界面显示对象
-    PKPaymentAuthorizationViewController *pvc = [[PKPaymentAuthorizationViewController alloc]initWithPaymentRequest:request];
-    
-    if (!pvc) {
-      NSLog(@"出问题了，请注意检查");
-      @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"创建支付显示界面不成功" userInfo:nil];
-    }else{
-      pvc.delegate = self;
-      [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:pvc animated:YES completion:nil];
-    }
-    
-  } else {
-    NSLog(@"This device cannot make payments");
-    callback();
+  // 订单请求对象
+  PKPaymentRequest *request = [[PKPaymentRequest alloc]init];
+  //商品订单信息对象
+  PKPaymentSummaryItem *item1 = [PKPaymentSummaryItem summaryItemWithLabel:@"虚拟钻石" amount:[NSDecimalNumber decimalNumberWithString:money ]];
+  request.paymentSummaryItems = @[item1];
+  //指定国家地区编码
+  request.countryCode = @"CN";
+  //指定国家货币种类--人民币
+  request.currencyCode = @"CNY";
+  //指定支持的网上银行支付方式
+  request.supportedNetworks = @[PKPaymentNetworkVisa,PKPaymentNetworkChinaUnionPay,PKPaymentNetworkMasterCard];
+  //指定APP需要的商业ID
+  request.merchantIdentifier = @"merchant.com.qic.wechatweguess";
+  //指定支付的范围限制
+  request.merchantCapabilities = PKMerchantCapabilityEMV;
+  //指定订单接受的地址是哪里
+  request.requiredBillingAddressFields = PKAddressFieldEmail | PKAddressFieldPostalAddress;
+  
+  //支付界面显示对象
+  PKPaymentAuthorizationViewController *pvc = [[PKPaymentAuthorizationViewController alloc]initWithPaymentRequest:request];
+  pvc.delegate = self;
+  if (!pvc) {
+    NSLog(@"出问题了，请注意检查");
+    @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"创建支付显示界面不成功" userInfo:nil];
+  }else{
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:pvc animated:YES completion:nil];
   }
   
 }
@@ -103,8 +118,9 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
 
 //当支付过程完成的时候进行调用
 -(void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller{
+  NSLog(@"支付结束");
   [controller dismissViewControllerAnimated:YES completion:nil];
-  _payCallback();
+//  _payCallback();
 }
 
 @end

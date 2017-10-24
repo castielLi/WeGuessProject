@@ -281,7 +281,7 @@ class VoucherCenter extends ContainerComponent {
                     that.props.getMemberInfo();
                 })
             } else if(type===1) {
-                WFTPay.applepay(money.toString();,() => {
+                WFTPay.applepay(money.toString(),() => {
                     that.props.getMemberInfo();
                 })
             }
