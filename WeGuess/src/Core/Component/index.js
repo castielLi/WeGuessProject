@@ -40,6 +40,9 @@ export default class DisplayComponent extends Component {
     }
 
     showError(errorCode, ok, callback) {
+        if (errorCode === -2 || errorCode === "-2") {
+            return;
+        }
         let errorMsg = this.getErrorMsg(errorCode);
         if (this.alert) {
             this.alert.show("提示", errorMsg, ok, null, null, null, null, callback);
