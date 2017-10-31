@@ -260,7 +260,7 @@ class VoucherCenter extends ContainerComponent {
                             }}>
                                 <View style={[styles.payType]}>
                                     <View style={[styles.payItem]}>
-                                        <Image source={require('../resources/applepay.png')} style={styles.listIcon}/>
+                                        <Image source={require('../resources/applepay.png')} style={styles.listAppleIcon}/>
                                         <Text style={[styles.customFont]}>Apple Pay</Text>
                                     </View>
                                     <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
@@ -682,6 +682,11 @@ const styles = StyleSheet.create({
     listIcon: {
         width: 24,
         height: 24,
+        marginRight: 10
+    },
+    listAppleIcon:{
+        width: 44,
+        height: 32,
         marginRight: 10
     },
     alertMoney: {
