@@ -8,7 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
+#import "SPayClient.h"
+
 
 @interface WFTPay : NSObject <RCTBridgeModule>
+
+@property (nonatomic,copy)RCTResponseSenderBlock(^payCallback)();
 
 @end
