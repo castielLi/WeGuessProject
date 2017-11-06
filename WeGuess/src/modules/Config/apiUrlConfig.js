@@ -7,31 +7,31 @@ const baseUrl = "http://m.weguess.cn/memberapi/api/";
 const sportBaseUrl = "http://sport.weguess.cn/api/";
 export const WebViewUrl = {
     userAgreement: {
-        url: "http://m.weguess.cn/#/tab/userargreement",
+        url: hostUrl+"/#/tab/userargreement",
         title: "用户服务协议"
     },
     winBean: {
-        url: "http://m.weguess.cn/#/tab/winbean",
+        url:  hostUrl+"/#/tab/winbean",
         title: "猜豆获取说明"
     },
     analysisRule: {
-        url: "http://m.weguess.cn/#/tab/analysisrule",
+        url:  hostUrl+"/#/tab/analysisrule",
         title: "众猜解盘说明"
     },
     userRankRule: {
-        url: "http://m.weguess.cn/#/tab/userrankrule",
+        url:  hostUrl+"/#/tab/userrankrule",
         title: "达人规则"
     },
     awardRule: {
-        url: "http://m.weguess.cn/#/tab/awardrule",
+        url:  hostUrl+"/#/tab/awardrule",
         title: "抽奖规则"
     },
     registerAgreement: {
-        url: "http://m.weguess.cn/#/tab/userargreement",
+        url:  hostUrl+"/#/tab/userargreement",
         title: "用户协议"
     },
     actionHelp: {
-        url: "http://m.weguess.cn/#/tab/gamerule/",
+        url:  hostUrl+"/#/tab/gamerule/",
         title: "游戏规则"
     }
 }

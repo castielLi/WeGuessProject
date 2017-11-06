@@ -36,6 +36,9 @@ export default class ContainerComponent extends Component {
     }
 
     showError(errorCode, ok, callback) {
+        if(errorCode==-2){
+            return;
+        }
         let errorMsg = this.getErrorMsg(errorCode);
         if (!ok) {
             ok = () => {

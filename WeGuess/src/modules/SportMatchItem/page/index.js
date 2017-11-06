@@ -71,6 +71,7 @@ class Match extends ContainerComponent {
             marketID: this.props.navigation.state.params.marketId,
             betPos: this.props.navigation.state.params.betPos,
             changeList: [],
+            reLoad:false,//点击加载数据
 
 
         }
@@ -322,7 +323,7 @@ class Match extends ContainerComponent {
             this.showError(error)
         }).catch((error) => {
             this.hideLoading();
-            this.showError(error);
+           this.showError(error);
         })
     }
     betItem = (marketid, index, betpos) => {//投注列
@@ -354,15 +355,25 @@ class Match extends ContainerComponent {
 
                 that.initBet(betodd, betPos, couid, marketID);
             }
-            //if(match.Stage===3){
+            if(match.Stage===3){
             that.refreshData(match);
-            //}
+            }
 
         }, (error) => {
+            if(error==-2){
+                this.setState({
+                    reLoad:true,
+                })
+            }
             this.showError(error);
             this.hideLoading();
         }).catch((error) => {
-            this.showError(error);
+            if(error==-2){
+                this.setState({
+                    reLoad:true,
+                })
+            }
+           this.showError(error);
 
             this.hideLoading();
         });
@@ -382,16 +393,16 @@ class Match extends ContainerComponent {
                     marketID = this.state.marketID,
                     betodd = match.MK[marketID][0][betPos],
                     couid = match.MK[marketID][0][0];
-
+                
                 that.initBet(betodd, betPos, couid, marketID);
             }
             that.MatchChange(match);
 
         }, (error) => {
-            this.showError(error)
+           this.showError(error)
         }).catch((error) => {
 
-            this.showError(error);
+           this.showError(error);
         });
 
     }
@@ -429,6 +440,21 @@ class Match extends ContainerComponent {
         ;
         return null;
     }
+
+    reLoad = ()=>{
+        return (
+            <TouchableHighlight onPress={()=>{
+                this.setState({
+                    reLoad:false
+                })
+                this.fetchData()
+            }}>
+                <View style={{height:ScreenHeight-230,justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{fontSize:16}}>点击重新加载数据</Text>
+                </View>
+            </TouchableHighlight>
+        )
+    }
     //当初始化appToken，设置存在的时候,第一次刷新获取数据
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.loginStore.hasToken && nextProps.loginStore.hasToken) {
@@ -452,7 +478,10 @@ class Match extends ContainerComponent {
         return (
             <View style={styles.container}>
                 <Header headerData={this.state.matchData} navigate={this.props.navigation.navigate}/>
-                <ScrollView style={styles.scroller}>
+                {
+                    this.state.reLoad?(this.reLoad()):
+
+                (<ScrollView style={styles.scroller}>
                     {//全场赛果
                         this.HasOwnProperty(mk, 5) ? this._allResult() : null
                     }
@@ -477,7 +506,8 @@ class Match extends ContainerComponent {
                     {//全场进球
                         this.HasOwnProperty(mk, 11) ? this._allInBall() : null
                     }
-                </ScrollView>
+                </ScrollView>)
+                }
                 <View style={{height: 30, justifyContent: "center", marginBottom: 10}}>
                     <Text >*注：页面无赔率时处于封盘状态</Text>
                 </View>

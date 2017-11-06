@@ -125,7 +125,7 @@ class LeagueResult extends ContainerComponent {
             }
         }).catch((error) => {
 
-            this.showError(error);
+           this.showError(error);
         })
     }
 

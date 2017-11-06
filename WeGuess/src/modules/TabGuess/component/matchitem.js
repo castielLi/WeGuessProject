@@ -72,7 +72,7 @@ class TimeItem extends ContainerComponent {
             "SportId": sportId,
         };
        
-        this.refreshData();
+        //this.refreshData();
         this.networking.get(GetOddsByLeague, params, {}).then((responseData) => {
             this.setState({
                 showLoading:false,
@@ -120,7 +120,7 @@ class TimeItem extends ContainerComponent {
         },(error)=>{            if(error!=-2){
                this.showError(error);
             }}).catch((error) => {
-            this.showError(error);
+           this.showError(error);
         })
     }
     //刷新盘口数据

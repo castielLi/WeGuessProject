@@ -175,9 +175,6 @@ class ActionDetail extends ContainerComponent {
         }).catch((error) => {
             this.hideLoading();
             this.showError(error);
-
-            throw error;
-
         })
     }
 

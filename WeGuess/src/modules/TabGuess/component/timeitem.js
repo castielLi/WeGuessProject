@@ -75,7 +75,7 @@ class TimeItem extends ContainerComponent {
         let params = {
             "SportId": sportId,
         };
-        this.refreshData();
+        //this.refreshData();
         this.networking.get(GetOddsByTime, params, {}).then((responseData) => {
             this.setState({
                 showLoading:false,

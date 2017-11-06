@@ -90,7 +90,7 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
             this.setState({
                 showLoading:false,
             })
-            //this.showError(error);
+            this.showError(error);
         });
     }
 
@@ -119,7 +119,7 @@ fetchData(sportId = this.props.sportId, refresh, callback) {
             }
         }).catch((error) => {
             
-            //this.showError(error);
+            this.showError(error);
         });
     }
 
