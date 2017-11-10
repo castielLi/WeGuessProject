@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <PassKit/PassKit.h>
 #import <AddressBook/AddressBook.h>
+#import "Toast+UIView.h"
 
 @interface WFTPay ()<PKPaymentAuthorizationViewControllerDelegate>
 @end
@@ -18,7 +19,7 @@
 @implementation WFTPay
 
 
-RCT_EXPORT_MODULE()
+RCT_EXPORT_MODULE(WFTPay)
 
 
 RCT_EXPORT_METHOD(pay:(NSString *)token callback:(RCTResponseSenderBlock (^)())callback){
@@ -31,10 +32,11 @@ RCT_EXPORT_METHOD(pay:(NSString *)token callback:(RCTResponseSenderBlock (^)())c
 }
 
 RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^)())callback){
-
+  
   if (![PKPaymentAuthorizationViewController class]) {
     //PKPaymentAuthorizationViewController需iOS8.0以上支持
     NSLog(@"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
+    [self toastShow: @"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持"];
 //    @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持" userInfo:nil];
     //callback();
     return;
@@ -43,6 +45,7 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
   if (![PKPaymentAuthorizationViewController canMakePayments]) {
     //支付需iOS9.0以上支持
     NSLog(@"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
+    [self toastShow: @"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持"];
 //    @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持" userInfo:nil];
     //callback();
     return;
@@ -52,6 +55,7 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
 //  NSArray *supportedNetworks = @[PKPaymentNetworkChinaUnionPay];
   if (![PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:supportedNetworks]) {
     NSLog(@"没有绑定支付卡");
+    [self toastShow: @"没有绑定支付卡"];
 //    callback();
 //    @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"没有绑定支付卡" userInfo:nil];
     return;
@@ -79,6 +83,7 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
   PKPaymentAuthorizationViewController *pvc = [[PKPaymentAuthorizationViewController alloc]initWithPaymentRequest:request];
   pvc.delegate = self;
   if (!pvc) {
+    [self toastShow: @"支付发生错误"];
     NSLog(@"出问题了，请注意检查");
     @throw  [NSException exceptionWithName:@"CQ_Error" reason:@"创建支付显示界面不成功" userInfo:nil];
   }else{
@@ -112,6 +117,10 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
   ///在这里将token和地址发送到自己的服务器，有自己的服务器与银行和商家进行接口调用和支付将结果返回到这里
   //我们根据结果生成对应的状态对象，根据状态对象显示不同的支付结构
   //状态对象
+
+  
+  [self toastShow: @"支付结果查询中"];
+  [self verifyTransactionResult];
   PKPaymentAuthorizationStatus status = PKPaymentAuthorizationStatusFailure;
   completion(status);
 }
@@ -119,8 +128,88 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
 //当支付过程完成的时候进行调用
 -(void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller{
   NSLog(@"支付结束");
+  [self toastShow: @"支付结束"];
   [controller dismissViewControllerAnimated:YES completion:nil];
 //  _payCallback();
 }
 
+-(void)toastShow:(NSString *)message {
+  NSString *position =@"center";
+  NSNumber *addPixelsY  =nil;
+
+  NSInteger durationInt = 2;
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[[[UIApplication sharedApplication]windows]firstObject] makeToast:message duration:durationInt position:position addPixelsY:addPixelsY == nil ? 0 : [addPixelsY intValue]];
+  });
+
+}
+
+
+#pragma mark - VerifyFinishedTransaction
+- (void)verifyTransactionResult
+{
+  // 验证凭据，获取到苹果返回的交易凭据
+  // appStoreReceiptURL iOS7.0增加的，购买交易完成后，会将凭据存放在该地址
+  NSURL *receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
+  // 从沙盒中获取到购买凭据
+  NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];
+  // 传输的是BASE64编码的字符串
+  /**
+   BASE64 常用的编码方案，通常用于数据传输，以及加密算法的基础算法，传输过程中能够保证数据传输的稳定性
+   BASE64是可以编码和解码的
+   */
+  NSDictionary *requestContents = @{
+                                    @"receipt-data": [receipt base64EncodedStringWithOptions:0]
+                                    };
+  NSError *error;
+  // 转换为 JSON 格式
+  NSData *requestData = [NSJSONSerialization dataWithJSONObject:requestContents
+                                                        options:0
+                                                          error:&error];
+  // 不存在
+  if (!requestData) { /* ... Handle error ... */ }
+  
+  // 发送网络POST请求，对购买凭据进行验证
+  NSString *verifyUrlString;
+#if (defined(APPSTORE_ASK_TO_BUY_IN_SANDBOX) && defined(DEBUG))
+  verifyUrlString = @"https://sandbox.itunes.apple.com/verifyReceipt";
+#else
+  verifyUrlString = @"https://buy.itunes.apple.com/verifyReceipt";
+#endif
+  // 国内访问苹果服务器比较慢，timeoutInterval 需要长一点
+  NSMutableURLRequest *storeRequest = [NSMutableURLRequest requestWithURL:[[NSURL alloc] initWithString:verifyUrlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0f];
+  
+  [storeRequest setHTTPMethod:@"POST"];
+  [storeRequest setHTTPBody:requestData];
+  
+  // 在后台对列中提交验证请求，并获得官方的验证JSON结果
+  NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+  [NSURLConnection sendAsynchronousRequest:storeRequest queue:queue
+                         completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                           if (connectionError) {
+                             NSLog(@"链接失败");
+                             [self toastShow: @"支付结果查询失败"];
+                           } else {
+                             NSError *error;
+                             NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                             if (!jsonResponse) {
+                               NSLog(@"验证失败");
+                               [self toastShow: @"支付失败"];
+                             }
+                             
+                             // 比对 jsonResponse 中以下信息基本上可以保证数据安全
+                             /*
+                              bundle_id
+                              application_version
+                              product_id
+                              transaction_id
+                              */
+                             
+                             NSLog(@"验证成功");
+                             [self toastShow: @"支付成功"];
+                           }
+                         }];
+  
+}
 @end

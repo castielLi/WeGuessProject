@@ -59,6 +59,8 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		A1AAA57BAA20478285075D48 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4156FB46ECE2411D82A101D8 /* Entypo.ttf */; };
 		A7CCCE3A05634A7FB3D4D77F /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 81B278FEF3F647A4B23471DC /* Ionicons.ttf */; };
+		AC12075E1FB5750F005C6565 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = AC12075B1FB5750F005C6565 /* Toast.m */; };
+		AC12075F1FB5750F005C6565 /* Toast+UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC12075D1FB5750F005C6565 /* Toast+UIView.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		BD893F20317547D4B231B63C /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E13057EE1B34848ADE94E18 /* libRNFS.a */; };
 		DF0ABEFCB47A49D096EC7F7A /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E6F6F6111FD4C87A1249753 /* SimpleLineIcons.ttf */; };
@@ -437,6 +439,9 @@
 		8E6F6F6111FD4C87A1249753 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		90D2B7127B174A1FA6A96D62 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		968691B9E47B4A27BE267B18 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
+		AC12075B1FB5750F005C6565 /* Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Toast.m; path = WeGuess/toast/Toast.m; sourceTree = "<group>"; };
+		AC12075C1FB5750F005C6565 /* Toast+UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Toast+UIView.h"; path = "WeGuess/toast/Toast+UIView.h"; sourceTree = "<group>"; };
+		AC12075D1FB5750F005C6565 /* Toast+UIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Toast+UIView.m"; path = "WeGuess/toast/Toast+UIView.m"; sourceTree = "<group>"; };
 		ACBBDC791F99D1CA00F2508D /* WeGuess.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WeGuess.entitlements; path = WeGuess/WeGuess.entitlements; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B5369786A655435486941357 /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
@@ -694,6 +699,9 @@
 		182DABC91F7B5A1400D19DBD /* pay */ = {
 			isa = PBXGroup;
 			children = (
+				AC12075B1FB5750F005C6565 /* Toast.m */,
+				AC12075C1FB5750F005C6565 /* Toast+UIView.h */,
+				AC12075D1FB5750F005C6565 /* Toast+UIView.m */,
 				182DABF01F7B5A3800D19DBD /* WFTPay.h */,
 				182DABF11F7B5A3800D19DBD /* WFTPay.m */,
 			);
@@ -1428,6 +1436,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				AC12075F1FB5750F005C6565 /* Toast+UIView.m in Sources */,
+				AC12075E1FB5750F005C6565 /* Toast.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				182DABF21F7B5A3800D19DBD /* WFTPay.m in Sources */,
 			);
