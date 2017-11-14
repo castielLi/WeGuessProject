@@ -2,12 +2,17 @@
 //  IAPManager.m
 //  WeGuess
 //
-//  Created by 冯亭 on 2017/11/13.
+//  Created by castiel on 2017/9/27.
 //  Copyright © 2017年 Facebook. All rights reserved.
 //
 
-#import <StoreKit/StoreKit.h>
+#import "IAPManager.h"
+#import "SPayClient.h"
+#import <UIKit/UIKit.h>
+#import <PassKit/PassKit.h>
+#import <AddressBook/AddressBook.h>
 #import "Toast+UIView.h"
+#import "RestService.h"
 #import "IAPManager.h"
 
 @interface IAPManager()
@@ -15,16 +20,34 @@
 
 @implementation IAPManager
 
+RCT_EXPORT_MODULE()
+
+RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^)())callback){
+  NSString *proId = @"com.qic.wechatWeGuess2";
+  [self IPAPay:proId];
+}
+
 - (void)IPAPay:(NSString *)proId
 {
-  [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
-  if([SKPaymentQueue canMakePayments]){
-    [self requestProductData:proId];
-  }else{
-    NSLog(@"不允许程序内付费");
-    [self toastShow: @"不允许程序内付费"];
-    
+  if (![PKPaymentAuthorizationViewController class]) {
+    NSLog(@"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
+    [self toastShow: @"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持"];
+    return;
   }
+  //检查当前设备是否可以支付
+  if (![PKPaymentAuthorizationViewController canMakePayments]) {
+    NSLog(@"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
+    [self toastShow: @"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持"];
+    return;
+  }
+  //检查用户是否可进行某种卡的支付，是否支持Amex、MasterCard、Visa与银联四种卡，根据自己项目的需要进行检测
+  //    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard,PKPaymentNetworkVisa,PKPaymentNetworkChinaUnionPay];
+  //    if (![PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:supportedNetworks]) {
+  //      NSLog(@"没有绑定支付卡");
+  //      [self toastShow: @"没有绑定支付卡"];
+  //      return;
+  //    }
+  [self requestProductData:proId];
 }
 
 -(void)toastShow:(NSString *)message {
@@ -55,21 +78,22 @@
   NSArray *product = response.products;
   if([product count] == 0){
     NSLog(@"--------------没有商品------------------");
+    [self toastShow: @"没有商品"];
     return;
   }
   NSLog(@"productID:%@", response.invalidProductIdentifiers);
   NSLog(@"产品付费数量:%lu",(unsigned long)[product count]);
   SKProduct *p = nil;
   for(SKProduct *pro in product) {
-      NSLog(@"%@", [pro description]);
-      NSLog(@"%@", [pro localizedTitle]);
-      NSLog(@"%@", [pro localizedDescription]);
-      NSLog(@"%@", [pro price]);
-      NSLog(@"%@", [pro productIdentifier]);
-      if([pro.productIdentifier isEqualToString:_currentProId]){
-        p = pro;
-      }
+    NSLog(@"%@", [pro description]);
+    NSLog(@"%@", [pro localizedTitle]);
+    NSLog(@"%@", [pro localizedDescription]);
+    NSLog(@"%@", [pro price]);
+    NSLog(@"%@", [pro productIdentifier]);
+    if([pro.productIdentifier isEqualToString:_currentProId]){
+      p = pro;
     }
+  }
   SKPayment *payment = [SKPayment paymentWithProduct:p];
   NSLog(@"发送购买请求");
   [[SKPaymentQueue defaultQueue] addPayment:payment];
@@ -112,8 +136,8 @@
   NSError *error=nil;
   NSData *responseData=[NSURLConnection sendSynchronousRequest:requestM returningResponse:nil error:&error];
   if(error) {
-      NSLog(@"验证购买过程中发生错误，错误信息：%@",error.localizedDescription);
-      return;
+    NSLog(@"验证购买过程中发生错误，错误信息：%@",error.localizedDescription);
+    return;
   }
   NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:nil];
   NSLog(@"%@",dic);
@@ -179,11 +203,5 @@
   [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
-- (void)dealloc{
-  [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
-}
-
-- (void)didReceiveMemoryWarning {
-  // Dispose of any resources that can be recreated.
-}
 @end
+

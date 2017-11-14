@@ -43,6 +43,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 var width = Dimensions.get('window').width;
 var cellWidth = (width - 10 * 4) / 3;  //单个框的宽度
 let WFTPay = NativeModules.WFTPay;
+var IAPManager = NativeModules.IAPManager;
 
 class VoucherCenter extends ContainerComponent {
     static navigationOptions = ({navigation}) => {
@@ -282,11 +283,11 @@ class VoucherCenter extends ContainerComponent {
         let that = this;
         that.alert.BackInit(() => {
             if (type === 0) {
-                WFTPay.pay(token, () => {
+                WFTPay.pay(token,"pay.alipay.native.towap", () => {
                     that.props.getMemberInfo();
                 })
             } else if(type===1) {
-                WFTPay.applepay(money.toString(),() => {
+                IAPManager.applepay(money.toString(),() => {
                     that.props.getMemberInfo();
                 })
             }

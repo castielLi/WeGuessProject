@@ -8,10 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
+#import <Foundation/Foundation.h>
+#import <React/RCTBridgeModule.h>
+#import "SPayClient.h"
+#import "Toast+UIView.h"
+#import "AFNetworking.h"
 
-@interface IAPManager:NSObject{
-  
-}
+@interface IAPManager:NSObject <RCTBridgeModule>
 
 @property (nonatomic,copy) NSString *currentProId;
 

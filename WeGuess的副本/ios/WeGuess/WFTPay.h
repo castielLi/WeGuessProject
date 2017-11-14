@@ -9,17 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 #import "SPayClient.h"
-#import "Toast+UIView.h"
-#import "AFNetworking.h"
 
 
 @interface WFTPay : NSObject <RCTBridgeModule>
-
-
-@property (nonatomic,copy)RCTResponseSenderBlock(^payCallback)();
-@property (nonatomic,copy) NSString *currentProId;
-
--(void)toastShow:(NSString *)message;
--(void)verifyTransactionResult;
 
 @end
