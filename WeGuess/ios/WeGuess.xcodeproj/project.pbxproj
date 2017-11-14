@@ -832,6 +832,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				D9FE946FCE4C48B6BA9CCB15 /* Resources */,
 				182DAC0B1F7B733600D19DBD /* Frameworks */,
+				E0DD976B1FB5A4B1005E3689 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -874,6 +875,18 @@
 				3A2FC81FEE7F4D1DACC36EB8 /* Zocial.ttf */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		E0DD976B1FB5A4B1005E3689 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				1E13057EE1B34848ADE94E18 /* libRNFS.a */,
+				4C3E55AA49F54D8C92619797 /* libRNDeviceInfo.a */,
+				968691B9E47B4A27BE267B18 /* libRNBackgroundTimer.a */,
+				B5369786A655435486941357 /* libSplashScreen.a */,
+				256590CBB128438689E71BF0 /* libRNVectorIcons.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -120,7 +120,7 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
 
   
   [self toastShow: @"支付结果查询中"];
-  [self verifyTransactionResult];
+  [self verifyTransactionResult:0];
   PKPaymentAuthorizationStatus status = PKPaymentAuthorizationStatusFailure;
   completion(status);
 }
@@ -147,7 +147,7 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
 
 
 #pragma mark - VerifyFinishedTransaction
-- (void)verifyTransactionResult
+- (void)verifyTransactionResult:(int)isSandBox
 {
   // 验证凭据，获取到苹果返回的交易凭据
   // appStoreReceiptURL iOS7.0增加的，购买交易完成后，会将凭据存放在该地址
@@ -168,15 +168,20 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
                                                         options:0
                                                           error:&error];
   // 不存在
-  if (!requestData) { /* ... Handle error ... */ }
+  if (!requestData) {
+    /* ... Handle error ... */
+    [self toastShow: @"支付失败"];
+  }
   
   // 发送网络POST请求，对购买凭据进行验证
   NSString *verifyUrlString;
-#if (defined(APPSTORE_ASK_TO_BUY_IN_SANDBOX) && defined(DEBUG))
-  verifyUrlString = @"https://sandbox.itunes.apple.com/verifyReceipt";
-#else
-  verifyUrlString = @"https://buy.itunes.apple.com/verifyReceipt";
-#endif
+  if (isSandBox==1){
+    verifyUrlString = @"https://sandbox.itunes.apple.com/verifyReceipt";
+  }
+  else{
+    verifyUrlString = @"https://buy.itunes.apple.com/verifyReceipt";
+    
+  }
   // 国内访问苹果服务器比较慢，timeoutInterval 需要长一点
   NSMutableURLRequest *storeRequest = [NSMutableURLRequest requestWithURL:[[NSURL alloc] initWithString:verifyUrlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0f];
   
@@ -197,17 +202,20 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
                                NSLog(@"验证失败");
                                [self toastShow: @"支付失败"];
                              }
+                             if([[jsonResponse objectForKey:@"status"] intValue]==0) //注意，status=@"0" 是验证收据成功
+                             {
+                               NSLog(@"验证成功");
+                               [self toastShow: @"支付成功"];
+                             }
+                             else if([[jsonResponse objectForKey:@"status"] intValue]==21007) //注意，status=@"0" 是验证收据成功
+                             {
+                               [self verifyTransactionResult:1];
+                             }
+                             else{
+                               NSLog(@"验证成功");
+                               [self toastShow: @"支付失败"];
+                             }
                              
-                             // 比对 jsonResponse 中以下信息基本上可以保证数据安全
-                             /*
-                              bundle_id
-                              application_version
-                              product_id
-                              transaction_id
-                              */
-                             
-                             NSLog(@"验证成功");
-                             [self toastShow: @"支付成功"];
                            }
                          }];
   
