@@ -11,7 +11,7 @@ export default class EditView extends Component {
     render() {
         return (
             <View style={styles.itemInput}>
-                <Text style={styles.inputLabel}>{this.props.label}</Text>
+                <Text style={[styles.inputLabel,{width:this.props.labelWidth}]}>{this.props.label}</Text>
                 <TextInput style={styles.inputText}
                            placeholder={this.props.name}
                            underlineColorAndroid="transparent"

@@ -43,6 +43,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 var width = Dimensions.get('window').width;
 var cellWidth = (width - 10 * 4) / 3;  //单个框的宽度
 let WFTPay = NativeModules.WFTPay;
+var IAPManager = NativeModules.IAPManager;
 
 class VoucherCenter extends ContainerComponent {
     static navigationOptions = ({navigation}) => {
@@ -222,10 +223,10 @@ class VoucherCenter extends ContainerComponent {
     }
 
     //支付
-    Pay = (token, money, bean,name) => {
+    Pay = (token, money, bean,name,buyType) => {
         let that = this;
         if(!this.props.loginStore.isPay){
-        	that.WFTPay(1,token, money, bean,name)
+        	that.WFTPay(1,token, money, bean,name,buyType)
         }else{
         that.showAlert(
             (<View style={[styles.alertTitle]}>
@@ -246,7 +247,7 @@ class VoucherCenter extends ContainerComponent {
                     </View>
                     
                             <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                                that.WFTPay(0, token, money, bean,name)
+                                that.WFTPay(0, token, money, bean,name,buyType)
                             }}>
                                 <View style={[styles.payType]}>
                                     <View style={[styles.payItem]}>
@@ -278,15 +279,19 @@ class VoucherCenter extends ContainerComponent {
 	// )
                     // }
 
-    WFTPay = (type, token, money, bean,name) => {
+    WFTPay = (type, token, money, bean,name,buyType) => {
         let that = this;
         that.alert.BackInit(() => {
             if (type === 0) {
-                WFTPay.pay(token, () => {
+                WFTPay.pay(token,"pay.alipay.native.towap", () => {
                     that.props.getMemberInfo();
                 })
             } else if(type===1) {
-                WFTPay.applepay(money.toString(),() => {
+                let moneyStr = money.toString();
+                if(buyType==2){
+                    moneyStr+="Prop";
+                }
+                IAPManager.applepay(moneyStr,() => {
                     that.props.getMemberInfo();
                 })
             }
@@ -314,7 +319,7 @@ class VoucherCenter extends ContainerComponent {
                 let {Result, Data} = response;
                 that.hideLoading(() => {
                     if (Result == 1) {
-                        that.Pay(Data, data.Money,null,"虚拟钻石");
+                        that.Pay(Data, data.Money,null,"虚拟钻石",1);
                     } else {
                         that.showError(Result);
                     }
@@ -356,7 +361,7 @@ class VoucherCenter extends ContainerComponent {
                 that.canPress.Prop = true;
                 that.hideLoading(() => {
                     if (Result == 1) {
-                        that.Pay(Data, data.Money, data.Bean,data.Name);
+                        that.Pay(Data, data.Money, data.Bean,data.Name,2);
                     } else {
                         that.showError(Result);
                     }

@@ -59,11 +59,14 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		A1AAA57BAA20478285075D48 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4156FB46ECE2411D82A101D8 /* Entypo.ttf */; };
 		A7CCCE3A05634A7FB3D4D77F /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 81B278FEF3F647A4B23471DC /* Ionicons.ttf */; };
-		AC12075E1FB5750F005C6565 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = AC12075B1FB5750F005C6565 /* Toast.m */; };
 		AC12075F1FB5750F005C6565 /* Toast+UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC12075D1FB5750F005C6565 /* Toast+UIView.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		BD893F20317547D4B231B63C /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E13057EE1B34848ADE94E18 /* libRNFS.a */; };
+		DE1316239021AF70B0C5B32B /* libPods-WeGuess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE8C17F9E9809D6B7B0CFB6 /* libPods-WeGuess.a */; };
 		DF0ABEFCB47A49D096EC7F7A /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E6F6F6111FD4C87A1249753 /* SimpleLineIcons.ttf */; };
+		E04C2B161FB948E00069CF08 /* RestService.m in Sources */ = {isa = PBXBuildFile; fileRef = E04C2B141FB948DF0069CF08 /* RestService.m */; };
+		E04C2B171FB948E00069CF08 /* ApiResult.m in Sources */ = {isa = PBXBuildFile; fileRef = E04C2B151FB948DF0069CF08 /* ApiResult.m */; };
+		E04C2B511FB97FEF0069CF08 /* IAPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E04C2B501FB97FEF0069CF08 /* IAPManager.m */; };
 		E27D0190F3484564842423FA /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF19BF6063A14C3B8693DF1B /* EvilIcons.ttf */; };
 		E2A3334E00074ADD942BF082 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F3EBF20206F4C688D36F1E9 /* FontAwesome.ttf */; };
 		ED2FC973868A421B966DFB87 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 968691B9E47B4A27BE267B18 /* libRNBackgroundTimer.a */; };
@@ -425,6 +428,7 @@
 		2D02E47B1E0B4A5D006451C7 /* WeGuess-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WeGuess-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* WeGuess-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WeGuess-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A2FC81FEE7F4D1DACC36EB8 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		3AE8C17F9E9809D6B7B0CFB6 /* libPods-WeGuess.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeGuess.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4156FB46ECE2411D82A101D8 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		4C3E55AA49F54D8C92619797 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		4DA1B6BC778049819554275A /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
@@ -439,15 +443,22 @@
 		8E6F6F6111FD4C87A1249753 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		90D2B7127B174A1FA6A96D62 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		968691B9E47B4A27BE267B18 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
-		AC12075B1FB5750F005C6565 /* Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Toast.m; path = WeGuess/toast/Toast.m; sourceTree = "<group>"; };
 		AC12075C1FB5750F005C6565 /* Toast+UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Toast+UIView.h"; path = "WeGuess/toast/Toast+UIView.h"; sourceTree = "<group>"; };
 		AC12075D1FB5750F005C6565 /* Toast+UIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Toast+UIView.m"; path = "WeGuess/toast/Toast+UIView.m"; sourceTree = "<group>"; };
 		ACBBDC791F99D1CA00F2508D /* WeGuess.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WeGuess.entitlements; path = WeGuess/WeGuess.entitlements; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B5369786A655435486941357 /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		BA0B3FADA0A6486A9842C59A /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		CFA6762E862747039F46D862 /* Pods-WeGuess.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGuess.release.xcconfig"; path = "Pods/Target Support Files/Pods-WeGuess/Pods-WeGuess.release.xcconfig"; sourceTree = "<group>"; };
 		D6F64A67F51B4E6AB7FD088E /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		DF19BF6063A14C3B8693DF1B /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		E04C2B121FB948DF0069CF08 /* ApiResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiResult.h; sourceTree = "<group>"; };
+		E04C2B131FB948DF0069CF08 /* RestService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RestService.h; sourceTree = "<group>"; };
+		E04C2B141FB948DF0069CF08 /* RestService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RestService.m; sourceTree = "<group>"; };
+		E04C2B151FB948DF0069CF08 /* ApiResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiResult.m; sourceTree = "<group>"; };
+		E04C2B291FB97FB20069CF08 /* IAPManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAPManager.h; sourceTree = "<group>"; };
+		E04C2B501FB97FEF0069CF08 /* IAPManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IAPManager.m; sourceTree = "<group>"; };
+		E0957F597F87B4B976E4C8B0 /* Pods-WeGuess.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeGuess.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WeGuess/Pods-WeGuess.debug.xcconfig"; sourceTree = "<group>"; };
 		E09973EBA43749928FE6B1BA /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
 		EABB79E3DB044F6C94A194CB /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -492,6 +503,7 @@
 				ED2FC973868A421B966DFB87 /* libRNBackgroundTimer.a in Frameworks */,
 				3E7AAD1C604C4517A95AD99B /* libSplashScreen.a in Frameworks */,
 				4B54D0A617084424B0D38F2E /* libRNVectorIcons.a in Frameworks */,
+				DE1316239021AF70B0C5B32B /* libPods-WeGuess.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -699,11 +711,16 @@
 		182DABC91F7B5A1400D19DBD /* pay */ = {
 			isa = PBXGroup;
 			children = (
-				AC12075B1FB5750F005C6565 /* Toast.m */,
+				E04C2B121FB948DF0069CF08 /* ApiResult.h */,
+				E04C2B151FB948DF0069CF08 /* ApiResult.m */,
+				E04C2B131FB948DF0069CF08 /* RestService.h */,
+				E04C2B141FB948DF0069CF08 /* RestService.m */,
 				AC12075C1FB5750F005C6565 /* Toast+UIView.h */,
 				AC12075D1FB5750F005C6565 /* Toast+UIView.m */,
 				182DABF01F7B5A3800D19DBD /* WFTPay.h */,
 				182DABF11F7B5A3800D19DBD /* WFTPay.m */,
+				E04C2B291FB97FB20069CF08 /* IAPManager.h */,
+				E04C2B501FB97FEF0069CF08 /* IAPManager.m */,
 			);
 			name = pay;
 			sourceTree = "<group>";
@@ -754,6 +771,7 @@
 				182DAC101F7B734300D19DBD /* SystemConfiguration.framework */,
 				182DAC0E1F7B733D00D19DBD /* CoreGraphics.framework */,
 				182DAC0C1F7B733600D19DBD /* AVFoundation.framework */,
+				3AE8C17F9E9809D6B7B0CFB6 /* libPods-WeGuess.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -833,6 +851,7 @@
 				D9FE946FCE4C48B6BA9CCB15 /* Resources */,
 				182DAC0B1F7B733600D19DBD /* Frameworks */,
 				E0DD976B1FB5A4B1005E3689 /* Recovered References */,
+				B3D2D30998D5C98A4130A899 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -857,6 +876,15 @@
 				1808C0191F7B482600AB9404 /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B3D2D30998D5C98A4130A899 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E0957F597F87B4B976E4C8B0 /* Pods-WeGuess.debug.xcconfig */,
+				CFA6762E862747039F46D862 /* Pods-WeGuess.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		D9FE946FCE4C48B6BA9CCB15 /* Resources */ = {
@@ -914,10 +942,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "WeGuess" */;
 			buildPhases = (
+				3B58248C53C1BF22B5C1CB77 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				60F86F7530DC404529C4921D /* [CP] Embed Pods Frameworks */,
+				FE5DE7F6D4A9D3478E5FA38E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1433,6 +1464,54 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		3B58248C53C1BF22B5C1CB77 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WeGuess-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		60F86F7530DC404529C4921D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeGuess/Pods-WeGuess-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FE5DE7F6D4A9D3478E5FA38E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeGuess/Pods-WeGuess-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1449,10 +1528,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				E04C2B511FB97FEF0069CF08 /* IAPManager.m in Sources */,
 				AC12075F1FB5750F005C6565 /* Toast+UIView.m in Sources */,
-				AC12075E1FB5750F005C6565 /* Toast.m in Sources */,
+				E04C2B171FB948E00069CF08 /* ApiResult.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				182DABF21F7B5A3800D19DBD /* WFTPay.m in Sources */,
+				E04C2B161FB948E00069CF08 /* RestService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1564,6 +1645,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E0957F597F87B4B976E4C8B0 /* Pods-WeGuess.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = WeGuess/WeGuess.entitlements;
@@ -1591,7 +1673,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.qic.wechatWeGuess;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qic.weguess;
 				PRODUCT_NAME = WeGuess;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1600,6 +1682,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CFA6762E862747039F46D862 /* Pods-WeGuess.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = WeGuess/WeGuess.entitlements;
@@ -1626,7 +1709,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.qic.wechatWeGuess;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qic.weguess;
 				PRODUCT_NAME = WeGuess;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";

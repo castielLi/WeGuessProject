@@ -51,9 +51,9 @@ const AppNavigator = StackNavigator({
     initialRouteName: "TabHome",
     navigationOptions: {
         headerStyle: {
-            height: 64,
+            height: 44,
             paddingBottom: 1,
-            paddingTop: 20,
+            paddingTop: 1,
             backgroundColor: "#ffffff",
             borderBottomWidth: 1,
             borderBottomColor: "#eeeeee"
