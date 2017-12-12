@@ -97,10 +97,10 @@ class VoucherCenter extends ContainerComponent {
             this.changeType(0);
         }else{
             if (state == 0) {
-            this.refs.TabView.onPress(0)
-        }
-        if (state == 2) {
-            this.refs.TabView.onPress(2)
+            	this.refs.TabView.onPress(0)
+        	}else if (state == 2) {
+            	this.refs.TabView.onPress(2)
+        	}
         }
 
         AppState.addEventListener('change', this._handleAppStateChange);
