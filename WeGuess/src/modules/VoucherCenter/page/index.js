@@ -75,7 +75,11 @@ class VoucherCenter extends ContainerComponent {
         this.propListData = [];    //获取道具数据
         this.awardListData = [];   //获取抽奖数据
         this.renderRow = this.renderRow.bind(this);
-        this.tabList = ["钻石充值", "道具购买", "抽奖"];
+        if(!this.props.loginStore.isPay){
+            this.tabList = ["钻石充值"];
+        }else{
+            this.tabList = ["钻石充值", "道具购买", "抽奖"];
+        }
         this.canPress = {
             Diamond: true,
             Prop: true,
@@ -86,11 +90,15 @@ class VoucherCenter extends ContainerComponent {
     componentDidMount() {
         //钻石充值
         let state = this.props.navigation.state.params.state;
-        if (state == 0) {
+        if(!this.props.loginStore.isPay){
+            this.changeType(0);
+        }else{
+            if (state == 0) {
             this.refs.TabView.onPress(0)
         }
         if (state == 2) {
             this.refs.TabView.onPress(2)
+        }
         }
     }
 
@@ -262,22 +270,6 @@ class VoucherCenter extends ContainerComponent {
             false, null)
         }
     }
-    // {
-    //     this.props.loginStore.isPay ? (
-	// ) : (
-	//     <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-	//         that.WFTPay(1,token, money, bean,name)
-	//     }}>
-	//         <View style={[styles.payType]}>
-	//             <View style={[styles.payItem]}>
-	//                 <Image source={require('../resources/applepay.png')} style={styles.listAppleIcon}/>
-	//                 <Text style={[styles.customFont]}>Apple Pay</Text>
-	//             </View>
-	//             <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-	//         </View>
-	//     </TouchableWithoutFeedback>
-	// )
-                    // }
 
     WFTPay = (type, token, money, bean,name,buyType) => {
         let that = this;
@@ -291,7 +283,7 @@ class VoucherCenter extends ContainerComponent {
                 if(buyType==2){
                     moneyStr+="Prop";
                 }
-                IAPManager.applepay(moneyStr,() => {
+                IAPManager.startpay(moneyStr,() => {
                     that.props.getMemberInfo();
                 })
             }
@@ -623,7 +615,7 @@ class VoucherCenter extends ContainerComponent {
         let WebView = this.WebView;
         return (
             <View style={{flex: 1}}>
-                <TabView tabList={this.tabList} onPress={this.changeType} ref='TabView'></TabView>
+                { this.props.loginStore.isPay?(<TabView tabList={this.tabList} onPress={this.changeType} ref='TabView'></TabView>):null}
                 <ScrollView>{this.content()}</ScrollView>
                 <Alert ref={(refAlert) => {
                     this.alert = refAlert

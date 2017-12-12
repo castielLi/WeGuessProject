@@ -22,7 +22,7 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^)())callback){
+RCT_EXPORT_METHOD(startpay:(NSString *)money callback:(RCTResponseSenderBlock (^)())callback){
   NSString *proId = @"";
   if([money isEqualToString:@"1"]){
     proId =@"com.qicloud.weguess1";
@@ -63,14 +63,14 @@ RCT_EXPORT_METHOD(applepay:(NSString *)money callback:(RCTResponseSenderBlock (^
 - (void)IPAPay:(NSString *)proId
 {
   if (![PKPaymentAuthorizationViewController class]) {
-    NSLog(@"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
-    [self toastShow: @"操作系统不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持"];
+    NSLog(@"操作系统不支持，请升级至9.0以上版本，且iPhone6以上设备才支持");
+    [self toastShow: @"操作系统不支持，请升级至9.0以上版本，且iPhone6以上设备才支持"];
     return;
   }
   //检查当前设备是否可以支付
   if (![PKPaymentAuthorizationViewController canMakePayments]) {
-    NSLog(@"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持");
-    [self toastShow: @"设备不支持ApplePay，请升级至9.0以上版本，且iPhone6以上设备才支持"];
+    NSLog(@"设备不支持，请升级至9.0以上版本，且iPhone6以上设备才支持");
+    [self toastShow: @"设备不支持，请升级至9.0以上版本，且iPhone6以上设备才支持"];
     return;
   }
   //检查用户是否可进行某种卡的支付，是否支持Amex、MasterCard、Visa与银联四种卡，根据自己项目的需要进行检测

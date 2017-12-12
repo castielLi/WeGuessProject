@@ -124,7 +124,7 @@ class BoughtAnalysisList extends DisplayComponent {
     }
     renderFooter=()=>{
         return (
-            <Text style={styles.tip}>*以上资料数据仅供浏览、参考之用，并不作为竞猜和彩票投注的依据。</Text>
+            <Text style={styles.tip}>*以上资料数据仅供浏览、参考之用。</Text>
         )
     }
 

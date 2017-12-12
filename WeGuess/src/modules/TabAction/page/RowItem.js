@@ -13,10 +13,12 @@ import {
     Image,
     StyleSheet
 } from 'react-native';
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 import {numFormat} from '../../Utils/money';
 import {timeFormat} from '../../Utils/time';
 
-export default class RowItem extends PureComponent {
+class RowItem extends PureComponent {
     constructor(props) {
         super(props);
     }
@@ -62,7 +64,12 @@ export default class RowItem extends PureComponent {
     }
 
     render() {
+
         let rowData = this.props.data;
+
+        if(!this.props.loginStore.isPay&&rowData.Type===3){
+            return null;
+        }
         return (
             <TouchableWithoutFeedback
                 onPress={() => this.onPress(rowData.Type, rowData.ID, rowData.Status, rowData.Code)}>
@@ -100,6 +107,15 @@ export default class RowItem extends PureComponent {
         );
     }
 }
+
+
+const mapStateToProps = (state) => ({
+    loginStore: state.loginStore
+});
+const mapDispatchToProps = dispatch => ({
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RowItem);
 
 const styles = StyleSheet.create({
     container: {

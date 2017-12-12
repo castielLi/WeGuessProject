@@ -142,6 +142,8 @@ class Me extends ContainerComponent {
                                 <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                             </View>
                         </TouchableWithoutFeedback>
+                        {
+                            !this.props.loginStore.isPay?null:(
                         <TouchableWithoutFeedback onPress={() => this.tabGo("VoucherCenter", {state: 2})}>
                             <View style={styles.userListLi}>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
@@ -150,7 +152,8 @@ class Me extends ContainerComponent {
                                 </View>
                                 <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
                             </View>
-                        </TouchableWithoutFeedback>
+                        </TouchableWithoutFeedback>)
+                    }
                         <TouchableWithoutFeedback onPress={() => this.tabGo("MoneyRecord", {})}>
                             <View style={styles.userListLi}>
                                 <View style={{flex: 1, flexDirection: 'row'}}>

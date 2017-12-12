@@ -80,7 +80,7 @@ class AnalysisDetail extends ContainerComponent {
             <ScrollView style={styles.analysisDetail}>
                 <AnalysisList item={guessInfo} alwaysShow={this.state.alwaysShow}/>
                 <View style={styles.footer}>
-                    <Text style={styles.annotation}>*以上资料数据仅供浏览、参考之用，并不作为竞猜和彩票投注的依据。</Text>
+                    <Text style={styles.annotation}>*以上资料数据仅供浏览、参考之用。</Text>
                 </View>
             </ScrollView>
         )
