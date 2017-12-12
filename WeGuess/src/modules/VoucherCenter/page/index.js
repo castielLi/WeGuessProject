@@ -16,7 +16,9 @@ import {
     TouchableWithoutFeedback,
     TouchableHighlight,
     NativeModules,
-    Platform
+    Platform,
+    Linking,
+    AppState
 } from 'react-native';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
@@ -69,7 +71,8 @@ class VoucherCenter extends ContainerComponent {
             getDiamonds: false,  //钻石充值加载状态
             getPropList: false,  //道具购买加载状态
             getAwardList: false,  //抽奖加载状态
-            getAwardEndTime: ''   //获取抽奖截止时间
+            getAwardEndTime: '',   //获取抽奖截止时间
+            currentAppState: AppState.currentState
         }
         this.diamondsData = [];    //获取钻石数据
         this.propListData = [];    //获取道具数据
@@ -92,6 +95,19 @@ class VoucherCenter extends ContainerComponent {
         if (state == 2) {
             this.refs.TabView.onPress(2)
         }
+
+        AppState.addEventListener('change', this._handleAppStateChange);
+    }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this._handleAppStateChange);
+    }
+
+    _handleAppStateChange = (nextAppState) => {
+        if (this.state.currentAppState.match(/inactive|background/) && nextAppState === 'active') {
+            this.props.getMemberInfo();
+        }
+        this.setState({currentAppState: nextAppState});
     }
 
     //主体内容
@@ -223,77 +239,74 @@ class VoucherCenter extends ContainerComponent {
     }
 
     //支付
-    Pay = (token, money, bean,name,buyType) => {
+    Pay = (token, money, bean, name, buyType) => {
         let that = this;
-        if(!this.props.loginStore.isPay){
-        	that.WFTPay(1,token, money, bean,name,buyType)
-        }else{
-        that.showAlert(
-            (<View style={[styles.alertTitle]}>
-                <Text style={{textAlign: 'left'}}>支付方式</Text>
-                <TouchableWithoutFeedback onPress={() => {
-                    that.alert.Ok()
-                }}>
-                    <View style={[styles.titleCancel]}>
-                        <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
-                    </View>
-                </TouchableWithoutFeedback>
-            </View>),
-            (
-                <View style={[styles.alertContent]}>
-                    <View style={[styles.alertMoney]}>
-                        <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
-                        <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
-                    </View>
-                    
-                            <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-                                that.WFTPay(0, token, money, bean,name,buyType)
-                            }}>
-                                <View style={[styles.payType]}>
-                                    <View style={[styles.payItem]}>
-                                        <Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>
-                                        <Text style={[styles.customFont]}>支付宝支付</Text>
-                                    </View>
-                                    <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-                                </View>
-                            </TouchableWithoutFeedback>
+        if (!this.props.loginStore.isPay) {
+            that.WFTPay(0, token, money, bean, name, buyType)
+        } else {
+            that.showAlert(
+                (<View style={[styles.alertTitle]}>
+                    <Text style={{textAlign: 'left'}}>支付方式</Text>
+                    <TouchableWithoutFeedback onPress={() => {
+                        that.alert.Ok()
+                    }}>
+                        <View style={[styles.titleCancel]}>
+                            <Image source={require('../resources/cancel.png')} style={[styles.titleCancelImg]}/>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>),
+                (
+                    <View style={[styles.alertContent]}>
+                        <View style={[styles.alertMoney]}>
+                            <Text style={[styles.money]}>支付金额：¥ {money}</Text>{bean ? (
+                            <Text style={[styles.bean]}>赠送{numFormat(bean)}猜豆</Text>) : null}
+                        </View>
 
-                </View>), 
-            false, null)
+                        {/*<TouchableWithoutFeedback style={styles.userListLi} onPress={() => {*/}
+                            {/*that.WFTPay(1, token, money, bean, name, buyType)*/}
+                        {/*}}>*/}
+                            {/*<View style={[styles.payType]}>*/}
+                                {/*<View style={[styles.payItem]}>*/}
+                                    {/*<Image source={require('../resources/zhifubao.png')} style={styles.listIcon}/>*/}
+                                    {/*<Text style={[styles.customFont]}>支付宝支付</Text>*/}
+                                {/*</View>*/}
+                                {/*<Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>*/}
+                            {/*</View>*/}
+                        {/*</TouchableWithoutFeedback>*/}
+                        <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
+                            that.WFTPay(2, token, money, bean, name, buyType)
+                        }}>
+                            <View style={[styles.payType]}>
+                                <View style={[styles.payItem]}>
+                                    <Image source={require('../resources/wechatpay.png')} style={styles.listIcon}/>
+                                    <Text style={[styles.customFont]}>微信支付</Text>
+                                </View>
+                                <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
+                            </View>
+                        </TouchableWithoutFeedback>
+
+                    </View>),
+                false, null)
         }
     }
-    // {
-    //     this.props.loginStore.isPay ? (
-	// ) : (
-	//     <TouchableWithoutFeedback style={styles.userListLi} onPress={() => {
-	//         that.WFTPay(1,token, money, bean,name)
-	//     }}>
-	//         <View style={[styles.payType]}>
-	//             <View style={[styles.payItem]}>
-	//                 <Image source={require('../resources/applepay.png')} style={styles.listAppleIcon}/>
-	//                 <Text style={[styles.customFont]}>Apple Pay</Text>
-	//             </View>
-	//             <Icon name="ios-arrow-forward" color="#cbcbcb" size={24}/>
-	//         </View>
-	//     </TouchableWithoutFeedback>
-	// )
-                    // }
 
-    WFTPay = (type, token, money, bean,name,buyType) => {
+    WFTPay = (type, token, money, bean, name, buyType) => {
         let that = this;
         that.alert.BackInit(() => {
             if (type === 0) {
-                WFTPay.pay(token,"pay.alipay.native.towap", () => {
-                    that.props.getMemberInfo();
-                })
-            } else if(type===1) {
                 let moneyStr = money.toString();
-                if(buyType==2){
-                    moneyStr+="Prop";
+                if (buyType == 2) {
+                    moneyStr += "Prop";
                 }
-                IAPManager.applepay(moneyStr,() => {
+                IAPManager.applepay(moneyStr, () => {
                     that.props.getMemberInfo();
                 })
+            } else if (type === 1) {
+                WFTPay.pay(token, "pay.alipay.native.towap", () => {
+                    that.props.getMemberInfo();
+                })
+            } else if (type === 2) {
+                Linking.openURL(token).catch(err => console.error('An error occurred', err));
             }
         });
     }
@@ -319,7 +332,7 @@ class VoucherCenter extends ContainerComponent {
                 let {Result, Data} = response;
                 that.hideLoading(() => {
                     if (Result == 1) {
-                        that.Pay(Data, data.Money,null,"虚拟钻石",1);
+                        that.Pay(Data, data.Money, null, "虚拟钻石", 1);
                     } else {
                         that.showError(Result);
                     }
@@ -361,7 +374,7 @@ class VoucherCenter extends ContainerComponent {
                 that.canPress.Prop = true;
                 that.hideLoading(() => {
                     if (Result == 1) {
-                        that.Pay(Data, data.Money, data.Bean,data.Name,2);
+                        that.Pay(Data, data.Money, data.Bean, data.Name, 2);
                     } else {
                         that.showError(Result);
                     }
@@ -694,7 +707,7 @@ const styles = StyleSheet.create({
         height: 24,
         marginRight: 10
     },
-    listAppleIcon:{
+    listAppleIcon: {
         width: 44,
         height: 32,
         marginRight: 10
