@@ -297,11 +297,7 @@ class VoucherCenter extends ContainerComponent {
         }
     }
 
-<<<<<<< HEAD
-    WFTPay = (type, token, money, bean,name,buyType) => {
-=======
     WFTPay = (type, token, money, bean, name, buyType) => {
->>>>>>> 70dbeb1a33b5ded75835b6851ed363d41ac03047
         let that = this;
         that.alert.BackInit(() => {
             if (type === 0) {
@@ -309,15 +305,11 @@ class VoucherCenter extends ContainerComponent {
                 if (buyType == 2) {
                     moneyStr += "Prop";
                 }
-<<<<<<< HEAD
-                IAPManager.startpay(moneyStr,() => {
-=======
                 IAPManager.applepay(moneyStr, () => {
                     that.props.getMemberInfo();
                 })
             } else if (type === 1) {
                 WFTPay.pay(token, "pay.alipay.native.towap", () => {
->>>>>>> 70dbeb1a33b5ded75835b6851ed363d41ac03047
                     that.props.getMemberInfo();
                 })
             } else if (type === 2) {
